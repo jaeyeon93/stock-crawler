@@ -17,32 +17,6 @@ public class StockTest {
     private static final Logger logger =  LoggerFactory.getLogger(StockTest.class);
     private Stock stock;
 
-    @Before
-    public void setUp() {
-        stock = new Stock("삼성전자", "46,650", "536,450", "2,994,615억");
-    }
-
-    @Test
-    public void nameTest() {
-        assertThat(stock.getName(), is("삼성전자"));
-    }
-
-    @Test
-    public void upperCaseTest() {
-        stock = new Stock("naver", "46,650", "536,450", "2,994,615억");
-        logger.info("stock : {}", stock.toString());
-        String name = stock.getName().toUpperCase();
-        logger.info("change name : {}", name);
-    }
-
-    @Test
-    public void upperCaseTest2() {
-        stock = new Stock("sk하이닉스", "46,650", "536,450", "2,994,615억");
-        logger.info("stock : {}", stock.toString());
-        String name = stock.getName().toUpperCase();
-        logger.info("change name : {}", name);
-    }
-
     @Test
     public void timeTest() throws Exception {
         String format = "yyyyMMdd";;

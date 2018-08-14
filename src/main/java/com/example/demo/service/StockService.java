@@ -6,11 +6,15 @@ import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 public class StockService {
@@ -52,23 +56,30 @@ public class StockService {
     }
 
     @Transactional
-    public void serviceOne() throws Exception {
-        System.out.println("service one method called");
-        kospiInfo kospiInfo = new kospiInfo();
-        stockRepository.save(kospiInfo.oneInfo());
-    }
-
-    @Transactional
     public void addAll() throws Exception {
         long startTime = System.currentTimeMillis();
         System.out.println("시작시간 : " + startTime);
         kospiInfo kospiInfo = new kospiInfo();
-        stockRepository.save(kospiInfo.part1());
-        stockRepository.save(kospiInfo.part2());
-        stockRepository.save(kospiInfo.part3());
-        long endTime = System.currentTimeMillis();
-        System.out.println("종료시간 : " + endTime);
-        System.out.println("총 걸린 시간 : " + (endTime - startTime));
-
+        kospiInfo.init();
+//        stockRepository.save(kospiInfo.whole());
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("종료시간 : " + endTime);
+//        System.out.println("총 걸린 시간 : " + (endTime - startTime));
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executorService;
+                int poolsize = threadPoolExecutor.getPoolSize();
+                String threadName = Thread.currentThread().getName();
+                System.out.println("총 쓰레드 갯수 : " + poolsize + "쓰레드 이름 : " + threadName);
+                stockRepository.save(kospiInfo.part1());
+                stockRepository.save(kospiInfo.part2());
+                stockRepository.save(kospiInfo.part3());
+            }
+        };
+        executorService.execute(runnable);
+        Thread.sleep(10);
+        executorService.shutdown();
     }
 }

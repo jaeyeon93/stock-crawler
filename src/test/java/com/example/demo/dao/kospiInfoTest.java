@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -18,20 +19,8 @@ public class kospiInfoTest {
     }
 
     @Test
-    public void 태그갯수() {
-        System.out.println(kospiInfo.divCount());
-    }
-
-    @Test
-    public void getBodyTest() {
-        kospiInfo = new kospiInfo();
-        String result = kospiInfo.getBody();
-        logger.info("result : {}", result);
-    }
-
-    @Test
-    public void getTest() {
-        String result = kospiInfo.getTest();
-        logger.info("result : {}", result);
+    public void url가지고오기() {
+        String url = kospiInfo.getWholeInfoUrl();
+        System.out.println("url : " + url);
     }
 }

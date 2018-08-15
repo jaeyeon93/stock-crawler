@@ -58,12 +58,9 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long startTime = System.currentTimeMillis();
-        System.out.println("시작시간 : " + startTime);
         kospiInfo kospiInfo = new kospiInfo();
-        stockRepository.save(kospiInfo.whole1());
-        stockRepository.save(kospiInfo.whole2());
+        stockRepository.save(kospiInfo.whole3());
         long endTime = System.currentTimeMillis();
-        System.out.println("종료시간 : " + endTime);
         System.out.println("총 걸린 시간 : " + (endTime - startTime));
     }
 }

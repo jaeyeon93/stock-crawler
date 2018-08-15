@@ -21,7 +21,7 @@ public class kospiInfo {
 
     public kospiInfo() {
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless");
+        options.addArguments("--headless");
         System.setProperty("webdriver.chrome.driver", "/Users/jaeyeonkim/Desktop/stock-crawler/src/main/java/com/example/demo/chromedriver");
         driver = new ChromeDriver(options);
         driver.manage().window().setPosition(new Point(0, 0));
@@ -38,21 +38,9 @@ public class kospiInfo {
 //        driver.get(wholeInfoUrl);
 //    }
 
-    public List<Stock> part1() {
-        List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i < 507; i++) {
-            WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[" + i + "]"));
-            List<WebElement> childs = element.findElements(By.xpath(".//*"));
-            String url = childs.get(0).getAttribute("onclick");
-            List<String> info = Arrays.asList(element.getText().split("\n"));
-            stocks.add(new Stock(childs.get(0).getAttribute("title"), info.get(1), info.get(2), info.get(3), url.substring(8, url.length() - 2)));
-        }
-        return stocks;
-    }
-
     public List<Stock> whole1() {
         List<Stock> stocks = new ArrayList<>();
-            for (int j = 1; j <= 645; j++) {
+            for (int j = 1; j <= 763; j++) {
                 WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[" + j + "]"));
                 stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
             }
@@ -61,9 +49,20 @@ public class kospiInfo {
 
     public List<Stock> whole2() {
         List<Stock> stocks = new ArrayList<>();
-        for (int j = 1; j <= 646; j++) {
+        for (int j = 1; j <= 764; j++) {
             WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[2]/div/div[3]/dl[" + j + "]"));
             stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
+        }
+        return stocks;
+    }
+
+    public List<Stock> whole3() {
+        List<Stock> stocks = new ArrayList<>();
+        for (int i = 1; i <= 2; i++) {
+            for (int j = 1; j <= 763; j++) {
+                WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
+                stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
+            }
         }
         return stocks;
     }

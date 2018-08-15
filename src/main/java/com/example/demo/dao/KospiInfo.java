@@ -3,47 +3,20 @@ package com.example.demo.dao;
 import com.example.demo.domain.Stock;
 import com.example.demo.support.domain.CommonSearch;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-<<<<<<< HEAD
-@Component
-public class kospiInfo {
-=======
-public class kospiInfo extends CommonSearch {
->>>>>>> ba62e2601a72d407d5cf89f2913631861fd47a55
-    private static final Logger logger =  LoggerFactory.getLogger(kospiInfo.class);
+public class KospiInfo extends CommonSearch {
+    private static final Logger logger =  LoggerFactory.getLogger(KospiInfo.class);
     private String wholeInfoUrl = "http://finance.daum.net/quote/allpanel.daum?stype=P&type=S";
 
-<<<<<<< HEAD
-    @Value("${wholeInfoUrl}")
-    private String wholeInfoUrl;
-
-//    private String wholeInfoUrl = "http://finance.daum.net/quote/allpanel.daum?stype=P&type=S";
-
-    private WebDriver driver;
-
-    @PostConstruct
-    public void init() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        System.setProperty("webdriver.chrome.driver", "/Users/jaeyeonkim/Desktop/stock-crawler/src/main/java/com/example/demo/chromedriver");
-        driver = new ChromeDriver(options);
-        driver.get(getWholeInfoUrl());
-=======
-    public kospiInfo() {
+    public KospiInfo() {
         logger.debug("getDriver : {}", getDriver().toString());
         getDriver().get(getWholeInfoUrl());
->>>>>>> ba62e2601a72d407d5cf89f2913631861fd47a55
     }
 
 

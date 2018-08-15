@@ -26,11 +26,13 @@ public class Research extends CommonSearch {
     }
 
     public Stock update() {
+        String price = getDriver().findElement(By.xpath("//*[@id=\"topWrap\"]/div[1]/ul[2]/li[1]/em")).getText();
+        String changeMoney = getDriver().findElement(By.xpath("//*[@id=\"topWrap\"]/div[1]/ul[2]/li[2]/span")).getText();
+        String changePercent = getDriver().findElement(By.xpath("//*[@id=\"topWrap\"]/div[1]/ul[2]/li[3]")).getText();
         String profit = getDriver().findElement(By.xpath("//*[@id=\"performanceCorp\"]/table/tbody/tr[5]/td[9]")).getText();
         String sales_moeny = getDriver().findElement(By.xpath("//*[@id=\"performanceCorp\"]/table/tbody/tr[4]/td[9]")).getText();
         String total_cost = getDriver().findElement(By.xpath("//*[@id=\"stockContent\"]/ul[2]/li[2]/dl[2]/dd")).getText();
-        logger.info("profit : {} // sales_money : {} // total_cost : {}", profit, sales_moeny, total_cost);
-        getStock().update(profit, sales_moeny, total_cost);
+        getStock().update(price, changeMoney, changePercent, profit, sales_moeny, total_cost);
         return getStock();
     }
 

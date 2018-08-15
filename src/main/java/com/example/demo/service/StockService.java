@@ -1,20 +1,16 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.Research;
-import com.example.demo.dao.kospiInfo;
+import com.example.demo.dao.KospiInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 public class StockService {
@@ -38,9 +34,9 @@ public class StockService {
 
     public boolean checkMakingStock(String stockName) {
         Stock stock = stockRepository.findByName(stockName.toUpperCase());
-        if (stock != null && stock.getDiffday() < 15)
+        if (stock != null)
             return true;
-        logger.info("stockName : {}", stockName);
+        logger.info("주식이 DB에 없음");
         return false;
     }
 
@@ -52,19 +48,20 @@ public class StockService {
 
     @Transactional
     public void addAll() throws Exception {
-        long startTime = System.currentTimeMillis();
-        kospiInfo kospiInfo = new kospiInfo();
-        stockRepository.save(kospiInfo.whole3());
-        long endTime = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (endTime - startTime));
+        long start = System.currentTimeMillis();
+        KospiInfo KospiInfo = new KospiInfo();
+        stockRepository.save(KospiInfo.whole3());
+        long end = System.currentTimeMillis();
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
 
     @Transactional
     public void update(String stockName) {
-        logger.info("update method called on service, stockname : {}", stockName);
+        long start =  System.currentTimeMillis();
         Stock stock = stockRepository.findByName(stockName);
-        logger.info("검색된 stock : {}", stock.toString());
         Research research = new Research(stock);
         research.update();
+        long end = System.currentTimeMillis();
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
 }

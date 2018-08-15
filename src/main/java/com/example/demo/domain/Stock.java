@@ -62,8 +62,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.totalCost = totalCost.replaceAll(" ", "");
     }
 
-    public void update(String profit, String salesMoney, String totalCost) {
+    public void update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost) {
         this.name = getName().toUpperCase();
+        this.price = price;
+        this.changeMoney = changeMoney;
+        this.changePercent = changePercent;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;

@@ -6,6 +6,7 @@ import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,7 +51,7 @@ public class StockService {
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
         KospiInfo KospiInfo = new KospiInfo();
-        stockRepository.save(KospiInfo.whole3());
+        stockRepository.save(KospiInfo.whole1());
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
@@ -61,6 +62,18 @@ public class StockService {
         Stock stock = stockRepository.findByName(stockName);
         Research research = new Research(stock);
         research.update();
+        long end = System.currentTimeMillis();
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+    }
+
+    @Transactional
+    public void wholeUpdate() {
+        long start =  System.currentTimeMillis();
+        for (int i = 1; i < 50; i++) {
+            Stock stock = stockRepository.findOne((long)i);
+            Research research = new Research(stock);
+            research.update();
+        }
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }

@@ -31,7 +31,7 @@ public class KospiInfo extends CommonSearch {
 
     public List<Stock> whole1() {
         List<Stock> stocks = new ArrayList<>();
-            for (int j = 1; j <= 763; j++) {
+            for (int j = 50; j <= 101; j++) {
                 WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[" + j + "]"));
                 stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
             }
@@ -57,6 +57,7 @@ public class KospiInfo extends CommonSearch {
         }
         return stocks;
     }
+
 
     public List<WebElement> getChilds(WebElement element) {
         return element.findElements(By.xpath(".//*"));

@@ -44,4 +44,10 @@ public class StockController {
         stockService.update(stockName);
         return "redirect:/stock";
     }
+
+    @GetMapping("/update")
+    public String wholeUpdate() throws Exception {
+        stockService.wholeUpdate();
+        return "redirect:/stock";
+    }
 }

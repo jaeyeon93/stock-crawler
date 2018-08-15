@@ -25,14 +25,6 @@ public class ApiStockController {
     @Resource(name = "stockService")
     private StockService stockService;
 
-    @PostMapping("")
-    public ResponseEntity<Stock> create(@Valid @RequestBody String stockName) throws Exception {
-        stock = stockService.add(stockName);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("/api/stock/" + stock.getId()));
-        return new ResponseEntity<Stock>(headers, HttpStatus.CREATED);
-    }
-
     @GetMapping("")
     public List<Stock> list() {
         return stockService.findAll();

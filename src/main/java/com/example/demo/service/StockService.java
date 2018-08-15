@@ -36,11 +36,6 @@ public class StockService {
         return stockRepository.findByName(stockName);
     }
 
-    public Stock add(String stockName) throws Exception {
-        Research research = new Research(stockName);
-        return stockRepository.save(research.update(stockRepository.findByName(stockName.toUpperCase()), checkMakingStock(stockName)));
-    }
-
     public boolean checkMakingStock(String stockName) {
         Stock stock = stockRepository.findByName(stockName.toUpperCase());
         if (stock != null && stock.getDiffday() < 15)
@@ -62,5 +57,14 @@ public class StockService {
         stockRepository.save(kospiInfo.whole3());
         long endTime = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (endTime - startTime));
+    }
+
+    @Transactional
+    public void update(String stockName) {
+        logger.info("update method called on service, stockname : {}", stockName);
+        Stock stock = stockRepository.findByName(stockName);
+        logger.info("검색된 stock : {}", stock.toString());
+        Research research = new Research(stock);
+        research.update();
     }
 }

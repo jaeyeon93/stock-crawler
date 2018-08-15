@@ -20,29 +20,9 @@ public class StockController {
     @Resource(name = "stockService")
     private StockService stockService;
 
-    @PostMapping("")
-    public String research(String stockName) throws Exception {
-        stockService.add(stockName);
-        return "redirect:/stock";
-    }
-
-    @PostMapping("/{stockName}")
-    public @ResponseBody Stock getInfoByName(@PathVariable String stockName) throws Exception {
-        logger.info("stockName on Controller : {}", stockName);
-        stockService.add(stockName);
-        return stockService.findByName(stockName);
-    }
-
     @GetMapping("")
     public @ResponseBody List<Stock> list(Model model) {
         return stockService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public String oneStockInfo(@PathVariable long id, Model model) {
-        logger.info("controller called, id : {}", id);
-        model.addAttribute("stock", stockService.findById(id));
-        return "/stock/showInfo";
     }
 
     @DeleteMapping("/{id}")
@@ -55,6 +35,13 @@ public class StockController {
     @GetMapping("/all")
     public String allStock() throws Exception {
         stockService.addAll();
+        return "redirect:/stock";
+    }
+
+    @GetMapping("/{stockName}")
+    public String update(@PathVariable String stockName) throws Exception {
+        logger.info("update method called on controller");
+        stockService.update(stockName);
         return "redirect:/stock";
     }
 }

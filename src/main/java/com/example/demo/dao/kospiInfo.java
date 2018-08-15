@@ -9,16 +9,18 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Component
 public class kospiInfo {
     private static final Logger logger =  LoggerFactory.getLogger(kospiInfo.class);
 
-    @Value("${spring.default.url}")
+    @Value("${wholeInfoUrl}")
     private String wholeInfoUrl;
 
 //    private String wholeInfoUrl = "http://finance.daum.net/quote/allpanel.daum?stype=P&type=S";

@@ -1,9 +1,8 @@
 package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.example.demo.support.domain.CommonSearch;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
@@ -16,10 +15,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+<<<<<<< HEAD
 @Component
 public class kospiInfo {
+=======
+public class kospiInfo extends CommonSearch {
+>>>>>>> ba62e2601a72d407d5cf89f2913631861fd47a55
     private static final Logger logger =  LoggerFactory.getLogger(kospiInfo.class);
+    private String wholeInfoUrl = "http://finance.daum.net/quote/allpanel.daum?stype=P&type=S";
 
+<<<<<<< HEAD
     @Value("${wholeInfoUrl}")
     private String wholeInfoUrl;
 
@@ -34,55 +39,49 @@ public class kospiInfo {
         System.setProperty("webdriver.chrome.driver", "/Users/jaeyeonkim/Desktop/stock-crawler/src/main/java/com/example/demo/chromedriver");
         driver = new ChromeDriver(options);
         driver.get(getWholeInfoUrl());
+=======
+    public kospiInfo() {
+        logger.debug("getDriver : {}", getDriver().toString());
+        getDriver().get(getWholeInfoUrl());
+>>>>>>> ba62e2601a72d407d5cf89f2913631861fd47a55
     }
 
-    public List<Stock> part1() {
-        List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i < 507; i++) {
-            WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[" + i + "]"));
-            List<WebElement> childs = element.findElements(By.xpath(".//*"));
-            String url = childs.get(0).getAttribute("onclick");
-            List<String> info = Arrays.asList(element.getText().split("\n"));
-            stocks.add(new Stock(childs.get(0).getAttribute("title"), info.get(1), info.get(2), info.get(3), url.substring(8, url.length() - 2)));
-        }
-        return stocks;
-    }
 
-    public List<Stock> part2() {
-        List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i < 507; i++) {
-            WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[2]/div/div[3]/dl[" + i + "]"));
-            List<WebElement> childs = element.findElements(By.xpath(".//*"));
-            String url = childs.get(0).getAttribute("onclick");
-            List<String> info = Arrays.asList(element.getText().split("\n"));
-            stocks.add(new Stock(childs.get(0).getAttribute("title"), info.get(1), info.get(2), info.get(3), url.substring(8, url.length() - 2)));
-        }
-        return stocks;
-    }
+//    @PostConstruct
+//    public void init() {
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless");
+//        System.setProperty("webdriver.chrome.driver", "/Users/jaeyeonkim/Desktop/stock-crawler/src/main/java/com/example/demo/chromedriver");
+//        driver = new ChromeDriver(options);
+//        driver.get(wholeInfoUrl);
+//    }
 
-    public List<Stock> part3() {
+    public List<Stock> whole1() {
         List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i < 509; i++) {
-            WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[" + i + "]"));
-            List<WebElement> childs = element.findElements(By.xpath(".//*"));
-            String url = childs.get(0).getAttribute("onclick");
-            List<String> info = Arrays.asList(element.getText().split("\n"));
-            stocks.add(new Stock(childs.get(0).getAttribute("title"), info.get(1), info.get(2), info.get(3), url.substring(8, url.length() - 2)));
-        }
-        return stocks;
-    }
-
-    public List<Stock> whole() {
-        List<Stock> stocks = new ArrayList<>();
-//        for (int i = 1; i <=3; i++) {
-            for (int j = 1; j <= 507; j++) {
-                WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[" + j + "]"));
-//                WebElement element = driver.findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
-                List<String> info = Arrays.asList(element.getText().split("\n"));
-                String url = getChilds(element).get(0).getAttribute("onclick");
-                stocks.add(new Stock(getChilds(element).get(0).getAttribute("title"), info.get(1), info.get(2), info.get(3), url.substring(8, url.length() - 2)));
+            for (int j = 1; j <= 763; j++) {
+                WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[" + j + "]"));
+                stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
             }
-//        }
+        return stocks;
+    }
+
+    public List<Stock> whole2() {
+        List<Stock> stocks = new ArrayList<>();
+        for (int j = 1; j <= 764; j++) {
+            WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[2]/div/div[3]/dl[" + j + "]"));
+            stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
+        }
+        return stocks;
+    }
+
+    public List<Stock> whole3() {
+        List<Stock> stocks = new ArrayList<>();
+        for (int i = 1; i <= 2; i++) {
+            for (int j = 1; j <= 763; j++) {
+                WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
+                stocks.add(new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element)));
+            }
+        }
         return stocks;
     }
 
@@ -92,5 +91,18 @@ public class kospiInfo {
 
     public String getWholeInfoUrl() {
         return wholeInfoUrl;
+    }
+
+    public String getUrl(WebElement element) {
+        String url = getChilds(element).get(0).getAttribute("onclick");
+        return url.substring(8, url.length() -2);
+    }
+
+    public String getTitle(WebElement element) {
+        return getChilds(element).get(0).getAttribute("title");
+    }
+
+    public List<String> getInfo(WebElement element) {
+        return Arrays.asList(element.getText().split("\n"));
     }
 }

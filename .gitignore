@@ -1,3 +1,19 @@
+.DS_Store
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+/out/
+/target/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+bin/
+/.gradle/
+*.iml
+/.idea
+
 # Compiled class file
 *.class
 

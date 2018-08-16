@@ -21,7 +21,6 @@ public class Research extends CommonSearch {
 
     public Research(Stock original) {
         this.stock = original;
-        logger.info("Research에 전달받은 주식 객체 : {}", original.toString());
         getDriver().get(original.getDetailUrl());
     }
 

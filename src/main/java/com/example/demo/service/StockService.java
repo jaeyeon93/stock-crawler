@@ -20,6 +20,9 @@ public class StockService {
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
 
+    @Autowired
+    private KospiInfo kospiInfo;
+
     public List<Stock> findAll() {
         return stockRepository.findAll();
     }
@@ -50,8 +53,7 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        KospiInfo KospiInfo = new KospiInfo();
-        stockRepository.save(KospiInfo.whole1());
+        stockRepository.save(kospiInfo.whole1());
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }

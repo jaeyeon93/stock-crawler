@@ -17,4 +17,4 @@ bin/
 # Compiled class file
 *.class
 *.log
-/.idea
+/.idea.idea/*

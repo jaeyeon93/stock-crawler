@@ -6,16 +6,19 @@ import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @Service
 public class KospiInfo extends CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(KospiInfo.class);
+    private List<Stock> stocks = new ArrayList<>();
 
     @Value("${kospiUrl}")
     private String kospiUrl;
@@ -24,6 +27,23 @@ public class KospiInfo extends CommonSearch {
     public void init() {
         super.init();
     }
+
+    @Async("threadPoolTaskExecutor")
+    public void part1() throws Exception {
+        getStart(kospiUrl);
+        logger.info("1번 쓰레드호출");
+        for (int i = 1; i <= 25; i++)
+            stocks.add(makeStock(1, i));
+    }
+
+    @Async("threadPoolTaskExecutor")
+    public void part2() throws Exception {
+        getStart(kospiUrl);
+        logger.info("2번 쓰레드호출");
+        for (int i = 1; i <= 25; i++)
+            stocks.add(makeStock(2, i));
+    }
+
 
     public List<Stock> whole1() {
         getStart(kospiUrl);
@@ -41,17 +61,6 @@ public class KospiInfo extends CommonSearch {
                 makeStock(i, j);
         return stocks;
     }
-
-    public Integer getCountDl() {
-        List<WebElement> elements = getDriver().findElements(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[1]"));
-        for (WebElement element : elements) {
-            logger.info("element info : {}", element.getText());
-            logger.info("element tagName : {}", element.getTagName());
-
-        }
-        return elements.size();
-    }
-
 
     public Stock makeStock(int i, int j) {
         WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
@@ -76,4 +85,7 @@ public class KospiInfo extends CommonSearch {
         return Arrays.asList(element.getText().split("\n"));
     }
 
+    public List<Stock> getStocks() {
+        return stocks;
+    }
 }

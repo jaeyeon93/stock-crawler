@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @Service
 public class StockService {
@@ -53,8 +54,9 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        int count = kospiInfo.getCountDl();
-        logger.info("count의 갯수 : {}", count);
+        kospiInfo.part1();
+        kospiInfo.part2();
+        stockRepository.save(kospiInfo.getStocks());
 //        stockRepository.save(kospiInfo.whole1());
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");

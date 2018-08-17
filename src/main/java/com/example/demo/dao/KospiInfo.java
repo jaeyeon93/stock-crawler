@@ -42,6 +42,17 @@ public class KospiInfo extends CommonSearch {
         return stocks;
     }
 
+    public Integer getCountDl() {
+        List<WebElement> elements = getDriver().findElements(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]/dl[1]"));
+        for (WebElement element : elements) {
+            logger.info("element info : {}", element.getText());
+            logger.info("element tagName : {}", element.getTagName());
+
+        }
+        return elements.size();
+    }
+
+
     public Stock makeStock(int i, int j) {
         WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
         return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));

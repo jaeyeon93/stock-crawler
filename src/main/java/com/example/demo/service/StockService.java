@@ -53,7 +53,9 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        stockRepository.save(kospiInfo.whole1());
+        int count = kospiInfo.getCountDl();
+        logger.info("count의 갯수 : {}", count);
+//        stockRepository.save(kospiInfo.whole1());
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }

@@ -56,7 +56,6 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-//        stockRepository.save(kospiInfo.whole1());
         kospiInfo.part1();
         kospiInfo.part2();
         kospiInfo.part3();

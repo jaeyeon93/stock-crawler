@@ -63,15 +63,7 @@ public class KospiInfo extends CommonSearch {
             stockRepository.save(makeStock(4, i));
     }
 
-    public List<Stock> whole1() {
-        getStart(kospiUrl);
-        List<Stock> stocks = new ArrayList<>();
-            for (int j = 50; j <= 101; j++)
-                stocks.add(makeStock(1, j));
-        return stocks;
-    }
-
-    public List<Stock> whole2() {
+    public List<Stock> whole() {
         getStart(kospiUrl);
         List<Stock> stocks = new ArrayList<>();
         for (int i = 1; i <= 2; i++)

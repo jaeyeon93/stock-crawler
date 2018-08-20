@@ -36,38 +36,20 @@ public class KospiInfo extends CommonSearch {
     }
 
     @Async("threadPoolTaskExecutor")
-    public void part1() throws Exception {
+    public void part(int section) throws Exception {
         getStart(kospiUrl);
+        List<Stock> stocks = new ArrayList<>();
         for (int i = 1; i <= 381; i++)
-            stockRepository.save(makeStock(1, i));
+            stocks.add(makeStock(section, i));
+        logger.info("size : {}", stocks.size());
+        stockRepository.save(stocks);
     }
-
-    @Async("threadPoolTaskExecutor")
-    public void part2() throws Exception {
-        getStart(kospiUrl);
-        for (int i = 1; i <= 381; i++)
-            stockRepository.save(makeStock(2, i));
-    }
-
-    @Async("threadPoolTaskExecutor")
-    public void part3() throws Exception {
-        getStart(kospiUrl);
-        for (int i = 1; i <= 381; i++)
-            stockRepository.save(makeStock(3, i));
-    }
-
-    @Async("threadPoolTaskExecutor")
-    public void part4() throws Exception {
-        getStart(kospiUrl);
-        for (int i = 1; i <= 383; i++)
-            stockRepository.save(makeStock(4, i));
-    }
-
+    
     public List<Stock> whole() {
         getStart(kospiUrl);
         List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i <= 2; i++)
-            for (int j = 1; j <= 763; j++)
+        for (int i = 1; i <= 4; i++)
+            for (int j = 1; j <= 381; j++)
                 makeStock(i, j);
         return stocks;
     }

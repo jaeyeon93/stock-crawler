@@ -35,22 +35,22 @@ public class KospiInfo extends CommonSearch {
         super.init();
     }
 
-    @Async("threadPoolTaskExecutor")
-    public void part(int section) throws Exception {
-        getStart(kospiUrl);
-        List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i <= 381; i++)
-            stocks.add(makeStock(section, i));
-        logger.info("size : {}", stocks.size());
-        stockRepository.save(stocks);
-    }
-    
+//    @Async("threadPoolTaskExecutor")
+//    public void part(int section) throws Exception {
+//        getStart(kospiUrl);
+//        List<Stock> stocks = new ArrayList<>();
+//        for (int i = 1; i <= 381; i++)
+//            stocks.add(makeStock(section, i));
+//        logger.info("size : {}", stocks.size());
+//        stockRepository.save(stocks);
+//    }
+
     public List<Stock> whole() {
         getStart(kospiUrl);
         List<Stock> stocks = new ArrayList<>();
         for (int i = 1; i <= 4; i++)
-            for (int j = 1; j <= 381; j++)
-                makeStock(i, j);
+            for (int j = 1; j <= 10; j++)
+                stocks.add(makeStock(i, j));
         return stocks;
     }
 
@@ -75,5 +75,4 @@ public class KospiInfo extends CommonSearch {
     public List<String> getInfo(WebElement element) {
         return Arrays.asList(element.getText().split("\n"));
     }
-
 }

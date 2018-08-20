@@ -24,6 +24,9 @@ public class StockService {
     private StockRepository stockRepository;
 
     @Autowired
+    private Research research;
+
+    @Autowired
     private KospiInfo kospiInfo;
 
     public List<Stock> findAll() {
@@ -56,10 +59,6 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-//        kospiInfo.part(1);
-//        kospiInfo.part(2);
-//        kospiInfo.part(3);
-//        kospiInfo.part(4);
         stockRepository.save(kospiInfo.whole());
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
@@ -69,8 +68,7 @@ public class StockService {
     public void update(String stockName) {
         long start =  System.currentTimeMillis();
         Stock stock = stockRepository.findByName(stockName);
-        Research research = new Research(stock);
-        research.update();
+        research.update(stock);
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
@@ -78,11 +76,8 @@ public class StockService {
     @Transactional
     public void wholeUpdate() {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i < 50; i++) {
-            Stock stock = stockRepository.findOne((long)i);
-            Research research = new Research(stock);
-            research.update();
-        }
+        for (int i = 1; i < stockRepository.findAll().size(); i++)
+            research.update(stockRepository.findOne((long)i));
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }

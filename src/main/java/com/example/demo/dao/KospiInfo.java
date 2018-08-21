@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class KospiInfo extends CommonSearch {
@@ -35,27 +36,41 @@ public class KospiInfo extends CommonSearch {
         super.init();
     }
 
-//    @Async("threadPoolTaskExecutor")
-//    public void part(int section) throws Exception {
-//        getStart(kospiUrl);
-//        List<Stock> stocks = new ArrayList<>();
-//        for (int i = 1; i <= 381; i++)
-//            stocks.add(makeStock(section, i));
-//        logger.info("size : {}", stocks.size());
-//        stockRepository.save(stocks);
-//    }
+    @Async("threadPoolTaskExecutor")
+    public void part(int partNumber) throws Exception {
+        long start = System.currentTimeMillis();
+        getStart(kospiUrl);
+        List<Stock> stocks = new ArrayList<>();
+        try {
+            for (int i = 1; i <= 380; i++)
+                stocks.add(makeStock(partNumber, i));
+        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+            logger.info("error발생");
+            logger.info("message : {}", e.getMessage());
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        stockRepository.save(stocks);
+    }
 
     public List<Stock> whole() {
         getStart(kospiUrl);
         List<Stock> stocks = new ArrayList<>();
-        for (int i = 1; i <= 4; i++)
-            for (int j = 1; j <= 10; j++)
-                stocks.add(makeStock(i, j));
+        try {
+            for (int i = 1; i <= 4; i++)
+                for (int j = 1; j <= 30; j++)
+                    stocks.add(makeStock(i, j));
+        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+            logger.info("errr발생");
+            logger.info("message : {}", e.getMessage());
+        }
         return stocks;
     }
 
     public Stock makeStock(int i, int j) {
         WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
+        if (j % 10 == 0)
+            logger.info("{}part {}번째 data, title : {}",i, j, getTitle(element));
         return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
     }
 

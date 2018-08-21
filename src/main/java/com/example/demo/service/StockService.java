@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StockService {
@@ -60,6 +61,8 @@ public class StockService {
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
         stockRepository.save(kospiInfo.whole());
+//        for (int i = 1; i <= 4; i++)
+//            kospiInfo.part(i);
         long end = System.currentTimeMillis();
         System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
@@ -76,9 +79,22 @@ public class StockService {
     @Transactional
     public void wholeUpdate() {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i < stockRepository.findAll().size(); i++)
+        for (int i = 70; i <= 100; i++)
             research.update(stockRepository.findOne((long)i));
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+//        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
+
+//    @Transactional
+//    public void wholeUpdate() {
+//        long start =  System.currentTimeMillis();
+//        AtomicInteger atomicInteger = new AtomicInteger(1);
+//        for (int i = 1; i <= 10; i++) {
+//            research.update(stockRepository.findOne((long)atomicInteger.getAndIncrement()));
+//            research.update(stockRepository.findOne((long)atomicInteger.getAndIncrement()));
+//            research.update(stockRepository.findOne((long)atomicInteger.getAndIncrement()));
+//        }
+//        long end = System.currentTimeMillis();
+//        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+//    }
 }

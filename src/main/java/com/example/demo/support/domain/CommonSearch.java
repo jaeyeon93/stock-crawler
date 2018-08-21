@@ -26,7 +26,7 @@ public abstract class CommonSearch {
     public void getStart(String url) {
         driver.get(url);
         driver.manage().window().setPosition(new Point(0, 0));
-        driver.manage().window().setSize(new Dimension(840, 530));
+        driver.manage().window().setSize(new Dimension(1360, 430));
     }
 
     public WebDriver getDriver() {

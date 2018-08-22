@@ -58,7 +58,7 @@ public class KospiInfo extends CommonSearch {
         List<Stock> stocks = new ArrayList<>();
         try {
             for (int i = 1; i <= 4; i++)
-                for (int j = 1; j <= 30; j++)
+                for (int j = 1; j <= 380; j++)
                     stocks.add(makeStock(i, j));
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
             logger.info("errr발생");
@@ -67,10 +67,18 @@ public class KospiInfo extends CommonSearch {
         return stocks;
     }
 
+    public boolean checkDb(WebElement element) {
+        if (stockRepository.findAll().contains(stockRepository.findByName(getTitle(element))))
+            return true;
+        return false;
+    }
+
     public Stock makeStock(int i, int j) {
         WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
         if (j % 10 == 0)
             logger.info("{}part {}번째 data, title : {}",i, j, getTitle(element));
+        if (checkDb(element))
+            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
         return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
     }
 

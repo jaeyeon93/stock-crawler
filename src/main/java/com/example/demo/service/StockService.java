@@ -79,10 +79,13 @@ public class StockService {
     @Transactional
     public void wholeUpdate() {
         long start =  System.currentTimeMillis();
-        for (int i = 70; i <= 100; i++)
+        for (int i = 1; i <= 150; i++) {
             research.update(stockRepository.findOne((long)i));
+            if (i % 15 == 0)
+                logger.info("{}번째 업로드 성공",i);
+        }
         long end = System.currentTimeMillis();
-//        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
 
 //    @Transactional

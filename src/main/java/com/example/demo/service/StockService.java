@@ -5,6 +5,7 @@ import com.example.demo.dao.KospiInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import com.google.common.util.concurrent.Futures;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,7 @@ public class StockService {
         for (int i = 1; i <= 4; i++)
             kospiInfo.part(i);
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
@@ -72,18 +73,16 @@ public class StockService {
         Stock stock = stockRepository.findByName(stockName);
         research.update(stock);
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
     public void wholeUpdate() {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i <= 150; i++) {
+        for (int i = 1; i <= 50; i++) {
             research.update(stockRepository.findOne((long)i));
-            if (i % 15 == 0)
-                logger.info("{}번째 업로드 성공",i);
         }
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }
 }

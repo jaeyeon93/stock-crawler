@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.lang.model.util.Elements;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,13 +43,13 @@ public class KospiInfo extends CommonSearch {
         getStart(kospiUrl);
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 380; i++)
+            for (int i = 1; i <= 20; i++)
                 stocks.add(makeStock(partNumber, i));
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
             logger.info("message : {}", e.getMessage());
         }
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
         stockRepository.save(stocks);
     }
 

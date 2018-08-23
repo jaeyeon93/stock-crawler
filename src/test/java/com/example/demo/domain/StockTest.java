@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -34,5 +35,18 @@ public class StockTest {
     public void currentTime() throws Exception {
         stock = new Stock(1L, "naver","760,000", "1000","1000");
         logger.info("현재시간 : {}", LocalDateTime.now().getDayOfYear());
+    }
+
+    @Test
+    public void atomicInteger() {
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+        logger.info("default value : {}", atomicInteger.getAndIncrement());
+        for (int i = 1; i < 30; i++) {
+            logger.info("value1 : {}", atomicInteger.getAndIncrement());
+            logger.info("value2 : {}", atomicInteger.getAndIncrement());
+            logger.info("value3 : {}", atomicInteger.getAndIncrement());
+            logger.info("value4 : {}", atomicInteger.getAndIncrement());
+
+        }
     }
 }

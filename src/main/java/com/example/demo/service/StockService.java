@@ -4,6 +4,8 @@ import com.example.demo.dao.Research;
 import com.example.demo.dao.KospiInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.google.common.util.concurrent.Futures;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StockService {
@@ -19,6 +24,9 @@ public class StockService {
 
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
+
+    @Autowired
+    private Research research;
 
     @Autowired
     private KospiInfo kospiInfo;
@@ -53,30 +61,28 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        stockRepository.save(kospiInfo.whole1());
+        for (int i = 1; i <= 4; i++)
+            kospiInfo.part(i);
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
     public void update(String stockName) {
         long start =  System.currentTimeMillis();
         Stock stock = stockRepository.findByName(stockName);
-        Research research = new Research(stock);
-        research.update();
+        research.update(stock);
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
     public void wholeUpdate() {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i < 50; i++) {
-            Stock stock = stockRepository.findOne((long)i);
-            Research research = new Research(stock);
-            research.update();
+        for (int i = 1; i <= 50; i++) {
+            research.update(stockRepository.findOne((long)i));
         }
         long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+        logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }
 }

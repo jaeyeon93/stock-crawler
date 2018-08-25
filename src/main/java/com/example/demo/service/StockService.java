@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dao.KosdaqInfo;
 import com.example.demo.dao.Research;
 import com.example.demo.dao.KospiInfo;
 import com.example.demo.domain.Stock;
@@ -31,6 +32,9 @@ public class StockService {
     @Autowired
     private KospiInfo kospiInfo;
 
+    @Autowired
+    private KosdaqInfo kosdaqInfo;
+
     public List<Stock> findAll() {
         return stockRepository.findAll();
     }
@@ -61,8 +65,10 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        for (int i = 1; i <= 4; i++)
+        for (int i = 1; i <= 4; i++) {
+            kosdaqInfo.part(i);
             kospiInfo.part(i);
+        }
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }

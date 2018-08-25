@@ -49,4 +49,25 @@ public class StockTest {
 
         }
     }
+
+    @Test
+    public void stringToInteger() {
+        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        int changePirce = Integer.parseInt(stock.getPrice().replace(",", ""));
+        assertThat(changePirce, is(3170));
+    }
+
+    @Test
+    public void changePercentMinus() {
+        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        double changePercent = Double.parseDouble(stock.getChangePercent().replace("%", ""));
+        assertThat(changePercent, is(-1.09));
+    }
+
+    @Test
+    public void changePercentPlus() {
+        stock = new Stock("test1", "3,170", "35", "+11.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        double change = stock.changeDouble(stock.getChangePercent());
+        assertThat(change, is(11.09));
+    }
 }

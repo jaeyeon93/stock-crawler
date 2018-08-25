@@ -84,6 +84,14 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
+    public Integer changeInt(String number) {
+        return Integer.parseInt(number.replace(",", ""));
+    }
+
+    public Double changeDouble(String percent) {
+        return Double.parseDouble(percent.replace("%",""));
+    }
+
     public String getName() {
         return name;
     }

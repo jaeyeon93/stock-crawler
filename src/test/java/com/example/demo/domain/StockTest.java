@@ -17,6 +17,7 @@ import static org.junit.Assert.*;
 public class StockTest {
     private static final Logger logger =  LoggerFactory.getLogger(StockTest.class);
     private Stock stock;
+    private Double result;
 
     @Test
     public void timeTest() throws Exception {
@@ -59,24 +60,37 @@ public class StockTest {
         assertThat(stock.getChangePercent(), is(1.07));
     }
 
-//    @Test
-//    public void stringToInteger() {
-//        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
-//        int changePirce = Integer.parseInt(stock.getPrice().replace(",", ""));
-//        assertThat(changePirce, is(3170));
-//    }
-//
-//    @Test
-//    public void changePercentMinus() {
-//        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
-//        double changePercent = Double.parseDouble(stock.getChangePercent().replace("%", ""));
-//        assertThat(changePercent, is(-1.09));
-//    }
-//
-//    @Test
-//    public void changePercentPlus() {
-//        stock = new Stock("test1", "3,170", "35", "+11.09%", "http://finance.daum.net/item/main.daum?code=060310");
-//        double change = stock.changeDouble(stock.getChangePercent());
-//        assertThat(change, is(11.09));
-//    }
+    @Test
+    public void stringToInteger() {
+        stock = new Stock("test1", "3,170", "35", "+0.33％", "http://finance.daum.net/item/main.daum?code=060310");
+        assertThat(stock.getPrice(), is(3170));
+        logger.info("changePercent : {}", stock.getChangePercent());
+//        assertThat(stock.getChangePercent(), is(0.33));
+    }
+
+    @Test
+    public void numberTest() {
+        String test = "-0.33%";
+        if (test.contains("+")) {
+            result = Double.parseDouble(test.replace("%","").replace("+", "")) * (1.0);
+            assertThat(result, is(0.33));
+        }
+        test = "-0.33%";
+        if (test.contains("-")) {
+            result = Double.parseDouble(test.replace("%","").replace("-", "")) * (-1.0);
+            assertThat(result, is(-0.33));
+        }
+    }
+
+    @Test
+    public void changePercentMinus() {
+        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        assertThat(stock.getChangePercent(), is(-1.09));
+    }
+
+    @Test
+    public void changePercentPlus() {
+        stock = new Stock("test1", "3,170", "35", "+11.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        assertThat(stock.getChangePercent(), is(11.09));
+    }
 }

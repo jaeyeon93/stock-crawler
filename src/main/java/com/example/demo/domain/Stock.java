@@ -83,7 +83,9 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost) {
         this.name = getName().toUpperCase();
         this.price = changeInt(price);
+        logger.info("updated price : {}", changeInt(price));
         this.changeMoney = changeMoney;
+        logger.info("updated percent : {}", changeDouble(changePercent));
         this.changePercent = changeDouble(changePercent);
         this.profit = profit;
         this.salesMoney = salesMoney;
@@ -135,7 +137,12 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     }
 
     public Double changeDouble(String percent) {
-        return Double.parseDouble(percent.replace("%",""));
+        logger.info("changeDouble method called, delivered percent : {}", percent);
+        String tmp = percent.replace("%", "");
+        logger.info("temp : {}", tmp);
+        if (percent.contains("+"))
+            return Double.parseDouble(percent.replace("%","").replace("+", "")) * (1.0);
+        return Double.parseDouble(percent.replace("%","").replace("-", "")) * (1.0);
     }
 
     public String getName() {

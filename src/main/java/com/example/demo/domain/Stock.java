@@ -20,9 +20,13 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonProperty
     private String salesMoney;
 
+//    @Column
+//    @JsonProperty
+//    private String price;
+
     @Column
     @JsonProperty
-    private String price;
+    private Integer price;
 
     @Column
     @JsonProperty
@@ -36,9 +40,13 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonProperty
     private String changeMoney;
 
+//    @Column
+//    @JsonProperty
+//    private String changePercent;
+
     @Column
     @JsonProperty
-    private String changePercent;
+    private Double changePercent;
 
     @Column
     @JsonProperty
@@ -48,25 +56,25 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
     }
 
     public Stock(long id, String name, String price, String profit, String totalCost) {
         super(id);
         this.name = name.toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.profit = profit;
         this.totalCost = totalCost.replaceAll(" ", "");
     }
 
     public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
         logger.info("realData업데이트");
         return this;
@@ -74,15 +82,53 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost) {
         this.name = getName().toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.changePercent = changeDouble(changePercent);
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
         logger.info("{} 업데이트 성공", name);
         return this;
     }
+
+//    public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
+//        this.name = name.toUpperCase();
+//        this.price = price;
+//        this.changeMoney = changeMoney;
+//        this.changePercent = changePercent;
+//        this.detailUrl = detailUrl;
+//    }
+//
+//    public Stock(long id, String name, String price, String profit, String totalCost) {
+//        super(id);
+//        this.name = name.toUpperCase();
+//        this.price = price;
+//        this.profit = profit;
+//        this.totalCost = totalCost.replaceAll(" ", "");
+//    }
+//
+//    public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
+//        this.name = name.toUpperCase();
+//        this.price = price;
+//        this.changeMoney = changeMoney;
+//        this.changePercent = changePercent;
+//        this.detailUrl = detailUrl;
+//        logger.info("realData업데이트");
+//        return this;
+//    }
+//
+//    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost) {
+//        this.name = getName().toUpperCase();
+//        this.price = price;
+//        this.changeMoney = changeMoney;
+//        this.changePercent = changePercent;
+//        this.profit = profit;
+//        this.salesMoney = salesMoney;
+//        this.totalCost = totalCost;
+//        logger.info("{} 업데이트 성공", name);
+//        return this;
+//    }
 
     public Integer changeInt(String number) {
         return Integer.parseInt(number.replace(",", ""));
@@ -100,9 +146,17 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return salesMoney;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
+
+    public Double getChangePercent() {
+        return changePercent;
+    }
+
+    //    public String getPrice() {
+//        return price;
+//    }
 
     public String getProfit() {
         return profit;
@@ -116,9 +170,9 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return changeMoney;
     }
 
-    public String getChangePercent() {
-        return changePercent;
-    }
+//    public String getChangePercent() {
+//        return changePercent;
+//    }
 
     public String getDetailUrl() {
         return detailUrl;

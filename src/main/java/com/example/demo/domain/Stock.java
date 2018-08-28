@@ -20,10 +20,6 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonProperty
     private String salesMoney;
 
-//    @Column
-//    @JsonProperty
-//    private String price;
-
     @Column
     @JsonProperty
     private Integer price;
@@ -40,13 +36,13 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonProperty
     private String changeMoney;
 
-//    @Column
-//    @JsonProperty
-//    private String changePercent;
-
     @Column
     @JsonProperty
-    private Double changePercent;
+    private String changePercent;
+
+//    @Column
+//    @JsonProperty
+//    private Double changePercent;
 
     @Column
     @JsonProperty
@@ -58,7 +54,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.name = name.toUpperCase();
         this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changeDouble(changePercent);
+        this.changePercent = changePercent;
         this.detailUrl = detailUrl;
     }
 
@@ -74,7 +70,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.name = name.toUpperCase();
         this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changeDouble(changePercent);
+        this.changePercent = changePercent;
         this.detailUrl = detailUrl;
         logger.info("realData업데이트");
         return this;
@@ -85,8 +81,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.price = changeInt(price);
         logger.info("updated price : {}", changeInt(price));
         this.changeMoney = changeMoney;
-        logger.info("updated percent : {}", changeDouble(changePercent));
-        this.changePercent = changeDouble(changePercent);
+        this.changePercent = changePercent;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
@@ -94,55 +89,12 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-//    public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
-//        this.name = name.toUpperCase();
-//        this.price = price;
-//        this.changeMoney = changeMoney;
-//        this.changePercent = changePercent;
-//        this.detailUrl = detailUrl;
-//    }
-//
-//    public Stock(long id, String name, String price, String profit, String totalCost) {
-//        super(id);
-//        this.name = name.toUpperCase();
-//        this.price = price;
-//        this.profit = profit;
-//        this.totalCost = totalCost.replaceAll(" ", "");
-//    }
-//
-//    public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
-//        this.name = name.toUpperCase();
-//        this.price = price;
-//        this.changeMoney = changeMoney;
-//        this.changePercent = changePercent;
-//        this.detailUrl = detailUrl;
-//        logger.info("realData업데이트");
-//        return this;
-//    }
-//
-//    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost) {
-//        this.name = getName().toUpperCase();
-//        this.price = price;
-//        this.changeMoney = changeMoney;
-//        this.changePercent = changePercent;
-//        this.profit = profit;
-//        this.salesMoney = salesMoney;
-//        this.totalCost = totalCost;
-//        logger.info("{} 업데이트 성공", name);
-//        return this;
-//    }
-
     public Integer changeInt(String number) {
         return Integer.parseInt(number.replace(",", ""));
     }
 
     public Double changeDouble(String percent) {
-        logger.info("changeDouble method called, delivered percent : {}", percent);
-        String tmp = percent.replace("%", "");
-        logger.info("temp : {}", tmp);
-        if (percent.contains("+"))
-            return Double.parseDouble(percent.replace("%","").replace("+", "")) * (1.0);
-        return Double.parseDouble(percent.replace("%","").replace("-", "")) * (1.0);
+        return Double.parseDouble(percent.replace("%",""));
     }
 
     public String getName() {
@@ -157,14 +109,6 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return price;
     }
 
-    public Double getChangePercent() {
-        return changePercent;
-    }
-
-    //    public String getPrice() {
-//        return price;
-//    }
-
     public String getProfit() {
         return profit;
     }
@@ -177,9 +121,9 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return changeMoney;
     }
 
-//    public String getChangePercent() {
-//        return changePercent;
-//    }
+    public String getChangePercent() {
+        return changePercent;
+    }
 
     public String getDetailUrl() {
         return detailUrl;

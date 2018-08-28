@@ -1,12 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.KosdaqInfo;
-import com.example.demo.dao.Research;
 import com.example.demo.dao.KospiInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
-import com.google.common.util.concurrent.Futures;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StockService {
@@ -77,7 +71,7 @@ public class StockService {
     public void update(String stockName) {
         long start =  System.currentTimeMillis();
         Stock stock = stockRepository.findByName(stockName);
-        research.update(stock);
+        kosdaqInfo.getUpdate(stock);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
@@ -85,9 +79,8 @@ public class StockService {
     @Transactional
     public void wholeUpdate() {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i <= 50; i++) {
-            research.update(stockRepository.findOne((long)i));
-        }
+        for (int i = 1; i <= 20; i++)
+            kosdaqInfo.getUpdate(stockRepository.findOne((long)i));
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }

@@ -3,6 +3,8 @@ package com.example.demo.dao;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import com.example.demo.support.domain.CommonSearch;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

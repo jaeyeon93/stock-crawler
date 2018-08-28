@@ -36,6 +36,14 @@ public class kospiInfoTest {
     }
 
     @Test
+    public void 크롤링() throws Exception {
+        long start = System.currentTimeMillis();
+        stockService.addAll();
+        long end = System.currentTimeMillis();
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+    }
+
+    @Test
     public void 전체크롤링() {
         List<Stock> stocks = kospiInfo.whole();
         logger.info("stocks size : {}", stocks.size());
@@ -94,6 +102,5 @@ public class kospiInfoTest {
         Stock stock = stockService.findById(1);
         assertThat(stock.getName(), is("삼성전자"));
         stockService.update("삼성전자");
-//        stockService.update("삼성전자");
     }
 }

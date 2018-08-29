@@ -103,4 +103,9 @@ public class kospiInfoTest {
         assertThat(stock.getName(), is("삼성전자"));
         stockService.update("삼성전자");
     }
+
+    @Test
+    public void test() {
+        logger.info("result : {}", kospiInfo.test());
+    }
 }

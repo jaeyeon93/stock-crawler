@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.lang.model.util.Elements;
+import javax.xml.bind.Element;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +48,7 @@ public class KospiInfo extends CommonSearch {
         long start = System.currentTimeMillis();
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 380; i++)
+            for (int i = 1; i <= 20; i++)
                 stocks.add(makeStock(partNumber, i));
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
             logger.info("message : {}", e.getMessage());
@@ -71,4 +72,14 @@ public class KospiInfo extends CommonSearch {
         }
         return stocks;
     }
+
+    public String test() {
+//        List<WebElement> elements = getDriver().findElements(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]"));
+        List<WebElement> elements = getDriver().findElements(By.cssSelector("#wrap .wBox:nth-child(1) .nBox div:nth-child(3) > dl"));
+        for (int i = 0; i < 3; i++) {
+            logger.info("title : {}", getTitle(elements.get(i)));
+        }
+        return "hello";
+    }
+
 }

@@ -59,7 +59,7 @@ public class StockService {
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
         for (int i = 1; i <= 4; i++) {
-            kosdaqInfo.part(i);
+//            kosdaqInfo.part(i);
             kospiInfo.part(i);
         }
         long end = System.currentTimeMillis();

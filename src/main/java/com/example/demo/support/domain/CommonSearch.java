@@ -87,6 +87,10 @@ public abstract class CommonSearch {
         return url.substring(8, url.length() -2);
     }
 
+    public Stock making(WebElement element) {
+        return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
+    }
+
     public String getTitle(WebElement element) {
         return getChilds(element).get(0).getAttribute("title");
     }

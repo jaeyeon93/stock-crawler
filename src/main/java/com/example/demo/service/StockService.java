@@ -58,10 +58,8 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        for (int i = 1; i <= 4; i++) {
-//            kosdaqInfo.part(i);
-            kospiInfo.part(i);
-        }
+        for (int i = 1; i <= 4; i++)
+            kospiInfo.test2(i);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }

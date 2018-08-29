@@ -74,12 +74,27 @@ public class KospiInfo extends CommonSearch {
     }
 
     public String test() {
-//        List<WebElement> elements = getDriver().findElements(By.xpath("//*[@id=\"wrap\"]/div[1]/div/div[3]"));
         List<WebElement> elements = getDriver().findElements(By.cssSelector("#wrap .wBox:nth-child(1) .nBox div:nth-child(3) > dl"));
-        for (int i = 0; i < 3; i++) {
-            logger.info("title : {}", getTitle(elements.get(i)));
-        }
+        logger.info("elements size : {}", elements.size());
         return "hello";
     }
 
+    public List<Stock> test2(int partNumber) {
+        getStart(kospiUrl);
+        logger.info("전달받은 partNumber : {}", partNumber);
+        long start = System.currentTimeMillis();
+        List<Stock> stocks = new ArrayList<>();
+        try {
+            for (int i = 0; i < getElements(partNumber).size(); i++)
+                stocks.add(making(getElements(partNumber).get(i)));
+            return stocks;
+        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+            logger.info("message : {}", e.getMessage());
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            logger.info("message : {}", e.getMessage());
+        }
+        long end = System.currentTimeMillis();
+        logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
+        return stocks;
+    }
 }

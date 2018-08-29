@@ -17,6 +17,7 @@ import static org.junit.Assert.*;
 public class StockTest {
     private static final Logger logger =  LoggerFactory.getLogger(StockTest.class);
     private Stock stock;
+    private Double result;
 
     @Test
     public void timeTest() throws Exception {
@@ -48,5 +49,48 @@ public class StockTest {
             logger.info("value4 : {}", atomicInteger.getAndIncrement());
 
         }
+    }
+
+    @Test
+    public void updateTest() {
+        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        stock.update("3000", "40",1.07, "1000","10000","100000");
+        logger.info("바뀐정보 : {}", stock.toString());
+        assertThat(stock.getPrice(), is(3000));
+        assertThat(stock.getChangePercent(), is(1.07));
+    }
+
+    @Test
+    public void stringToInteger() {
+        stock = new Stock("test1", "3,170", "35", "+0.33％", "http://finance.daum.net/item/main.daum?code=060310");
+        assertThat(stock.getPrice(), is(3170));
+        logger.info("changePercent : {}", stock.getChangePercent());
+//        assertThat(stock.getChangePercent(), is(0.33));
+    }
+
+    @Test
+    public void numberTest() {
+        String test = "-0.33%";
+        if (test.contains("+")) {
+            result = Double.parseDouble(test.replace("%","").replace("+", "")) * (1.0);
+            assertThat(result, is(0.33));
+        }
+        test = "-0.33%";
+        if (test.contains("-")) {
+            result = Double.parseDouble(test.replace("%","").replace("-", "")) * (-1.0);
+            assertThat(result, is(-0.33));
+        }
+    }
+
+    @Test
+    public void changePercentMinus() {
+        stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        assertThat(stock.getChangePercent(), is(-1.09));
+    }
+
+    @Test
+    public void changePercentPlus() {
+        stock = new Stock("test1", "3,170", "35", "+11.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        assertThat(stock.getChangePercent(), is(11.09));
     }
 }

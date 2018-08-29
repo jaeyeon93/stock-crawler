@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
+import com.example.demo.domain.StockRepository;
 import com.example.demo.service.StockService;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,14 @@ public class kospiInfoTest {
     @Before
     public void setUp() {
         kospiInfo.getStart("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
+    }
+
+    @Test
+    public void 크롤링() throws Exception {
+        long start = System.currentTimeMillis();
+        stockService.addAll();
+        long end = System.currentTimeMillis();
+        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
     }
 
     @Test
@@ -86,5 +95,12 @@ public class kospiInfoTest {
         logger.info("title : {}", kospiInfo.getTitle(element));
         boolean result = kospiInfo.checkDb(element);
         assertThat(result, is(false));
+    }
+
+    @Test
+    public void updateTest() {
+        Stock stock = stockService.findById(1);
+        assertThat(stock.getName(), is("삼성전자"));
+        stockService.update("삼성전자");
     }
 }

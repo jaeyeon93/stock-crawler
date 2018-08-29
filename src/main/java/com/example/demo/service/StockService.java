@@ -21,9 +21,6 @@ public class StockService {
     private StockRepository stockRepository;
 
     @Autowired
-    private Research research;
-
-    @Autowired
     private KospiInfo kospiInfo;
 
     @Autowired

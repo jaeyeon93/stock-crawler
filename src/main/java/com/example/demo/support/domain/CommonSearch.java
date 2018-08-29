@@ -47,7 +47,9 @@ public abstract class CommonSearch {
             WebElement element = driver.findElement(By.xpath("//*[@id=\"topWrap\"]/div[1]/ul[2]"));
             String price = element.findElement(By.xpath(".//li[1]/em")).getText();
             String changeMoney = element.findElement(By.xpath(".//li[2]/span")).getText();
-            String changePercent = element.findElement(By.xpath(".//li[3]")).getText();
+//            String changePercent = element.findElement(By.xpath(".//li[3]")).getText();
+            Double changePercent = Double.parseDouble(element.findElement(By.xpath(".//li[3]")).getText().replace("%", ""));
+            logger.info("changePercent on update method : {}", changePercent);
             String profit = driver.findElement(By.xpath("//*[@id=\"performanceCorp\"]/table/tbody/tr[5]/td[9]")).getText();
             String salesMoney = driver.findElement(By.xpath("//*[@id=\"performanceCorp\"]/table/tbody/tr[4]/td[9]")).getText();
             String total_cost = driver.findElement(By.xpath("//*[@id=\"stockContent\"]/ul[2]/li[2]/dl[2]/dd")).getText();

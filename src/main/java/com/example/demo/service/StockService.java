@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -80,5 +82,49 @@ public class StockService {
             kosdaqInfo.getUpdate(stockRepository.findOne((long)i));
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
+    }
+
+    public List<Stock> lowPercent() {
+        List<Stock> result = stockRepository.findAll();
+        Collections.sort(result, new Comparator<Stock>() {
+            @Override
+            public int compare(Stock o1, Stock o2) {
+                return o1.getChangePercent().compareTo(o2.getChangePercent());
+            }
+        });
+        return result;
+    }
+
+    public List<Stock> lowPrice() {
+        List<Stock> result = stockRepository.findAll();
+        Collections.sort(result, new Comparator<Stock>() {
+            @Override
+            public int compare(Stock o1, Stock o2) {
+                return o1.getPrice().compareTo(o2.getPrice());
+            }
+        });
+        return result;
+    }
+
+    public List<Stock> topPercent() {
+        List<Stock> result = stockRepository.findAll();
+        Collections.sort(result, new Comparator<Stock>() {
+            @Override
+            public int compare(Stock o1, Stock o2) {
+                return o2.getChangePercent().compareTo(o1.getChangePercent());
+            }
+        });
+        return result;
+    }
+
+    public List<Stock> topPrice() {
+        List<Stock> result = stockRepository.findAll();
+        Collections.sort(result, new Comparator<Stock>() {
+            @Override
+            public int compare(Stock o1, Stock o2) {
+                return o2.getPrice().compareTo(o1.getPrice());
+            }
+        });
+        return result;
     }
 }

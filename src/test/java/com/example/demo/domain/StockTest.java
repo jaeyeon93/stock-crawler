@@ -54,7 +54,7 @@ public class StockTest {
     @Test
     public void updateTest() {
         stock = new Stock("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
-        stock.update("3000", "40","1.07%", "1000","10000","100000");
+        stock.update("3000", "40",1.07, "1000","10000","100000");
         logger.info("바뀐정보 : {}", stock.toString());
         assertThat(stock.getPrice(), is(3000));
         assertThat(stock.getChangePercent(), is(1.07));

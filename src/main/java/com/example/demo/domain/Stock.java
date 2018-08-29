@@ -36,10 +36,6 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonProperty
     private String changeMoney;
 
-//    @Column
-//    @JsonProperty
-//    private String changePercent;
-
     @Column
     @JsonProperty
     private Double changePercent;
@@ -124,10 +120,6 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Double getChangePercent() {
         return changePercent;
     }
-
-    //    public String getChangePercent() {
-//        return changePercent;
-//    }
 
     public String getDetailUrl() {
         return detailUrl;

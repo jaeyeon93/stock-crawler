@@ -47,7 +47,7 @@ public class KospiInfo extends CommonSearch {
         long start = System.currentTimeMillis();
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 380; i++)
                 stocks.add(makeStock(partNumber, i));
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
             logger.info("message : {}", e.getMessage());

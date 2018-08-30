@@ -108,4 +108,13 @@ public class kospiInfoTest {
     public void test() {
         logger.info("result : {}", kospiInfo.test());
     }
+
+    @Test
+    public void test3() throws Exception {
+        long start = System.currentTimeMillis();
+        for (int i = 1; i <= 4; i++)
+            kospiInfo.test3(i);
+        long end = System.currentTimeMillis();
+        logger.info("소요시간 : {}초", (end - start)/1000.0);
+    }
 }

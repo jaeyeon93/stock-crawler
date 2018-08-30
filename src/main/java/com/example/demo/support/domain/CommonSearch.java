@@ -31,6 +31,7 @@ public abstract class CommonSearch {
     }
 
     public void getStart(String url) {
+        logger.info("getStart method 실행");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
         System.setProperty("webdriver.chrome.driver", path);
@@ -63,8 +64,11 @@ public abstract class CommonSearch {
     }
 
     public boolean checkDb(WebElement element) {
-        if (stockRepository.findAll().contains(stockRepository.findByName(getTitle(element))))
+        if (stockRepository.findAll().contains(stockRepository.findByName(getTitle(element)))) {
+            logger.info("DB에 {} 존재 ", getTitle(element));
             return true;
+        }
+        logger.info("DB에 {} 존재하지 않음 ", getTitle(element));
         return false;
     }
 
@@ -77,14 +81,17 @@ public abstract class CommonSearch {
         if (j % 10 == 0)
             logger.info("{}part {}번째 data, title : {}",i, j, getTitle(element));
 
-        if (checkDb(element))
-            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
+//        if (checkDb(element))
+//            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
         return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
     }
 
     public Stock making(WebElement element) {
-        if (checkDb(element))
-            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
+//        if (checkDb(element)) {
+//            logger.info("making db에 존재");
+//            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
+//        }
+        logger.info("making db에 존재안함");
         return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
     }
 

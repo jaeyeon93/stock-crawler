@@ -48,7 +48,7 @@ public class KospiInfo extends CommonSearch {
         long start = System.currentTimeMillis();
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 20; i++)
+            for (int i = 1; i <= 380; i++)
                 stocks.add(makeStock(partNumber, i));
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
             logger.info("message : {}", e.getMessage());
@@ -69,6 +69,8 @@ public class KospiInfo extends CommonSearch {
                     stocks.add(makeStock(i, j));
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
             logger.info("message : {}", e.getMessage());
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            logger.info("message : {}", e.getMessage());
         }
         return stocks;
     }
@@ -81,7 +83,6 @@ public class KospiInfo extends CommonSearch {
 
     public List<Stock> test2(int partNumber) {
         getStart(kospiUrl);
-        logger.info("전달받은 partNumber : {}", partNumber);
         long start = System.currentTimeMillis();
         List<Stock> stocks = new ArrayList<>();
         try {
@@ -96,5 +97,18 @@ public class KospiInfo extends CommonSearch {
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
         return stocks;
+    }
+
+    @Async
+    public void test3(int partNumber) {
+        getStart(kospiUrl);
+        try {
+            for (int i = 0; i < getElements(partNumber).size(); i++)
+                making(getElements(partNumber).get(i));
+        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+            logger.info("message : {}", e.getMessage());
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            logger.info("message : {}", e.getMessage());
+        }
     }
 }

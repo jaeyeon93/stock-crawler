@@ -1,7 +1,6 @@
 package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
-import com.example.demo.domain.StockRepository;
 import com.example.demo.service.StockService;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,9 +43,8 @@ public class kospiInfoTest {
     }
 
     @Test
-    public void 전체크롤링() {
-        List<Stock> stocks = kospiInfo.whole();
-        logger.info("stocks size : {}", stocks.size());
+    public void partTest() throws Exception {
+        kospiInfo.part();
     }
 
     @Test
@@ -62,59 +60,27 @@ public class kospiInfoTest {
         assertThat(result, is(true));
     }
 
-    @Test
-    public void db주식존재주식생성() {
-        long start = System.currentTimeMillis();
-        Stock stock = kospiInfo.makeStock(3,202);
-        long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
-        logger.info("stock info : {}", stock.toString());
-    }
-
-    @Test
-    public void db주식없음주식생성() {
-        long start = System.currentTimeMillis();
-        Stock stock = kospiInfo.makeStock(1,202);
-        long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
-        logger.info("stock info : {}", stock.toString());
-    }
-
-    @Test
-    public void 주식확인() {
-        WebElement element = kospiInfo.getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[202]"));
-        logger.info("title : {}", kospiInfo.getTitle(element));
-        assertThat(kospiInfo.getTitle(element), is("삼성전자"));
-        boolean result = kospiInfo.checkDb(element);
-        assertThat(result, is(true));
-    }
-
-    @Test
-    public void 주식존재하지않음() {
-        WebElement element = kospiInfo.getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[203]"));
-        logger.info("title : {}", kospiInfo.getTitle(element));
-        boolean result = kospiInfo.checkDb(element);
-        assertThat(result, is(false));
-    }
+//    @Test
+//    public void 주식확인() {
+//        WebElement element = kospiInfo.getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[202]"));
+//        logger.info("title : {}", kospiInfo.getTitle(element));
+//        assertThat(kospiInfo.getTitle(element), is("삼성전자"));
+//        boolean result = kospiInfo.checkDb(element);
+//        assertThat(result, is(true));
+//    }
+//
+//    @Test
+//    public void 주식존재하지않음() {
+//        WebElement element = kospiInfo.getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[203]"));
+//        logger.info("title : {}", kospiInfo.getTitle(element));
+//        boolean result = kospiInfo.checkDb(element);
+//        assertThat(result, is(false));
+//    }
 
     @Test
     public void updateTest() {
         Stock stock = stockService.findById(1);
         assertThat(stock.getName(), is("삼성전자"));
         stockService.update("삼성전자");
-    }
-
-    @Test
-    public void test() {
-        logger.info("result : {}", kospiInfo.test());
-    }
-
-    @Test
-    public void test3() throws Exception {
-        long start = System.currentTimeMillis();
-        for (int i = 1; i <= 4; i++)
-            kospiInfo.test3(i);
-        long end = System.currentTimeMillis();
-        logger.info("소요시간 : {}초", (end - start)/1000.0);
     }
 }

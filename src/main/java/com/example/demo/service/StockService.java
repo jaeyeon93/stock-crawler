@@ -59,7 +59,8 @@ public class StockService {
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
 //        for (int i = 1; i <= 4; i++)
-//            kospiInfo.test2(i);
+//            kospiInfo.part2(i);
+        kospiInfo.batchInsert();
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
@@ -83,46 +84,18 @@ public class StockService {
     }
 
     public List<Stock> lowPercent() {
-        List<Stock> result = stockRepository.findAll();
-        Collections.sort(result, new Comparator<Stock>() {
-            @Override
-            public int compare(Stock o1, Stock o2) {
-                return o1.getChangePercent().compareTo(o2.getChangePercent());
-            }
-        });
-        return result;
+        return stockRepository.findAllByOrderByChangePercentAsc();
     }
 
     public List<Stock> lowPrice() {
-        List<Stock> result = stockRepository.findAll();
-        Collections.sort(result, new Comparator<Stock>() {
-            @Override
-            public int compare(Stock o1, Stock o2) {
-                return o1.getPrice().compareTo(o2.getPrice());
-            }
-        });
-        return result;
+        return stockRepository.findAllByOrderByPriceAsc();
     }
 
     public List<Stock> topPercent() {
-        List<Stock> result = stockRepository.findAll();
-        Collections.sort(result, new Comparator<Stock>() {
-            @Override
-            public int compare(Stock o1, Stock o2) {
-                return o2.getChangePercent().compareTo(o1.getChangePercent());
-            }
-        });
-        return result;
+        return stockRepository.findAllByOrderByChangePercentDesc();
     }
 
     public List<Stock> topPrice() {
-        List<Stock> result = stockRepository.findAll();
-        Collections.sort(result, new Comparator<Stock>() {
-            @Override
-            public int compare(Stock o1, Stock o2) {
-                return o2.getPrice().compareTo(o1.getPrice());
-            }
-        });
-        return result;
+        return stockRepository.findAllByOrderByPriceDesc();
     }
 }

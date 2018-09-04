@@ -31,34 +31,34 @@ public class KosdaqInfo extends CommonSearch {
         super.init();
     }
 
-    @Async("threadPoolTaskExecutor")
-    public void part(int partNumber) throws Exception {
-        long start = System.currentTimeMillis();
-        getStart(kosdaqUrl);
-        List<Stock> stocks = new ArrayList<>();
-        try {
-            for (int i = 1; i <= 324; i++)
-                stocks.add(makeStock(partNumber, i));
-        } catch (org.openqa.selenium.StaleElementReferenceException e) {
-            logger.info("message : {}", e.getMessage());
-        }
-        long end = System.currentTimeMillis();
-        logger.info("코스닥 총 걸린 시간 : {}초", (end - start)/1000.0);
-        stockRepository.save(stocks);
-    }
-
-    public List<Stock> whole() {
-        getStart(kosdaqUrl);
-        List<Stock> stocks = new ArrayList<>();
-        try {
-            for (int i = 1; i <= 4; i++)
-                for (int j = 1; j <= 324; j++)
-                    stocks.add(makeStock(i, j));
-        } catch (org.openqa.selenium.StaleElementReferenceException e) {
-            logger.info("message : {}", e.getMessage());
-        }
-        return stocks;
-    }
+//    @Async("threadPoolTaskExecutor")
+//    public void part(int partNumber) throws Exception {
+//        long start = System.currentTimeMillis();
+//        getStart(kosdaqUrl);
+//        List<Stock> stocks = new ArrayList<>();
+//        try {
+//            for (int i = 1; i <= 324; i++)
+//                stocks.add(makeStock(partNumber, i));
+//        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+//            logger.info("message : {}", e.getMessage());
+//        }
+//        long end = System.currentTimeMillis();
+//        logger.info("코스닥 총 걸린 시간 : {}초", (end - start)/1000.0);
+//        stockRepository.save(stocks);
+//    }
+//
+//    public List<Stock> whole() {
+//        getStart(kosdaqUrl);
+//        List<Stock> stocks = new ArrayList<>();
+//        try {
+//            for (int i = 1; i <= 4; i++)
+//                for (int j = 1; j <= 324; j++)
+//                    stocks.add(makeStock(i, j));
+//        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+//            logger.info("message : {}", e.getMessage());
+//        }
+//        return stocks;
+//    }
 }
 
 

@@ -10,12 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
     private WebDriver driver;
+    private List<Stock> stocks;
 
     @Value("${driver.path}")
     private String path;
@@ -28,14 +30,10 @@ public abstract class CommonSearch {
         options.addArguments("--headless");
         System.setProperty("webdriver.chrome.driver", path);
         driver = new ChromeDriver(options);
+        logger.info("첫번째 호출");
     }
 
     public void getStart(String url) {
-        logger.info("getStart method 실행");
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        System.setProperty("webdriver.chrome.driver", path);
-        driver = new ChromeDriver(options);
         driver.get(url);
         driver.manage().window().setPosition(new Point(0, 0));
         driver.manage().window().setSize(new Dimension(1360, 430));
@@ -63,12 +61,9 @@ public abstract class CommonSearch {
         return driver;
     }
 
-    public boolean checkDb(WebElement element) {
-        if (stockRepository.findAll().contains(stockRepository.findByName(getTitle(element)))) {
-            logger.info("DB에 {} 존재 ", getTitle(element));
+    public boolean checkDb(WebElement element, List<Stock> stocks) {
+        if (stocks.contains(getTitle(element)))
             return true;
-        }
-        logger.info("DB에 {} 존재하지 않음 ", getTitle(element));
         return false;
     }
 
@@ -76,22 +71,9 @@ public abstract class CommonSearch {
         return getDriver().findElements(By.cssSelector("#wrap .wBox:nth-child(" + partNumber  +") .nBox div:nth-child(3) > dl"));
     }
 
-    public Stock makeStock(int i, int j) {
-        WebElement element = getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[" + i + "]/div/div[3]/dl[" + j + "]"));
-        if (j % 10 == 0)
-            logger.info("{}part {}번째 data, title : {}",i, j, getTitle(element));
-
-//        if (checkDb(element))
-//            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
-        return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
-    }
-
-    public Stock making(WebElement element) {
-//        if (checkDb(element)) {
-//            logger.info("making db에 존재");
-//            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
-//        }
-        logger.info("making db에 존재안함");
+    public Stock making(WebElement element, List<Stock> stocks) {
+        if (checkDb(element, stocks))
+            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
         return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
     }
 
@@ -110,5 +92,9 @@ public abstract class CommonSearch {
 
     public List<String> getInfo(WebElement element) {
         return Arrays.asList(element.getText().split("\n"));
+    }
+
+    public List<Stock> getStocks() {
+        return stockRepository.findAll();
     }
 }

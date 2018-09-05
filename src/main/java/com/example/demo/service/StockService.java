@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,27 +59,27 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-//        for (int i = 1; i <= 4; i++)
-//            kospiInfo.part2(i);
-        kospiInfo.batchInsert();
+//        stockRepository.save(kospiInfo.part());
+        for (int i = 1; i <= 4;i ++)
+            kospiInfo.part2(i);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
-    public void update(String stockName) {
+    public void update(String stockName) throws IOException {
         long start =  System.currentTimeMillis();
         Stock stock = stockRepository.findByName(stockName);
-        kosdaqInfo.getUpdate(stock);
+        kosdaqInfo.update(stock);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
-    public void wholeUpdate() {
+    public void wholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i <= 20; i++)
-            kosdaqInfo.getUpdate(stockRepository.findOne((long)i));
+        for (int i = 1; i  <= stockRepository.findAll().size(); i++)
+            kospiInfo.update(stockRepository.findOne((long)i));
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }

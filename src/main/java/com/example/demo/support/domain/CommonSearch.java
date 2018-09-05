@@ -1,5 +1,6 @@
 package com.example.demo.support.domain;
 
+import com.example.demo.dao.Research;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import org.openqa.selenium.*;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,19 +41,12 @@ public abstract class CommonSearch {
         driver.manage().window().setSize(new Dimension(1360, 430));
     }
 
-    public Stock getUpdate(Stock original) {
-        getStart(original.getDetailUrl());
-        WebDriver driver = getDriver();
+    public Stock update(Stock original) throws IOException {
+        Research research = new Research(original.getDetailUrl());
         try {
-            WebElement element = driver.findElement(By.xpath("//*[@id=\"topWrap\"]/div[1]/ul[2]"));
-            String price = element.findElement(By.xpath(".//li[1]/em")).getText();
-            String changeMoney = element.findElement(By.xpath(".//li[2]/span")).getText();
-            Double changePercent = Double.valueOf(element.findElement(By.xpath(".//li[3]")).getText().substring(0, element.findElement(By.xpath(".//li[3]")).getText().length() -1));
-            String profit = driver.findElement(By.xpath("//*[@id=\"performanceCorp\"]/table/tbody/tr[5]/td[9]")).getText();
-            String salesMoney = driver.findElement(By.xpath("//*[@id=\"performanceCorp\"]/table/tbody/tr[4]/td[9]")).getText();
-            String total_cost = driver.findElement(By.xpath("//*[@id=\"stockContent\"]/ul[2]/li[2]/dl[2]/dd")).getText();
-            original.update(price, changeMoney, changePercent, profit, salesMoney, total_cost);
-        } catch (org.openqa.selenium.NoSuchElementException e) {
+            Double changePercent = Double.valueOf(research.getElements().get(2).substring(0, research.getElements().get(2).length()-1));
+            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost());
+        } catch (Exception e) {
             logger.info(e.getMessage());
         }
         return original;

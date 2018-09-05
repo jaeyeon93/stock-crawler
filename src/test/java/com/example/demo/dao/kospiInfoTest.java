@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -60,27 +61,16 @@ public class kospiInfoTest {
         assertThat(result, is(true));
     }
 
-//    @Test
-//    public void 주식확인() {
-//        WebElement element = kospiInfo.getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[202]"));
-//        logger.info("title : {}", kospiInfo.getTitle(element));
-//        assertThat(kospiInfo.getTitle(element), is("삼성전자"));
-//        boolean result = kospiInfo.checkDb(element);
-//        assertThat(result, is(true));
-//    }
-//
-//    @Test
-//    public void 주식존재하지않음() {
-//        WebElement element = kospiInfo.getDriver().findElement(By.xpath("//*[@id=\"wrap\"]/div[3]/div/div[3]/dl[203]"));
-//        logger.info("title : {}", kospiInfo.getTitle(element));
-//        boolean result = kospiInfo.checkDb(element);
-//        assertThat(result, is(false));
-//    }
-
     @Test
     public void updateTest() {
         Stock stock = stockService.findById(1);
         assertThat(stock.getName(), is("삼성전자"));
         stockService.update("삼성전자");
+    }
+
+    @Test
+    public void jsoupUpdate() throws IOException {
+        Stock stock = stockService.findById(1);
+        kospiInfo.jsoupUpdate(stock);
     }
 }

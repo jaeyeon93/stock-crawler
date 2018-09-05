@@ -41,7 +41,7 @@ public class KospiInfo extends CommonSearch {
         getStart(kospiUrl);
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 4; i++) {
+            for (int i = 1; i <= 2; i++) {
                 List<WebElement> elements = getElements(i);
                 List<Stock> originalStocks = stockRepository.findAll();
                 for (int j = 0; j < elements.size(); j++)
@@ -75,31 +75,5 @@ public class KospiInfo extends CommonSearch {
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
         stockRepository.save(stocks);
-    }
-
-    public List<Stock> batchInsert() {
-        long start = System.currentTimeMillis();
-        getStart(kospiUrl);
-        final List<Stock> stocks = new ArrayList<>();
-        try {
-            for (int i = 1; i <= 4; i++) {
-                List<WebElement> elements = getElements(i);
-                List<Stock> originalStocks = stockRepository.findAll();
-                for (int j = 0; j < elements.size(); j++) {
-                    stocks.add(making(elements.get(j), originalStocks));
-                    if (j % 20 == 0) {
-                        entityManager.flush();
-                        entityManager.clear();
-                    }
-                }
-            }
-        } catch (org.openqa.selenium.StaleElementReferenceException e) {
-            logger.info("message : {}", e.getMessage());
-        } catch (org.openqa.selenium.NoSuchElementException e) {
-            logger.info("message : {}", e.getMessage());
-        }
-        long end = System.currentTimeMillis();
-        logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
-        return stocks;
     }
 }

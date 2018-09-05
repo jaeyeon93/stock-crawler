@@ -69,7 +69,6 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.changeMoney = changeMoney;
         this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
-        logger.info("realData업데이트");
         return this;
     }
 
@@ -81,7 +80,6 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
-        logger.info("{} 업데이트 성공", name);
         return this;
     }
 

@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +20,12 @@ import java.util.List;
 @Service
 public class StockService {
     public static final Logger logger = LoggerFactory.getLogger(StockService.class);
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Value("${hibernate.jdbc.batch_size}")
+    private int batchSize;
 
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
@@ -60,8 +69,10 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        stockRepository.save(stockInfo.stockCrawling(kospiUrl));
-        stockRepository.save(stockInfo.stockCrawling(kosdaqUrl));
+//        stockRepository.save(stockInfo.stockCrawling(kospiUrl));
+//        stockRepository.save(stockInfo.stockCrawling(kosdaqUrl));
+        for (int i = 1; i <= 4;i ++)
+            stockInfo.partCrawing(i, kospiUrl);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
@@ -83,6 +94,7 @@ public class StockService {
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }
+
 
     public List<Stock> lowPercent() {
         return stockRepository.findAllByOrderByChangePercentAsc();

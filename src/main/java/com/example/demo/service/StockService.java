@@ -1,19 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.KosdaqInfo;
-import com.example.demo.dao.KospiInfo;
+import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -24,10 +22,13 @@ public class StockService {
     private StockRepository stockRepository;
 
     @Autowired
-    private KospiInfo kospiInfo;
+    private StockInfo stockInfo;
 
-    @Autowired
-    private KosdaqInfo kosdaqInfo;
+    @Value("${kosdaqUrl}")
+    private String kosdaqUrl;
+
+    @Value("${kospiUrl}")
+    private String kospiUrl;
 
     public List<Stock> findAll() {
         return stockRepository.findAll();
@@ -59,9 +60,8 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-//        stockRepository.save(kospiInfo.part());
-        for (int i = 1; i <= 4;i ++)
-            kospiInfo.part2(i);
+        stockRepository.save(stockInfo.stockCrawling(kospiUrl));
+        stockRepository.save(stockInfo.stockCrawling(kosdaqUrl));
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
@@ -70,7 +70,7 @@ public class StockService {
     public void update(String stockName) throws IOException {
         long start =  System.currentTimeMillis();
         Stock stock = stockRepository.findByName(stockName);
-        kosdaqInfo.update(stock);
+        stockInfo.update(stock);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
@@ -79,7 +79,7 @@ public class StockService {
     public void wholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
         for (int i = 1; i  <= stockRepository.findAll().size(); i++)
-            kospiInfo.update(stockRepository.findOne((long)i));
+            stockInfo.update(stockRepository.findOne((long)i));
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }

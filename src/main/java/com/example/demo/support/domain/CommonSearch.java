@@ -12,14 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
     private WebDriver driver;
-    private List<Stock> stocks;
 
     @Value("${driver.path}")
     private String path;
@@ -32,7 +30,6 @@ public abstract class CommonSearch {
         options.addArguments("--headless");
         System.setProperty("webdriver.chrome.driver", path);
         driver = new ChromeDriver(options);
-        logger.info("첫번째 호출");
     }
 
     public void getStart(String url) {
@@ -87,9 +84,5 @@ public abstract class CommonSearch {
 
     public List<String> getInfo(WebElement element) {
         return Arrays.asList(element.getText().split("\n"));
-    }
-
-    public List<Stock> getStocks() {
-        return stockRepository.findAll();
     }
 }

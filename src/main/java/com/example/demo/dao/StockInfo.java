@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -19,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class KospiInfo extends CommonSearch {
-    private static final Logger logger = LoggerFactory.getLogger(KospiInfo.class);
+public class StockInfo extends CommonSearch {
+    private static final Logger logger = LoggerFactory.getLogger(StockInfo.class);
 
     @Autowired
     EntityManager entityManager;
@@ -36,12 +35,12 @@ public class KospiInfo extends CommonSearch {
         super.init();
     }
 
-    public List<Stock> part() {
+    public List<Stock> stockCrawling(String url) {
         long start = System.currentTimeMillis();
-        getStart(kospiUrl);
+        getStart(url);
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 2; i++) {
+            for (int i = 1; i <= 4; i++) {
                 List<WebElement> elements = getElements(i);
                 List<Stock> originalStocks = stockRepository.findAll();
                 for (int j = 0; j < elements.size(); j++)
@@ -58,8 +57,8 @@ public class KospiInfo extends CommonSearch {
     }
 
     @Async("threadPoolTaskExecutor")
-    public void part2(int partNumber) throws Exception {
-        getStart(kospiUrl);
+    public void partCrawing(int partNumber, String url) throws Exception {
+        getStart(url);
         long start = System.currentTimeMillis();
         List<Stock> stocks = new ArrayList<>();
         try {

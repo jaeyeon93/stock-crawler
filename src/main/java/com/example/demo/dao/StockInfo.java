@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,11 @@ import java.util.List;
 public class StockInfo extends CommonSearch {
     private static final Logger logger = LoggerFactory.getLogger(StockInfo.class);
 
-    @Autowired
-    EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager em;
+
+    @Value("${hibernate.jdbc.batch_size}")
+    private int batchSize;
 
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
@@ -57,28 +61,7 @@ public class StockInfo extends CommonSearch {
         return stocks;
     }
 
-//    @Async("threadPoolTaskExecutor")
-//    public void partCrawing(int partNumber, String url) throws Exception {
-//        getStart(url);
-//        long start = System.currentTimeMillis();
-//        List<Stock> stocks = new ArrayList<>();
-//        try {
-//            List<WebElement> elements = getElements(partNumber);
-//            List<Stock> originalStocks = stockRepository.findAll();
-//            for (int i = 0; i < elements.size(); i++)
-//                stocks.add(making(elements.get(i), originalStocks));
-//        } catch (org.openqa.selenium.StaleElementReferenceException e) {
-//            logger.info("message : {}", e.getMessage());
-//        } catch (org.openqa.selenium.NoSuchElementException e) {
-//            logger.info("message : {}", e.getMessage());
-//        }
-//        long end = System.currentTimeMillis();
-//        logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
-//        stockRepository.save(stocks);
-//    }
-
     @Async("threadPoolTaskExecutor")
-    @Transactional
     public void partCrawing(int partNumber, String url) throws Exception {
         getStart(url);
         long start = System.currentTimeMillis();
@@ -86,16 +69,38 @@ public class StockInfo extends CommonSearch {
         try {
             List<WebElement> elements = getElements(partNumber);
             List<Stock> originalStocks = stockRepository.findAll();
-            for (int i = 0; i < elements.size(); i++) {
+            for (int i = 0; i < elements.size(); i++)
                 stocks.add(making(elements.get(i), originalStocks));
-            }
-        } catch (org.openqa.selenium.StaleElementReferenceException e) {
-            logger.info("message : {}", e.getMessage());
-        } catch (org.openqa.selenium.NoSuchElementException e) {
-            logger.info("message : {}", e.getMessage());
+        } catch (Exception e) {
+            logger.info("{}", e.getMessage());
         }
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
         stockRepository.save(stocks);
     }
+
+//    @Async("threadPoolTaskExecutor")
+//    @Transactional
+//    public void partCrawing(int partNumber, String url) throws Exception {
+//        getStart(url);
+//        long start = System.currentTimeMillis();
+//        try {
+//            List<WebElement> elements = getElements(partNumber);
+//            List<Stock> originalStocks = stockRepository.findAll();
+//            for (int i = 0; i < elements.size(); i++) {
+//                Stock stock = making(elements.get(i), originalStocks);
+//                em.persist(stock);
+//                if (i % batchSize == 0) {
+//                    em.flush();
+//                    em.clear();
+//                }
+//            }
+//        } catch (Exception e) {
+//            logger.info("{}", e.getMessage());
+//        }
+//        long end = System.currentTimeMillis();
+//        logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
+//        em.flush();
+//        em.clear();
+//    }
 }

@@ -6,11 +6,15 @@ import com.example.demo.domain.StockRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -22,14 +26,23 @@ public abstract class CommonSearch {
     @Value("${driver.path}")
     private String path;
 
+    @Value("${phanthomjs.path}")
+    private String phantomPath;
+
     @Autowired
     private StockRepository stockRepository;
 
-    public void init() {
-        ChromeOptions options = new ChromeOptions();
+//    public void init() {
+//        ChromeOptions options = new ChromeOptions();
 //        options.addArguments("--headless");
-        System.setProperty("webdriver.chrome.driver", path);
-        driver = new ChromeDriver(options);
+//        System.setProperty("webdriver.chrome.driver", path);
+//        driver = new ChromeDriver(options);
+//    }
+
+    public void init() {
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomPath);
+        driver = new PhantomJSDriver(caps);
     }
 
     public void getStart(String url) {

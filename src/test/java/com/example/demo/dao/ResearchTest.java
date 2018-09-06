@@ -18,6 +18,12 @@ public class ResearchTest {
     }
 
     @Test
+    public void antherSite() throws Exception {
+        research = new Research("http://finance.daum.net/quote/all.daum?type=S&stype=P");
+        logger.info("{}", research.html());
+    }
+
+    @Test
     public void getElements() throws Exception {
         List<String> elements = research.getElements();
         for (String s : elements)

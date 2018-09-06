@@ -27,7 +27,7 @@ public abstract class CommonSearch {
 
     public void init() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+//        options.addArguments("--headless");
         System.setProperty("webdriver.chrome.driver", path);
         driver = new ChromeDriver(options);
     }

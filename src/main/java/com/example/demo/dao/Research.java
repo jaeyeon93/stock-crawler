@@ -34,4 +34,8 @@ public class Research  {
     public String getProfit() {
         return doc.select("#performanceCorp > table > tbody > tr:nth-child(5) > td:nth-child(9)").text();
     }
+
+    public String html() {
+        return doc.html();
+    }
 }

@@ -1,22 +1,22 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.Research;
-import com.example.demo.dao.KospiInfo;
+import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
-import com.google.common.util.concurrent.Futures;
-import org.openqa.selenium.WebElement;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StockService {
@@ -26,10 +26,13 @@ public class StockService {
     private StockRepository stockRepository;
 
     @Autowired
-    private Research research;
+    private StockInfo stockInfo;
 
-    @Autowired
-    private KospiInfo kospiInfo;
+    @Value("${kosdaqUrl}")
+    private String kosdaqUrl;
+
+    @Value("${kospiUrl}")
+    private String kospiUrl;
 
     public List<Stock> findAll() {
         return stockRepository.findAll();
@@ -61,28 +64,47 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        for (int i = 1; i <= 4; i++)
-            kospiInfo.part(i);
-        long end = System.currentTimeMillis();
-        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
-    }
-
-    @Transactional
-    public void update(String stockName) {
-        long start =  System.currentTimeMillis();
-        Stock stock = stockRepository.findByName(stockName);
-        research.update(stock);
-        long end = System.currentTimeMillis();
-        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
-    }
-
-    @Transactional
-    public void wholeUpdate() {
-        long start =  System.currentTimeMillis();
-        for (int i = 1; i <= 50; i++) {
-            research.update(stockRepository.findOne((long)i));
+        for (int i = 1; i <= 2;i ++) {
+            stockInfo.partCrawing(i, kospiUrl);
+//            stockInfo.partCrawing(i, kosdaqUrl);
         }
         long end = System.currentTimeMillis();
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
+    }
+
+    @Transactional
+    public void update(String stockName) throws IOException {
+        long start =  System.currentTimeMillis();
+        Stock stock = stockRepository.findByName(stockName);
+        stockInfo.update(stock);
+        long end = System.currentTimeMillis();
+        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
+    }
+
+    @Transactional
+    public void wholeUpdate() throws IOException {
+        long start =  System.currentTimeMillis();
+        List<Stock> stocks = stockRepository.findAll();
+        for (int i = 1; i  < stocks.size(); i++)
+            stockInfo.update(stocks.get(i));
+        long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
+    }
+
+
+    public List<Stock> lowPercent() {
+        return stockRepository.findAllByOrderByChangePercentAsc();
+    }
+
+    public List<Stock> lowPrice() {
+        return stockRepository.findAllByOrderByPriceAsc();
+    }
+
+    public List<Stock> topPercent() {
+        return stockRepository.findAllByOrderByChangePercentDesc();
+    }
+
+    public List<Stock> topPrice() {
+        return stockRepository.findAllByOrderByPriceDesc();
     }
 }

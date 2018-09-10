@@ -22,7 +22,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private String price;
+    private Integer price;
 
     @Column
     @JsonProperty
@@ -38,7 +38,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private String changePercent;
+    private Double changePercent;
 
     @Column
     @JsonProperty
@@ -48,40 +48,48 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
+        logger.info("stock 생성 : {}", toString());
     }
 
     public Stock(long id, String name, String price, String profit, String totalCost) {
         super(id);
         this.name = name.toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.profit = profit;
         this.totalCost = totalCost.replaceAll(" ", "");
     }
 
     public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
-        logger.info("realData업데이트");
         return this;
     }
 
-    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost) {
+    public Stock update(String price, String changeMoney, Double changePercent, String profit, String salesMoney, String totalCost) {
         this.name = getName().toUpperCase();
-        this.price = price;
+        this.price = changeInt(price);
         this.changeMoney = changeMoney;
         this.changePercent = changePercent;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
-        logger.info("{} 업데이트 성공", name);
+        logger.info("{} updated", name);
         return this;
+    }
+
+    public Integer changeInt(String number) {
+        return Integer.parseInt(number.replace(",", ""));
+    }
+
+    public Double changeDouble(String percent) {
+        return Double.parseDouble(percent.replace("%",""));
     }
 
     public String getName() {
@@ -92,7 +100,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return salesMoney;
     }
 
-    public String getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -108,7 +116,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return changeMoney;
     }
 
-    public String getChangePercent() {
+    public Double getChangePercent() {
         return changePercent;
     }
 

@@ -2,7 +2,6 @@ package com.example.demo.web;
 
 import com.example.demo.domain.Stock;
 import com.example.demo.service.StockService;
-import org.apache.xpath.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -49,5 +48,25 @@ public class StockController {
     public String wholeUpdate() throws Exception {
         stockService.wholeUpdate();
         return "redirect:/stock";
+    }
+
+    @GetMapping("/lowPrice")
+    public @ResponseBody List<Stock> lowPrice() throws Exception {
+        return stockService.lowPrice();
+    }
+
+    @GetMapping("/lowPercent")
+    public @ResponseBody List<Stock> lowPercent() throws Exception {
+        return stockService.lowPercent();
+    }
+
+    @GetMapping("/topPrice")
+    public @ResponseBody List<Stock> topPrice() throws Exception {
+        return stockService.topPrice();
+    }
+
+    @GetMapping("/topPercent")
+    public @ResponseBody List<Stock> topPercent() throws Exception {
+        return stockService.topPercent();
     }
 }

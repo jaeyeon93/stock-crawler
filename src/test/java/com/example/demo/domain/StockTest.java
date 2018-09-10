@@ -35,6 +35,7 @@ public class StockTest {
     @Test
     public void currentTime() throws Exception {
         stock = new Stock(1L, "naver","760,000", "1000","1000");
+        logger.info("생성된 날짜 : {}", stock.getCreateDate());
         logger.info("현재시간 : {}", LocalDateTime.now().getDayOfYear());
     }
 

@@ -59,7 +59,7 @@ public class StockInfo extends CommonSearch {
         try {
             List<WebElement> elements = getElements(partNumber);
             List<Stock> originalStocks = stockRepository.findAll();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < elements.size(); i++)
                 stocks.add(making(elements.get(i), originalStocks));
         } catch (Exception e) {
             logger.info("{}", e.getMessage());
@@ -67,5 +67,10 @@ public class StockInfo extends CommonSearch {
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
         stockRepository.save(stocks);
+    }
+
+    public void saveBatch(List<Stock> stocks) {
+        final int batchSize = 20;
+
     }
 }

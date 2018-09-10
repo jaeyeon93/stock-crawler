@@ -32,13 +32,6 @@ public abstract class CommonSearch {
     @Autowired
     private StockRepository stockRepository;
 
-//    public void init() {
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless");
-//        System.setProperty("webdriver.chrome.driver", path);
-//        driver = new ChromeDriver(options);
-//    }
-
     public void init() {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomPath);

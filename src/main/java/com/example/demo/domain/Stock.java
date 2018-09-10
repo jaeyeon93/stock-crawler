@@ -80,6 +80,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
+        logger.info("{} updated", name);
         return this;
     }
 

@@ -1,0 +1,72 @@
+package com.jimmy.crawler.web;
+
+import com.jimmy.crawler.domain.Stock;
+import com.jimmy.crawler.service.StockService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@Controller
+@RequestMapping("/stock")
+public class StockController {
+    public static final Logger logger = LoggerFactory.getLogger(StockController.class);
+
+    @Resource(name = "stockService")
+    private StockService stockService;
+
+    @GetMapping("")
+    public @ResponseBody List<Stock> list(Model model) {
+        return stockService.findAll();
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable long id) throws Exception {
+        logger.info("delete method called");
+        stockService.delete(id);
+        return "/redirect:/stock";
+    }
+
+    @GetMapping("/all")
+    public String allStock() throws Exception {
+        stockService.addAll();
+        return "redirect:/stock";
+    }
+
+    @GetMapping("/{stockName}")
+    public String update(@PathVariable String stockName) throws Exception {
+        logger.info("update method called on controller");
+        stockService.update(stockName);
+        return "redirect:/stock";
+    }
+
+    @GetMapping("/update")
+    public String wholeUpdate() throws Exception {
+        stockService.wholeUpdate();
+        return "redirect:/stock";
+    }
+
+    @GetMapping("/lowPrice")
+    public @ResponseBody List<Stock> lowPrice() throws Exception {
+        return stockService.lowPrice();
+    }
+
+    @GetMapping("/lowPercent")
+    public @ResponseBody List<Stock> lowPercent() throws Exception {
+        return stockService.lowPercent();
+    }
+
+    @GetMapping("/topPrice")
+    public @ResponseBody List<Stock> topPrice() throws Exception {
+        return stockService.topPrice();
+    }
+
+    @GetMapping("/topPercent")
+    public @ResponseBody List<Stock> topPercent() throws Exception {
+        return stockService.topPercent();
+    }
+}

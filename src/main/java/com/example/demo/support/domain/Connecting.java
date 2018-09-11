@@ -13,7 +13,8 @@ public class Connecting {
         public Connecting() {
             try{
                 Class.forName("com.mysql.jdbc.Driver").newInstance(); // JDBC 드라이버 로드
-                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock?characterEncoding=UTF-8&serverTimezone=UTC", "jimmy", "12345");//URL,UID,PWD
+                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stock?characterEncoding=UTF-8&serverTimezone=UTC", "jimmy", "12345");
+                //URL,UID,PWD
                 if(conn==null){
                     System.out.println("연결실패");
                 }else{

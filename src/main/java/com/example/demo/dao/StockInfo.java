@@ -35,10 +35,10 @@ public class StockInfo extends CommonSearch {
         getStart(url);
         List<Stock> stocks = new ArrayList<>();
         try {
-            for (int i = 1; i <= 4; i++) {
+            for (int i = 1; i <= 1; i++) {
                 List<WebElement> elements = getElements(i);
                 List<Stock> originalStocks = stockRepository.findAll();
-                for (int j = 0; j < elements.size(); j++)
+                for (int j = 0; j < 50; j++)
                     stocks.add(making(elements.get(j), originalStocks));
             }
         } catch (org.openqa.selenium.StaleElementReferenceException e) {

@@ -38,6 +38,5 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     compile group: 'com.codeborne', name: 'phantomjsdriver', version: '1.4.3'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
     compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.2.15')
 }

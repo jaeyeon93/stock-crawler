@@ -64,10 +64,4 @@ public class kospiInfoTest {
         boolean result =stockService.checkMakingStock("삼성전자");
         assertThat(result, is(true));
     }
-
-    @Test
-    public void crawing() throws Exception {
-        stockInfo.partCrawing(1,"http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
-        stockService.wholeUpdate();
-    }
 }

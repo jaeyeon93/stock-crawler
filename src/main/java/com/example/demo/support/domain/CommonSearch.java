@@ -38,6 +38,7 @@ public abstract class CommonSearch {
         driver.get(url);
         driver.manage().window().setPosition(new Point(0, 0));
         driver.manage().window().setSize(new Dimension(1360, 430));
+
     }
 
     public Stock update(Stock original) throws IOException {

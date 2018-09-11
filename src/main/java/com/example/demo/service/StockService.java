@@ -64,11 +64,10 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-//        for (int i = 1; i <= 4;i ++) {
-//            stockInfo.partCrawing(i, kospiUrl);
-//            stockInfo.partCrawing(i, kosdaqUrl);
-//        }
-        stockInfo.stockCrawling(kospiUrl);
+        for (int i = 1; i <= 4; i++) {
+            stockInfo.bulkInsert(1, kospiUrl);
+            stockInfo.bulkInsert(1, kosdaqUrl);
+        }
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }

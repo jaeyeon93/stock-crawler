@@ -15,17 +15,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class StockService {
     public static final Logger logger = LoggerFactory.getLogger(StockService.class);
-
-    @PersistenceContext
-    private EntityManager em;
-
-    @Value("${hibernate.jdbc.batch_size}")
-    private int batchSize;
 
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
@@ -66,14 +61,12 @@ public class StockService {
         stockRepository.delete(id);
     }
 
-//    @Transactional
+    @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-//        stockRepository.save(stockInfo.stockCrawling(kospiUrl));
-//        stockRepository.save(stockInfo.stockCrawling(kosdaqUrl));
-        for (int i = 1; i <= 4;i ++) {
+        for (int i = 1; i <= 2;i ++) {
             stockInfo.partCrawing(i, kospiUrl);
-            stockInfo.partCrawing(i, kosdaqUrl);
+//            stockInfo.partCrawing(i, kosdaqUrl);
         }
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
@@ -91,8 +84,9 @@ public class StockService {
     @Transactional
     public void wholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
-        for (int i = 1; i  <= stockRepository.findAll().size(); i++)
-            stockInfo.update(stockRepository.findOne((long)i));
+        List<Stock> stocks = stockRepository.findAll();
+        for (int i = 1; i  < stocks.size(); i++)
+            stockInfo.update(stocks.get(i));
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }

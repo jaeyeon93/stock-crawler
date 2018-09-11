@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -41,6 +42,12 @@ public class kospiInfoTest {
     }
 
     @Test
+    public void updateTest() throws IOException {
+        Stock stock = stockService.findByName("삼성전자");
+        stockInfo.update(stock);
+    }
+
+    @Test
     public void partTest() throws Exception {
         stockInfo.stockCrawling("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
     }
@@ -56,5 +63,11 @@ public class kospiInfoTest {
     public void db에주식이있으면true() {
         boolean result =stockService.checkMakingStock("삼성전자");
         assertThat(result, is(true));
+    }
+
+    @Test
+    public void crawing() throws Exception {
+        stockInfo.partCrawing(1,"http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
+        stockService.wholeUpdate();
     }
 }

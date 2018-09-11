@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,41 +28,12 @@ public class StockInfo extends CommonSearch {
     @PersistenceContext
     private EntityManager em;
 
-    @Value("${kospiUrl}")
-    private String kospiUrl;
-
     @Value("${batch.size}")
     private Integer batchSize;
 
     @PostConstruct
     public void init() {
         super.init();
-    }
-
-    @Transactional
-    public void stockCrawling(String url) {
-        long start = System.currentTimeMillis();
-        getStart(url);
-        try {
-            for (int i = 1; i <= 2; i++) {
-                List<WebElement> elements = getElements(i);
-                List<Stock> originalStocks = stockRepository.findAll();
-                for (int j = 0; j < elements.size(); j++) {
-                    em.persist(making(elements.get(j), originalStocks));
-                    if (j % batchSize == 0) {
-                        logger.info("{}part {}번째 insert", i, j);
-                        em.flush();
-                        em.clear();
-                    }
-                }
-                em.flush();
-                em.clear();
-            }
-        } catch (Exception e) {
-            logger.info("message : {}", e.getMessage());
-        }
-        long end = System.currentTimeMillis();
-        logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
     }
 
     @Async("threadPoolTaskExecutor")
@@ -71,7 +45,6 @@ public class StockInfo extends CommonSearch {
             List<WebElement> elements = getElements(partNumber);
             List<Stock> originalStocks = stockRepository.findAll();
             for (int i = 0; i < elements.size(); i++) {
-                logger.info("{} size is {}", partNumber, elements.size());
                 em.persist(making(elements.get(i), originalStocks));
                 if (i % batchSize == 0) {
                     logger.info("batch i : {}", i);
@@ -82,7 +55,7 @@ public class StockInfo extends CommonSearch {
             em.flush();
             em.clear();
         } catch (Exception e) {
-            logger.info("error {}", e.getMessage());
+            logger.info("error occur : {}", e.getMessage());
         }
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);

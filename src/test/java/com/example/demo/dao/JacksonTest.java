@@ -63,16 +63,6 @@ public class JacksonTest {
     }
 
     @Test
-    public void stringTokeneizeTest() {
-        StringTokenizer st = new StringTokenizer(rawData, "} ,");
-        while (st.hasMoreTokens()) {
-//            System.out.println(st.nextToken());
-            System.out.println(st.nextToken() + "}");
-            System.out.println("다음");
-        }
-    }
-
-    @Test
     public void jsonParserTest() {
         String test = "{code:\"095570\",name :\"AJ네트웍스\",cost :\"6,800\",updn :\"▲310\",rate :\"+4.78%\"}";
         JsonParser jsonParser = new JsonParser();

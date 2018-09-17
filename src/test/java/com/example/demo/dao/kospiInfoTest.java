@@ -25,29 +25,12 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class kospiInfoTest {
     private static final Logger logger = LoggerFactory.getLogger(kospiInfoTest.class);
-    private String kospiUrl = "http://finance.daum.net/quote/allpanel.daum?stype=P&type=S";
+
     @Autowired
     private StockInfo stockInfo;
 
     @Autowired
     private StockService stockService;
-
-    @Before
-    public void setUp() {
-        stockInfo.getStart("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
-    }
-
-    @Test
-    public void 소스정보() {
-        String result = stockInfo.getHtml("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
-        logger.info("result : {}", result);
-    }
-
-    @Test
-    public void 리스트갯엘리먼트() throws Exception {
-        stockService.addAll();
-//        List<WebElement> list = stockInfo.getElements(1);
-    }
 
     @Test
     public void updateTest() throws IOException {

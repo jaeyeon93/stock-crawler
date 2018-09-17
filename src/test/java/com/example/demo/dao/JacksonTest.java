@@ -35,13 +35,16 @@ public class JacksonTest {
         List<Stock> stocks = new ArrayList<>();
         logger.info("{}", rawData);
         String [] result = rawData.split("\\s,\\s");
-        for (int i = 0; i < 10; i++) {
+        long start = System.currentTimeMillis();
+        logger.info("배열의 길이는 : {}", result.length);
+        for (int i = 0; i < result.length; i++) {
             JsonParser parser = new JsonParser();
             JsonObject object = (JsonObject)parser.parse(result[i]);
             stocks.add(new Stock(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString())));
         }
-
         System.out.println(stocks);
+        long end = System.currentTimeMillis();
+        logger.info("총 걸린 시간 : {}", (end - start)/1000);
     }
 
     @Test

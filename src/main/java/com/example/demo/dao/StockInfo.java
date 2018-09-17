@@ -3,6 +3,8 @@ package com.example.demo.dao;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import com.example.demo.support.domain.CommonSearch;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +17,14 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class StockInfo extends CommonSearch {
     private static final Logger logger = LoggerFactory.getLogger(StockInfo.class);
-    private List<WebElement> infos;
+    private JsonParser parser;
 
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
@@ -65,11 +68,27 @@ public class StockInfo extends CommonSearch {
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
     }
 
-    public String getHtml(String url) {
-        getStart(url);
-        String sources = getDriver().getPageSource();
-        logger.info("sources : {}", sources);
-        return sources;
+    public List<Stock> jsonMaking(String url) throws IOException {
+        List<Stock> stocks = new ArrayList<>();
+        String body = new Research(url).getBody();
+        parser = new JsonParser();
+        String [] infos = splitBody(body);
+        for (int i = 0; i < infos.length; i++)
+            stocks.add(makingStockUsingJson(infos[i], parser));
+        return stocks;
+    }
+
+    public String [] splitBody(String body) {
+        return body.split("\\s,\\s");
+    }
+
+    public Stock makingStockUsingJson(String info, JsonParser parser) {
+        JsonObject object = (JsonObject)parser.parse(info);
+        return new Stock(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
+    }
+
+    public String getUrl(String code) {
+        return "http://finance.daum.net/item/main.daum?code="+code;
     }
 }
 

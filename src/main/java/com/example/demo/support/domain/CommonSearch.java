@@ -6,6 +6,8 @@ import com.example.demo.domain.StockRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -18,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
@@ -32,16 +35,25 @@ public abstract class CommonSearch {
     @Autowired
     private StockRepository stockRepository;
 
+//    public void init() {
+//        DesiredCapabilities caps = new DesiredCapabilities();
+//        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomPath);
+//        driver = new PhantomJSDriver(caps);
+//    }
+
     public void init() {
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomPath);
-        driver = new PhantomJSDriver(caps);
+        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless");
+        System.setProperty("webdriver.chrome.driver", path);
+        driver = new ChromeDriver(options);
     }
 
     public void getStart(String url) {
         driver.get(url);
         driver.manage().window().setPosition(new Point(0, 0));
         driver.manage().window().setSize(new Dimension(1360, 430));
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//        js.executeScript("return window.stop()");
     }
 
     public Stock update(Stock original) throws IOException {

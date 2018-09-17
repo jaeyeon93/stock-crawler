@@ -24,6 +24,13 @@ public class ResearchTest {
     }
 
     @Test
+    public void apiTest() throws Exception {
+        research = new Research("http://finance.daum.net/xml/xmlallpanel.daum?stype=P&type=S");
+        String result = research.getBody();
+        System.out.println(result);
+    }
+
+    @Test
     public void getElements() throws Exception {
         List<String> elements = research.getElements();
         for (String s : elements)

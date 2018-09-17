@@ -4,6 +4,7 @@ import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import org.hibernate.Session;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +65,8 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        for (int i = 1; i <= 4; i++) {
-            stockInfo.bulkInsert(1, kospiUrl);
-            stockInfo.bulkInsert(1, kosdaqUrl);
-        }
+        for (int i = 1; i <= 4; i++)
+            stockInfo.bulkInsert(i, kospiUrl);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }

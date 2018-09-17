@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class StockInfo extends CommonSearch {
     private static final Logger logger = LoggerFactory.getLogger(StockInfo.class);
+    private List<WebElement> infos;
 
     @Resource(name = "stockRepository")
     private StockRepository stockRepository;
@@ -38,11 +39,12 @@ public class StockInfo extends CommonSearch {
 
     @Async("threadPoolTaskExecutor")
     @Transactional
-    public void bulkInsert(int partNumber, String url) throws Exception {
+    public void bulkInsert(int partNumber, String url) {
         getStart(url);
         long start = System.currentTimeMillis();
         try {
             List<WebElement> elements = getElements(partNumber);
+            logger.info("elements size : {}", elements.size());
             List<Stock> originalStocks = stockRepository.findAll();
             for (int i = 0; i < elements.size(); i++) {
                 em.persist(making(elements.get(i), originalStocks));
@@ -54,11 +56,20 @@ public class StockInfo extends CommonSearch {
             }
             em.flush();
             em.clear();
+        } catch (StaleElementReferenceException e) {
+            logger.info("staleElement error occur : {}", e.getMessage());
         } catch (Exception e) {
             logger.info("error occur : {}", e.getMessage());
         }
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start) / 1000.0);
+    }
+
+    public String getHtml(String url) {
+        getStart(url);
+        String sources = getDriver().getPageSource();
+        logger.info("sources : {}", sources);
+        return sources;
     }
 }
 

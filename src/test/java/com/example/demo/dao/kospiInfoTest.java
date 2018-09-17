@@ -5,12 +5,16 @@ import com.example.demo.service.StockService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,7 +25,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class kospiInfoTest {
     private static final Logger logger = LoggerFactory.getLogger(kospiInfoTest.class);
-
+    private String kospiUrl = "http://finance.daum.net/quote/allpanel.daum?stype=P&type=S";
     @Autowired
     private StockInfo stockInfo;
 
@@ -34,22 +38,21 @@ public class kospiInfoTest {
     }
 
     @Test
-    public void 크롤링() throws Exception {
-        long start = System.currentTimeMillis();
+    public void 소스정보() {
+        String result = stockInfo.getHtml("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
+        logger.info("result : {}", result);
+    }
+
+    @Test
+    public void 리스트갯엘리먼트() throws Exception {
         stockService.addAll();
-        long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
+//        List<WebElement> list = stockInfo.getElements(1);
     }
 
     @Test
     public void updateTest() throws IOException {
         Stock stock = stockService.findByName("삼성전자");
         stockInfo.update(stock);
-    }
-
-    @Test
-    public void partTest() throws Exception {
-        stockInfo.stockCrawling("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
     }
 
     @Test
@@ -63,11 +66,5 @@ public class kospiInfoTest {
     public void db에주식이있으면true() {
         boolean result =stockService.checkMakingStock("삼성전자");
         assertThat(result, is(true));
-    }
-
-    @Test
-    public void crawing() throws Exception {
-        stockInfo.partCrawing(1,"http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
-        stockService.wholeUpdate();
     }
 }

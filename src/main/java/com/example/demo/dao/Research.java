@@ -35,6 +35,12 @@ public class Research  {
         return doc.select("#performanceCorp > table > tbody > tr:nth-child(5) > td:nth-child(9)").text();
     }
 
+    public String getBody() {
+        int start = doc.body().text().indexOf("[");
+        int end = doc.body().text().indexOf("]");
+        return doc.body().text().substring(start+1, end).trim();
+    }
+
     public String html() {
         return doc.html();
     }

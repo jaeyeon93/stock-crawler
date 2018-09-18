@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
     Stock findByName(String name);
-    List<Stock> findAllByOrderByPriceDesc();
-    List<Stock> findAllByOrderByChangePercentDesc();
-    List<Stock> findAllByOrderByChangePercentAsc();
-    List<Stock> findAllByOrderByPriceAsc();
+    List<Stock> findAllByOrderByCostDesc();
+    List<Stock> findAllByOrderByRateDesc();
+    List<Stock> findAllByOrderByRateAsc();
+    List<Stock> findAllByOrderByCostAsc();
 }

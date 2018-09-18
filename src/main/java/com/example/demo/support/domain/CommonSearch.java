@@ -46,11 +46,11 @@ public abstract class CommonSearch {
         Research research = new Research(original.getCode());
         try {
             String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
-            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
+            original.toStock().update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
         } catch (Exception e) {
             logger.info("에러 발생 {}", e.getMessage());
         }
-        return original.toUpdate();
+        return original.toStock();
     }
 
     public Map<String, Stock> getMap(List<Stock> stocks) {

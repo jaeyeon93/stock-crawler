@@ -95,19 +95,19 @@ public class StockService {
 
 
     public List<Stock> lowPercent() {
-        return stockRepository.findAllByOrderByChangePercentAsc();
+        return stockRepository.findAllByOrderByRateAsc();
     }
 
     public List<Stock> lowPrice() {
-        return stockRepository.findAllByOrderByPriceAsc();
+        return stockRepository.findAllByOrderByCostAsc();
     }
 
     public List<Stock> topPercent() {
-        return stockRepository.findAllByOrderByChangePercentDesc();
+        return stockRepository.findAllByOrderByRateDesc();
     }
 
     public List<Stock> topPrice() {
-        return stockRepository.findAllByOrderByPriceDesc();
+        return stockRepository.findAllByOrderByCostDesc();
     }
 }
 

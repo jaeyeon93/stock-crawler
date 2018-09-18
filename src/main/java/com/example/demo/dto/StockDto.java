@@ -51,18 +51,18 @@ public class StockDto {
         return this;
     }
 
-    public StockDto update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
-        this.name = getName().toUpperCase();
-        this.cost = price;
-        this.updn = changeMoney;
-        this.rate = changePercent;
-        this.profit = profit;
-        this.salesMoney = salesMoney;
-        this.totalCost = totalCost;
-        this.code = detailUrl;
-        logger.info("{} updated", toString());
-        return this;
-    }
+//    public StockDto update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
+//        this.name = getName().toUpperCase();
+//        this.cost = price;
+//        this.updn = changeMoney;
+//        this.rate = changePercent;
+//        this.profit = profit;
+//        this.salesMoney = salesMoney;
+//        this.totalCost = totalCost;
+//        this.code = detailUrl;
+//        logger.info("{} updated", toString());
+//        return this;
+//    }
 
     public Integer changeInt(String number) {
         return Integer.parseInt(number.replace(",", ""));
@@ -82,9 +82,9 @@ public class StockDto {
         return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), getUrl(this.code));
     }
 
-    public Stock toUpdate() {
-        return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), this.profit, this.salesMoney, this.totalCost, this.code);
-    }
+//    public Stock toUpdate() {
+//        return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), this.profit, this.salesMoney, this.totalCost, this.code);
+//    }
 
     public String getUrl(String code) {
         return "http://finance.daum.net/item/main.daum?code="+code;

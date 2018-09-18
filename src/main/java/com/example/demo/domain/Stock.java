@@ -23,7 +23,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private Integer price;
+    private Integer cost;
 
     @Column
     @JsonProperty
@@ -35,11 +35,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private Integer changeMoney;
+    private Integer updn;
 
     @Column
     @JsonProperty
-    private Double changePercent;
+    private Double rate;
 
     @Column
     @JsonProperty
@@ -47,28 +47,30 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Stock() {}
 
-    public Stock(String name, Integer price, Integer changeMoney, Double changePercent, String detailUrl) {
+    public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = price;
-        this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.cost = cost;
+        this.updn = updn;
+        this.rate = rate;
         this.detailUrl = detailUrl;
         logger.info("stock 생성 : {}", toString());
     }
 
-    public Stock(String name, Integer price, Integer changeMoney, Double changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
-        this.name = name;
-        this.price = price;
-        this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
+        this.name = getName().toUpperCase();
+        this.cost = cost;
+        this.updn = updn;
+        this.rate = rate;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
         this.detailUrl = detailUrl;
+        logger.info("{} updated", toString());
+        return this;
     }
 
     public StockDto toStockDto() {
-        return new StockDto(this.name, String.valueOf(price), String.valueOf(this.changeMoney), String.valueOf(this.changePercent), this.detailUrl);
+        return new StockDto(this.name, String.valueOf(cost), String.valueOf(this.updn), String.valueOf(this.rate), this.detailUrl);
     }
 
     public String getName() {
@@ -79,8 +81,8 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return salesMoney;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getCost() {
+        return cost;
     }
 
     public String getProfit() {
@@ -91,12 +93,12 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return totalCost;
     }
 
-    public Integer getChangeMoney() {
-        return changeMoney;
+    public Integer getUpdn() {
+        return updn;
     }
 
-    public Double getChangePercent() {
-        return changePercent;
+    public Double getRate() {
+        return rate;
     }
 
     public String getDetailUrl() {
@@ -113,11 +115,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return "Stock{" +
                 "name='" + name + '\'' +
                 ", salesMoney='" + salesMoney + '\'' +
-                ", price='" + price + '\'' +
+                ", cost='" + cost + '\'' +
                 ", profit='" + profit + '\'' +
                 ", totalCost='" + totalCost + '\'' +
-                ", changeMoney='" + changeMoney + '\'' +
-                ", changePrice='" + changePercent + '\'' +
+                ", updn='" + updn + '\'' +
+                ", changePrice='" + rate + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }

@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.AbstractEntity;
 import com.example.demo.support.domain.UrlGeneratable;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,48 +47,28 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Stock() {}
 
-    public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
+    public Stock(String name, Integer price, Integer changeMoney, Double changePercent, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changePrice(changeMoney);
-        this.changePercent = changeDouble(changePercent);
+        this.price = price;
+        this.changeMoney = changeMoney;
+        this.changePercent = changePercent;
         this.detailUrl = detailUrl;
         logger.info("stock 생성 : {}", toString());
     }
 
-    public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
-        this.name = name.toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changePrice(changeMoney);
-        this.changePercent = changeDouble(changePercent);
-        this.detailUrl = detailUrl;
-        return this;
-    }
-
-    public Stock update(String price, String changeMoney, Double changePercent, String profit, String salesMoney, String totalCost) {
-        this.name = getName().toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changePrice(changeMoney);
+    public Stock(String name, Integer price, Integer changeMoney, Double changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
+        this.name = name;
+        this.price = price;
+        this.changeMoney = changeMoney;
         this.changePercent = changePercent;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
-        logger.info("{} updated", name);
-        return this;
+        this.detailUrl = detailUrl;
     }
 
-    public Integer changeInt(String number) {
-        return Integer.parseInt(number.replace(",", ""));
-    }
-
-    public Double changeDouble(String percent) {
-        return Double.parseDouble(percent.replace("%",""));
-    }
-
-    public Integer changePrice(String changeMoney) {
-        if (changeMoney.contains("▼"))
-            return (Integer.parseInt(changeMoney.replace("▼", "").replace(",", "").trim()) * -1);
-        return Integer.parseInt(changeMoney.replace("▲", "").replace(",","").trim());
+    public StockDto toStockDto() {
+        return new StockDto(this.name, this.price, this.changeMoney, this.changePercent, this.detailUrl);
     }
 
     public String getName() {

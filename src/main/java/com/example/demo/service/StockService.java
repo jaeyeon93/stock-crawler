@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.example.demo.dto.StockDto;
 import org.hibernate.Session;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -74,7 +75,7 @@ public class StockService {
     @Transactional
     public void update(String stockName) throws IOException {
         long start =  System.currentTimeMillis();
-        Stock stock = stockRepository.findByName(stockName);
+        StockDto stock = stockRepository.findByName(stockName).toStockDto();
         stockInfo.update(stock);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
@@ -85,7 +86,7 @@ public class StockService {
         long start =  System.currentTimeMillis();
         List<Stock> stocks = stockRepository.findAll();
         for (int i = 1; i  < stocks.size(); i++)
-            stockInfo.update(stocks.get(i));
+            stockInfo.update(stocks.get(i).toStockDto());
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }

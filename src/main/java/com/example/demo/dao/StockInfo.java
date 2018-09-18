@@ -38,7 +38,7 @@ public class StockInfo extends CommonSearch {
         parser = new JsonParser();
         String [] infos = splitBody(body);
         for (int i = 0; i < infos.length; i++)
-            stocks.add(makingStockUsingJson(infos[i], parser, stockMap));
+            stocks.add(makingStockUsingJson(infos[i], parser, stockMap).toStock());
         return stocks;
     }
 }

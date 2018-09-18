@@ -69,4 +69,9 @@ public class kospiInfoTest {
         boolean checkDB = stockInfo.chekcDB(object, map);
         assertThat(checkDB, is(true));
     }
+
+    @Test
+    public void updateTest() throws IOException {
+        stockService.update("삼성전자");
+    }
 }

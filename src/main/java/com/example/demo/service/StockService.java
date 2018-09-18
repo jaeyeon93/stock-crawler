@@ -84,9 +84,11 @@ public class StockService {
     @Transactional
     public void wholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
-        List<Stock> stocks = stockRepository.findAll();
-        for (int i = 1; i  < stocks.size(); i++)
-            stockInfo.update(stocks.get(i).toStockDto());
+        List<Stock> original = stockRepository.findAll();
+        List<Stock> stocks = new ArrayList<>();
+        for (int i = 100; i  < 150; i++)
+            stocks.add(stockInfo.update(original.get(i).toStockDto()));
+        stockRepository.save(stocks);
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }

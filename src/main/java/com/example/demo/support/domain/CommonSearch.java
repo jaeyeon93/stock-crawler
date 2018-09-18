@@ -26,13 +26,6 @@ public abstract class CommonSearch {
         return body.split("\\s,\\s");
     }
 
-//    public Stock makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
-//        JsonObject object = (JsonObject)parser.parse(info);
-//        if (chekcDB(object, stockMap))
-//            return stockRepository.findByName(getTitle(object)).realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
-//        return new Stock(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
-//    }
-
     public StockDto makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
         JsonObject object = (JsonObject)parser.parse(info);
         if (chekcDB(object, stockMap))
@@ -52,13 +45,12 @@ public abstract class CommonSearch {
     public Stock update(StockDto original) throws IOException {
         Research research = new Research(original.getCode());
         try {
-//            Double changePercent = Double.valueOf(research.getElements().get(2).substring(0, research.getElements().get(2).length()-1));
             String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
             original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.info("에러 발생 {}", e.getMessage());
         }
-        return original.toStock();
+        return original.toUpdate();
     }
 
     public Map<String, Stock> getMap(List<Stock> stocks) {

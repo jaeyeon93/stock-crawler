@@ -60,7 +60,7 @@ public class StockDto {
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
         this.code = detailUrl;
-        logger.info("{} updated", name);
+        logger.info("{} updated", toString());
         return this;
     }
 
@@ -79,11 +79,11 @@ public class StockDto {
     }
 
     public Stock toStock() {
-        return new Stock(this.name, changePrice(this.cost), changeInt(this.updn), changeDouble(this.rate), getUrl(this.code));
+        return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), getUrl(this.code));
     }
 
     public Stock toUpdate() {
-        return new Stock(this.name, changePrice(this.cost), changeInt(this.updn), changeDouble(this.rate), this.profit, this.salesMoney, this.totalCost, this.code);
+        return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), this.profit, this.salesMoney, this.totalCost, this.code);
     }
 
     public String getUrl(String code) {

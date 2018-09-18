@@ -34,7 +34,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private String changeMoney;
+    private Integer changeMoney;
 
     @Column
     @JsonProperty
@@ -49,7 +49,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
         this.price = changeInt(price);
-        this.changeMoney = changeMoney;
+        this.changeMoney = changePrice(changeMoney);
         this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
         logger.info("stock 생성 : {}", toString());
@@ -58,7 +58,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
         this.price = changeInt(price);
-        this.changeMoney = changeMoney;
+        this.changeMoney = changePrice(changeMoney);
         this.changePercent = changeDouble(changePercent);
         this.detailUrl = detailUrl;
         return this;
@@ -67,7 +67,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock update(String price, String changeMoney, Double changePercent, String profit, String salesMoney, String totalCost) {
         this.name = getName().toUpperCase();
         this.price = changeInt(price);
-        this.changeMoney = changeMoney;
+        this.changeMoney = changePrice(changeMoney);
         this.changePercent = changePercent;
         this.profit = profit;
         this.salesMoney = salesMoney;
@@ -82,6 +82,12 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Double changeDouble(String percent) {
         return Double.parseDouble(percent.replace("%",""));
+    }
+
+    public Integer changePrice(String changeMoney) {
+        if (changeMoney.contains("▼"))
+            return (Integer.parseInt(changeMoney.replace("▼", "").replace(",", "").trim()) * -1);
+        return Integer.parseInt(changeMoney.replace("▲", "").replace(",","").trim());
     }
 
     public String getName() {
@@ -104,7 +110,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return totalCost;
     }
 
-    public String getChangeMoney() {
+    public Integer getChangeMoney() {
         return changeMoney;
     }
 
@@ -130,7 +136,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
                 ", profit='" + profit + '\'' +
                 ", totalCost='" + totalCost + '\'' +
                 ", changeMoney='" + changeMoney + '\'' +
-                ", changePercent='" + changePercent + '\'' +
+                ", changePrice='" + changePercent + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }

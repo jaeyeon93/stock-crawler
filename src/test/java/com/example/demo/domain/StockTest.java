@@ -1,15 +1,9 @@
 package com.example.demo.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -41,7 +35,7 @@ public class StockTest {
     @Test
     public void stringToInteger() {
         assertThat(stock.getPrice(), is(3170));
-        logger.info("changePercent : {}", stock.getChangePercent());
+        logger.info("changePrice : {}", stock.getChangePercent());
     }
 
     @Test
@@ -56,6 +50,13 @@ public class StockTest {
             result = Double.parseDouble(test.replace("%","").replace("-", "")) * (-1.0);
             assertThat(result, is(-0.33));
         }
+    }
+
+    @Test
+    public void changePirce() {
+        stock = new Stock("test", "2620", "▲10", "1.8%", "http://www.naver.con");
+        int changePrice = stock.changePrice(stock.getChangeMoney());
+        assertThat(changePrice, is(10));
     }
 
     @Test

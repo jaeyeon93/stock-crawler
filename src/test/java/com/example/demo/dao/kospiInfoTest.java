@@ -48,12 +48,6 @@ public class kospiInfoTest {
     }
 
     @Test
-    public void updateTest() throws IOException {
-        Stock stock = stockService.findByName("삼성전자");
-        stockInfo.update(stock);
-    }
-
-    @Test
     public void db에정보확인() {
         List<Stock> stocks = stockService.findAll();
         logger.info("Stocks의 사이즈 : {}", stocks.size());

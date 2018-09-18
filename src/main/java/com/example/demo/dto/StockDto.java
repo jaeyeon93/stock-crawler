@@ -2,7 +2,6 @@ package com.example.demo.dto;
 
 import com.example.demo.domain.Stock;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ public class StockDto {
     private String salesMoney;
 
     @JsonProperty("cost")
-    private Integer price;
+    private String cost;
 
     @JsonProperty
     private String profit;
@@ -25,52 +24,42 @@ public class StockDto {
     private String totalCost;
 
     @JsonProperty("updn")
-    private Integer changeMoney;
+    private String updn;
 
     @JsonProperty("rate")
-    private Double changePercent;
+    private String rate;
 
     @JsonProperty("code")
-    private String detailUrl;
+    private String code;
 
     public StockDto() {}
 
-//    public StockDto(String name, String price, String changeMoney, String changePercent, String detailUrl) {
-//        this.name = name.toUpperCase();
-//        this.price = changeInt(price);
-//        this.changeMoney = changePrice(changeMoney);
-//        this.changePercent = changeDouble(changePercent);
-//        this.detailUrl = detailUrl;
-//        logger.info("stock 생성 : {}", toString());
-//    }
-
-    public StockDto(String name, Integer price, Integer changeMoney, Double changePercent, String detailUrl) {
+    public StockDto(String name, String cost, String updn, String rate, String code) {
         this.name = name.toUpperCase();
-        this.price = price;
-        this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
-        this.detailUrl = detailUrl;
-        logger.info("stock 생성 : {}", toString());
+        this.cost = cost;
+        this.updn = updn;
+        this.rate = rate;
+        this.code = code;
     }
 
     public StockDto realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changePrice(changeMoney);
-        this.changePercent = changeDouble(changePercent);
-        this.detailUrl = detailUrl;
+        this.cost = price;
+        this.updn = changeMoney;
+        this.rate = changePercent;
+        this.code = detailUrl;
         return this;
     }
 
-    public StockDto update(String price, String changeMoney, Double changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
+    public StockDto update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
         this.name = getName().toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changePrice(changeMoney);
-        this.changePercent = changePercent;
+        this.cost = price;
+        this.updn = changeMoney;
+        this.rate = changePercent;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
-        this.detailUrl = detailUrl;
+        this.code = detailUrl;
         logger.info("{} updated", name);
         return this;
     }
@@ -90,16 +79,17 @@ public class StockDto {
     }
 
     public Stock toStock() {
-        return new Stock(this.name, this.price, this.changeMoney, this.changePercent, this.detailUrl);
+        return new Stock(this.name, changePrice(this.cost), changeInt(this.updn), changeDouble(this.rate), getUrl(this.code));
     }
 
     public Stock toUpdate() {
-        return new Stock(this.name, this.price, this.changeMoney, this.changePercent, this.profit, this.salesMoney, this.totalCost, this.detailUrl);
+        return new Stock(this.name, changePrice(this.cost), changeInt(this.updn), changeDouble(this.rate), this.profit, this.salesMoney, this.totalCost, this.code);
     }
 
-//    public Stock toRealUpdate() {
-//        return new Stock(this.name, this.price, this.changeMoney, this.changePercent, this.detailUrl);
-//    }
+    public String getUrl(String code) {
+        return "http://finance.daum.net/item/main.daum?code="+code;
+    }
+
 
     public String getName() {
         return name;
@@ -119,12 +109,12 @@ public class StockDto {
         return this;
     }
 
-    public Integer getPrice() {
-        return price;
+    public String getCost() {
+        return cost;
     }
 
-    public StockDto setPrice(Integer price) {
-        this.price = price;
+    public StockDto setCost(String cost) {
+        this.cost = cost;
         return this;
     }
 
@@ -146,30 +136,44 @@ public class StockDto {
         return this;
     }
 
-    public Integer getChangeMoney() {
-        return changeMoney;
+    public String getUpdn() {
+        return updn;
     }
 
-    public StockDto setChangeMoney(Integer changeMoney) {
-        this.changeMoney = changeMoney;
+    public StockDto setUpdn(String updn) {
+        this.updn = updn;
         return this;
     }
 
-    public Double getChangePercent() {
-        return changePercent;
+    public String getRate() {
+        return rate;
     }
 
-    public StockDto setChangePercent(Double changePercent) {
-        this.changePercent = changePercent;
+    public StockDto setRate(String rate) {
+        this.rate = rate;
         return this;
     }
 
-    public String getDetailUrl() {
-        return detailUrl;
+    public String getCode() {
+        return code;
     }
 
-    public StockDto setDetailUrl(String detailUrl) {
-        this.detailUrl = detailUrl;
+    public StockDto setCode(String code) {
+        this.code = code;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "StockDto{" +
+                "name='" + name + '\'' +
+                ", salesMoney='" + salesMoney + '\'' +
+                ", cost='" + cost + '\'' +
+                ", profit='" + profit + '\'' +
+                ", totalCost='" + totalCost + '\'' +
+                ", updn='" + updn + '\'' +
+                ", rate='" + rate + '\'' +
+                ", code='" + code + '\'' +
+                '}';
     }
 }

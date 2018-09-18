@@ -37,7 +37,8 @@ public abstract class CommonSearch {
         JsonObject object = (JsonObject)parser.parse(info);
         if (chekcDB(object, stockMap))
             return stockRepository.findByName(getTitle(object)).toStockDto().realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
-        return new StockDto(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
+        Gson gson = new Gson();
+        return gson.fromJson(object, StockDto.class);
     }
 
     public String getUrl(String code) {
@@ -49,10 +50,11 @@ public abstract class CommonSearch {
     }
 
     public Stock update(StockDto original) throws IOException {
-        Research research = new Research(original.getDetailUrl());
+        Research research = new Research(original.getCode());
         try {
-            Double changePercent = Double.valueOf(research.getElements().get(2).substring(0, research.getElements().get(2).length()-1));
-            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
+//            Double changePercent = Double.valueOf(research.getElements().get(2).substring(0, research.getElements().get(2).length()-1));
+            String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
+            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
         } catch (Exception e) {
             logger.info(e.getMessage());
         }

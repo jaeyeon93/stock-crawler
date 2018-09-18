@@ -68,7 +68,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     }
 
     public StockDto toStockDto() {
-        return new StockDto(this.name, this.price, this.changeMoney, this.changePercent, this.detailUrl);
+        return new StockDto(this.name, String.valueOf(price), String.valueOf(this.changeMoney), String.valueOf(this.changePercent), this.detailUrl);
     }
 
     public String getName() {

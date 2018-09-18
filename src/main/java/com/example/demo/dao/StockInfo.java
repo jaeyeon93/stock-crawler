@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StockInfo extends CommonSearch {
@@ -32,12 +33,12 @@ public class StockInfo extends CommonSearch {
 
     public List<Stock> jsonMaking(String url) throws IOException {
         List<Stock> stocks = new ArrayList<>();
-        List<Stock> original = stockRepository.findAll();
+        Map<String, Stock> stockMap = getMap(stockRepository.findAll());
         String body = new Research(url).getBody();
         parser = new JsonParser();
         String [] infos = splitBody(body);
-        for (int i = 0; i < 50; i++)
-            stocks.add(makingStockUsingJson(infos[i], parser, original));
+        for (int i = 0; i < infos.length; i++)
+            stocks.add(makingStockUsingJson(infos[i], parser, stockMap));
         return stocks;
     }
 }

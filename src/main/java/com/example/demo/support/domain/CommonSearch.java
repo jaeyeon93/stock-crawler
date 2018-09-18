@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
@@ -22,12 +24,10 @@ public abstract class CommonSearch {
         return body.split("\\s,\\s");
     }
 
-    public Stock makingStockUsingJson(String info, JsonParser parser, List<Stock> stocks) {
+    public Stock makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
         JsonObject object = (JsonObject)parser.parse(info);
-        if (chekcDB(object, stocks)) {
-            logger.info("주식 업데이트");
+        if (chekcDB(object, stockMap))
             return stockRepository.findByName(getTitle(object)).realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
-        }
         return new Stock(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
     }
 
@@ -37,16 +37,6 @@ public abstract class CommonSearch {
 
     public String getTitle(JsonObject object) {
         return object.get("name").getAsString();
-    }
-
-    public boolean chekcDB(JsonObject object, List<Stock> stocks) {
-        logger.info("checkDB에 전달받은 title : {}", getTitle(object));
-        if (stocks.contains(getTitle(object))) {
-            logger.info("db에 {} 존재", getTitle(object));
-            return true;
-        }
-        logger.info("db에 존재안함");
-        return false;
     }
 
     public Stock update(Stock original) throws IOException {
@@ -60,4 +50,16 @@ public abstract class CommonSearch {
         return original;
     }
 
+    public Map<String, Stock> getMap(List<Stock> stocks) {
+        Map<String, Stock> map = new HashMap<>();
+        for (Stock stock : stocks)
+            map.put(stock.getName(), stock);
+        return map;
+    }
+
+    public boolean chekcDB(JsonObject object, Map<String, Stock> map) {
+        if (map.containsKey(getTitle(object)))
+            return true;
+        return false;
+    }
 }

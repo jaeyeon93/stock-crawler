@@ -3,92 +3,66 @@ package com.example.demo.support.domain;
 import com.example.demo.dao.Research;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import com.example.demo.dto.StockDto;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
-    private WebDriver driver;
-
-    @Value("${driver.path}")
-    private String path;
-
-    @Value("${phanthomjs.path}")
-    private String phantomPath;
 
     @Autowired
     private StockRepository stockRepository;
 
-    public void init() {
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomPath);
-        driver = new PhantomJSDriver(caps);
+    public String [] splitBody(String body) {
+        return body.split("\\s,\\s");
     }
 
-    public void getStart(String url) {
-        driver.get(url);
-        driver.manage().window().setPosition(new Point(0, 0));
-        driver.manage().window().setSize(new Dimension(1360, 430));
+    public StockDto makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
+        JsonObject object = (JsonObject)parser.parse(info);
+        if (chekcDB(object, stockMap))
+            return stockRepository.findByName(getTitle(object)).toStockDto().realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
+        Gson gson = new Gson();
+        return gson.fromJson(object, StockDto.class);
     }
 
-    public Stock update(Stock original) throws IOException {
-        Research research = new Research(original.getDetailUrl());
+    public String getUrl(String code) {
+        return "http://finance.daum.net/item/main.daum?code="+code;
+    }
+
+    public String getTitle(JsonObject object) {
+        return object.get("name").getAsString();
+    }
+
+    public Stock update(StockDto original) throws IOException {
+        Research research = new Research(original.getCode());
         try {
-            Double changePercent = Double.valueOf(research.getElements().get(2).substring(0, research.getElements().get(2).length()-1));
-            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost());
+            String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
+            original.toStock().update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.info("에러 발생 {}", e.getMessage());
         }
-        return original;
+        return original.toStock();
     }
 
-    public WebDriver getDriver() {
-        return driver;
+    public Map<String, Stock> getMap(List<Stock> stocks) {
+        Map<String, Stock> map = new HashMap<>();
+        for (Stock stock : stocks)
+            map.put(stock.getName(), stock);
+        return map;
     }
 
-    public boolean checkDb(WebElement element, List<Stock> stocks) {
-        if (stocks.contains(getTitle(element)))
+    public boolean chekcDB(JsonObject object, Map<String, Stock> map) {
+        if (map.containsKey(getTitle(object)))
             return true;
         return false;
-    }
-
-    public List<WebElement> getElements(int partNumber) {
-        return getDriver().findElements(By.cssSelector("#wrap .wBox:nth-child(" + partNumber  +") .nBox div:nth-child(3) > dl"));
-    }
-
-    public Stock making(WebElement element, List<Stock> stocks) {
-        if (checkDb(element, stocks))
-            return stockRepository.findByName(getTitle(element)).realDataUpdate(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
-        return new Stock(getTitle(element), getInfo(element).get(1), getInfo(element).get(2), getInfo(element).get(3), getUrl(element));
-    }
-
-    public List<WebElement> getChilds(WebElement element) {
-        return element.findElements(By.xpath(".//*"));
-    }
-
-    public String getUrl(WebElement element) {
-        String url = getChilds(element).get(0).getAttribute("onclick");
-        return url.substring(8, url.length() -2);
-    }
-
-    public String getTitle(WebElement element) {
-        return getChilds(element).get(0).getAttribute("title");
-    }
-
-    public List<String> getInfo(WebElement element) {
-        return Arrays.asList(element.getText().split("\n"));
     }
 }

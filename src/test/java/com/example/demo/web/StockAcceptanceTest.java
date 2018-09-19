@@ -19,16 +19,6 @@ public class StockAcceptanceTest extends AcceptanceTest {
     public static final Logger logger = LoggerFactory.getLogger(StockAcceptanceTest.class);
 
     @Test
-    public void addStock() throws Exception {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodeForm()
-                .addParameter("stockName", "SK하이닉스").build();
-        logger.info("request : {}", request.getBody());
-        ResponseEntity<String> response = template().postForEntity("/stock", request, String.class);
-        logger.info("response : {}", request.getBody());
-        assertThat(response.getStatusCode(), is(HttpStatus.FOUND));
-    }
-
-    @Test
     public void addlowerCaseName() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodeForm()
                 .addParameter("stockName", "naver").build();

@@ -2,17 +2,25 @@ package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
 import com.example.demo.service.StockService;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -21,6 +29,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class kospiInfoTest {
     private static final Logger logger = LoggerFactory.getLogger(kospiInfoTest.class);
+    private JsonParser parser;
 
     @Autowired
     private StockInfo stockInfo;
@@ -30,26 +39,12 @@ public class kospiInfoTest {
 
     @Before
     public void setUp() {
-        stockInfo.getStart("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
+        parser = new JsonParser();
     }
 
     @Test
-    public void 크롤링() throws Exception {
-        long start = System.currentTimeMillis();
+    public void crawlingTest() throws Exception {
         stockService.addAll();
-        long end = System.currentTimeMillis();
-        System.out.println("총 걸린 시간 : " + (end - start)/1000.0 + "초");
-    }
-
-    @Test
-    public void updateTest() throws IOException {
-        Stock stock = stockService.findByName("삼성전자");
-        stockInfo.update(stock);
-    }
-
-    @Test
-    public void partTest() throws Exception {
-        stockInfo.stockCrawling("http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
     }
 
     @Test
@@ -61,13 +56,22 @@ public class kospiInfoTest {
 
     @Test
     public void db에주식이있으면true() {
-        boolean result =stockService.checkMakingStock("삼성전자");
+        boolean result = stockService.checkMakingStock("삼성전자");
         assertThat(result, is(true));
     }
 
     @Test
-    public void crawing() throws Exception {
-        stockInfo.partCrawing(1,"http://finance.daum.net/quote/allpanel.daum?stype=P&type=S");
-        stockService.wholeUpdate();
+    public void checkDB확인() {
+        List<Stock> original = stockService.findAll();
+        logger.info("first : {}", original.get(0));
+        JsonObject object = (JsonObject)parser.parse("{code:\"005930\",name :\"삼성전자\",cost :\"45,150\",updn :\"▼700\",rate :\"-1.53%\"}");
+        Map<String, Stock> map = stockInfo.getMap(original);
+        boolean checkDB = stockInfo.chekcDB(object, map);
+        assertThat(checkDB, is(true));
+    }
+
+    @Test
+    public void updateTest() throws IOException {
+        stockService.update("삼성전자");
     }
 }

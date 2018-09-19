@@ -3,7 +3,9 @@ package com.example.demo.service;
 import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.example.demo.dto.StockDto;
 import org.hibernate.Session;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +66,8 @@ public class StockService {
     @Transactional
     public void addAll() throws Exception {
         long start = System.currentTimeMillis();
-        for (int i = 1; i <= 4; i++) {
-            stockInfo.bulkInsert(1, kospiUrl);
-            stockInfo.bulkInsert(1, kosdaqUrl);
-        }
+        stockRepository.save(stockInfo.jsonMaking(kospiUrl));
+        stockRepository.save(stockInfo.jsonMaking(kosdaqUrl));
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
@@ -75,7 +75,7 @@ public class StockService {
     @Transactional
     public void update(String stockName) throws IOException {
         long start =  System.currentTimeMillis();
-        Stock stock = stockRepository.findByName(stockName);
+        StockDto stock = stockRepository.findByName(stockName).toStockDto();
         stockInfo.update(stock);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
@@ -84,28 +84,30 @@ public class StockService {
     @Transactional
     public void wholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
-        List<Stock> stocks = stockRepository.findAll();
-        for (int i = 1; i  < stocks.size(); i++)
-            stockInfo.update(stocks.get(i));
+        List<Stock> original = stockRepository.findAll();
+        List<Stock> stocks = new ArrayList<>();
+        for (int i = 100; i  < 150; i++)
+            stocks.add(stockInfo.update(original.get(i).toStockDto()));
+        stockRepository.save(stocks);
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }
 
 
     public List<Stock> lowPercent() {
-        return stockRepository.findAllByOrderByChangePercentAsc();
+        return stockRepository.findAllByOrderByRateAsc();
     }
 
     public List<Stock> lowPrice() {
-        return stockRepository.findAllByOrderByPriceAsc();
+        return stockRepository.findAllByOrderByCostAsc();
     }
 
     public List<Stock> topPercent() {
-        return stockRepository.findAllByOrderByChangePercentDesc();
+        return stockRepository.findAllByOrderByRateDesc();
     }
 
     public List<Stock> topPrice() {
-        return stockRepository.findAllByOrderByPriceDesc();
+        return stockRepository.findAllByOrderByCostDesc();
     }
 }
 

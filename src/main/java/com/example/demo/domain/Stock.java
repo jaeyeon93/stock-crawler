@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.AbstractEntity;
 import com.example.demo.support.domain.UrlGeneratable;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +23,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private Integer price;
+    private Integer cost;
 
     @Column
     @JsonProperty
@@ -34,11 +35,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private String changeMoney;
+    private Integer updn;
 
     @Column
     @JsonProperty
-    private Double changePercent;
+    private Double rate;
 
     @Column
     @JsonProperty
@@ -46,50 +47,30 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     public Stock() {}
 
-    public Stock(String name, String price, String changeMoney, String changePercent, String detailUrl) {
+    public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl) {
         this.name = name.toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changeMoney;
-        this.changePercent = changeDouble(changePercent);
+        this.cost = cost;
+        this.updn = updn;
+        this.rate = rate;
         this.detailUrl = detailUrl;
         logger.info("stock 생성 : {}", toString());
     }
 
-    public Stock(long id, String name, String price, String profit, String totalCost) {
-        super(id);
-        this.name = name.toUpperCase();
-        this.price = changeInt(price);
-        this.profit = profit;
-        this.totalCost = totalCost.replaceAll(" ", "");
-    }
-
-    public Stock realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
-        this.name = name.toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changeMoney;
-        this.changePercent = changeDouble(changePercent);
-        this.detailUrl = detailUrl;
-        return this;
-    }
-
-    public Stock update(String price, String changeMoney, Double changePercent, String profit, String salesMoney, String totalCost) {
+    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
         this.name = getName().toUpperCase();
-        this.price = changeInt(price);
-        this.changeMoney = changeMoney;
-        this.changePercent = changePercent;
+        this.cost = cost;
+        this.updn = updn;
+        this.rate = rate;
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
-        logger.info("{} updated", name);
+        this.detailUrl = detailUrl;
+        logger.info("{} updated", toString());
         return this;
     }
 
-    public Integer changeInt(String number) {
-        return Integer.parseInt(number.replace(",", ""));
-    }
-
-    public Double changeDouble(String percent) {
-        return Double.parseDouble(percent.replace("%",""));
+    public StockDto toStockDto() {
+        return new StockDto(this.name, String.valueOf(cost), String.valueOf(this.updn), String.valueOf(this.rate), this.detailUrl);
     }
 
     public String getName() {
@@ -100,8 +81,8 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return salesMoney;
     }
 
-    public Integer getPrice() {
-        return price;
+    public Integer getCost() {
+        return cost;
     }
 
     public String getProfit() {
@@ -112,12 +93,12 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return totalCost;
     }
 
-    public String getChangeMoney() {
-        return changeMoney;
+    public Integer getUpdn() {
+        return updn;
     }
 
-    public Double getChangePercent() {
-        return changePercent;
+    public Double getRate() {
+        return rate;
     }
 
     public String getDetailUrl() {
@@ -134,11 +115,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return "Stock{" +
                 "name='" + name + '\'' +
                 ", salesMoney='" + salesMoney + '\'' +
-                ", price='" + price + '\'' +
+                ", cost='" + cost + '\'' +
                 ", profit='" + profit + '\'' +
                 ", totalCost='" + totalCost + '\'' +
-                ", changeMoney='" + changeMoney + '\'' +
-                ", changePercent='" + changePercent + '\'' +
+                ", updn='" + updn + '\'' +
+                ", changePrice='" + rate + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }

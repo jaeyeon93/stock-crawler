@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -26,19 +27,12 @@ public abstract class CommonSearch {
         return body.split("\\s,\\s");
     }
 
-    public StockDto makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
+    public StockDto makeStockByJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
         JsonObject object = (JsonObject)parser.parse(info);
-        if (chekcDB(object, stockMap)) {
-            logger.info("db에 {} 존재", getTitle(object));
-            ifStockExist(object);
-            return null;
-        }
+        if (chekcDB(object, stockMap))
+            return stockRepository.findByName(getTitle(object)).realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString()).toStockDto();
         Gson gson = new Gson();
         return gson.fromJson(object, StockDto.class);
-    }
-
-    public Stock ifStockExist(JsonObject object) {
-        return stockRepository.findByName(getTitle(object)).realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString());
     }
 
     public String getUrl(String code) {
@@ -49,8 +43,12 @@ public abstract class CommonSearch {
         return object.get("name").getAsString();
     }
 
+    @Transactional
+    public void ifStockExist() {
+        
+    }
+
     public Stock updateByStockName(Stock original) throws IOException {
-        logger.info("{}의 세부 정보 : {}", original.getName(), original.getDetailUrl());
         Research research = new Research(original.getDetailUrl());
         try {
             String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);

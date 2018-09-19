@@ -2,7 +2,6 @@ package com.example.demo.web;
 
 import com.example.demo.domain.Stock;
 import com.example.demo.service.StockService;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -56,23 +55,23 @@ public class StockController {
         return "redirect:/stock";
     }
 
-    @GetMapping("/lowPrice")
+    @GetMapping("/lowCost")
     public @ResponseBody List<Stock> lowPrice() throws Exception {
-        return stockService.lowPrice();
+        return stockService.lowCost();
     }
 
-    @GetMapping("/lowPercent")
+    @GetMapping("/lowRate")
     public @ResponseBody List<Stock> lowPercent() throws Exception {
-        return stockService.lowPercent();
+        return stockService.lowRate();
     }
 
-    @GetMapping("/topPrice")
+    @GetMapping("/topCost")
     public @ResponseBody List<Stock> topPrice() throws Exception {
-        return stockService.topPrice();
+        return stockService.topCost();
     }
 
-    @GetMapping("/topPercent")
+    @GetMapping("/topRate")
     public @ResponseBody List<Stock> topPercent() throws Exception {
-        return stockService.topPercent();
+        return stockService.topRate();
     }
 }

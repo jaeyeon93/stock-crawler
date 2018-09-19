@@ -15,7 +15,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);
 
     @Column
-    @JsonProperty
+    @JsonProperty("name")
     private String name;
 
     @Column
@@ -23,7 +23,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     private String salesMoney;
 
     @Column
-    @JsonProperty
+    @JsonProperty("cost")
     private Integer cost;
 
     @Column
@@ -35,11 +35,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     private String totalCost;
 
     @Column
-    @JsonProperty
+    @JsonProperty("updn")
     private Integer updn;
 
     @Column
-    @JsonProperty
+    @JsonProperty("rate")
     private Double rate;
 
     @Column
@@ -66,7 +66,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
         this.detailUrl = detailUrl;
-        logger.info("{} updated", toString());
+        logger.info("{} updated", getName());
         return this;
     }
 
@@ -75,6 +75,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.cost = costToInteger(cost);
         this.updn = updnToInteger(updn);
         this.rate = rateToDouble(rate);
+        logger.info("{} 실시간 정보 업데이트", name);
         return this;
     }
 

@@ -45,6 +45,5 @@ public class StockAcceptanceTest extends AcceptanceTest {
         ResponseEntity<String> response = template.postForEntity("/stock", request, String.class);
 //        ResponseEntity<String> response = template().getForEntity("/stock/삼성전자", String.class);
 //        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-
     }
 }

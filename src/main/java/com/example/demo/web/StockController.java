@@ -39,10 +39,9 @@ public class StockController {
     }
 
     @GetMapping("/{stockName}")
-    public String updateByStockName(@PathVariable String stockName) throws Exception {
-        logger.info("updateByStockName method called on controller");
-        stockService.updateByStockName(stockName);
-        return "redirect:/stock";
+    public @ResponseBody Stock getByStockName(@PathVariable String stockName) throws Exception {
+        logger.info("getByStockName method called on controller");
+        return stockService.updateByStockName(stockName);
     }
 
     @GetMapping("/search/{stockName}")

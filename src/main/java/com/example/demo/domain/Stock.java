@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "nameRateIndex", columnList = "name, rate")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);
 

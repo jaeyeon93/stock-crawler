@@ -63,18 +63,15 @@ public class StockService {
     public void getAllStock() throws Exception {
         long start = System.currentTimeMillis();
         stockRepository.save(stockInfo.getAllStockByUrl(kospiUrl));
-//        stockRepository.save(stockInfo.getAllStockByUrl(kosdaqUrl));
+        stockRepository.save(stockInfo.getAllStockByUrl(kosdaqUrl));
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
-    public void updateByStockName(String stockName) throws IOException {
-        long start =  System.currentTimeMillis();
+    public Stock updateByStockName(String stockName) throws IOException {
         Stock stock = stockRepository.findByName(stockName);
-        stockInfo.updateByStockName(stock);
-        long end = System.currentTimeMillis();
-        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
+        return stockInfo.updateByStockName(stock);
     }
 
     @Transactional

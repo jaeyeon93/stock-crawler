@@ -37,7 +37,7 @@ public class StockInfo extends CommonSearch {
         parser = new JsonParser();
         String [] infos = splitBody(body);
         for (int i = 0; i < infos.length; i++) {
-            em.persist(makeStockByJson(infos[i], parser, stockMap));
+            em.persist(makeStockByJson(infos[i], parser, stockMap).toStock());
             if (i % batchSize == 0) {
                 logger.info("{}번째i batch실행", i);
                 em.flush();

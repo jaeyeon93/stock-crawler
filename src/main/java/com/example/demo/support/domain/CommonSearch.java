@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -41,11 +40,6 @@ public abstract class CommonSearch {
 
     public String getTitle(JsonObject object) {
         return object.get("name").getAsString();
-    }
-
-    @Transactional
-    public void ifStockExist() {
-        
     }
 
     public Stock updateByStockName(Stock original) throws IOException {

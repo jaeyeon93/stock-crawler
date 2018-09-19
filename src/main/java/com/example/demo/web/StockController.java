@@ -45,7 +45,6 @@ public class StockController {
 
     @GetMapping("/search/{stockName}")
     public @ResponseBody List<Stock> searchByStockName(@PathVariable String stockName) {
-        logger.info("전달받은 주식이름 : {}", stockName);
         return stockService.searchByStockName(stockName);
     }
 

@@ -102,19 +102,19 @@ public class StockService {
     }
 
     public List<Stock> lowRate() {
-        return stockRepository.findAllByOrderByRateAsc();
+        return stockRepository.findTop20ByOrderByRateAsc();
     }
 
     public List<Stock> lowCost() {
-        return stockRepository.findAllByOrderByCostAsc();
+        return stockRepository.findTop20ByOrderByCostAsc();
     }
 
     public List<Stock> topRate() {
-        return stockRepository.findAllByOrderByRateDesc();
+        return stockRepository.findTop20ByOrderByRateDesc();
     }
 
     public List<Stock> topCost() {
-        return stockRepository.findAllByOrderByCostDesc();
+        return stockRepository.findTop20ByOrderByCostDesc();
     }
 
     public List<Stock> searchByStockName(String stockName) {

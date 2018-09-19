@@ -1,11 +1,12 @@
 package com.example.demo.dto;
 
 import com.example.demo.domain.Stock;
+import com.example.demo.support.domain.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StockDto {
+public class StockDto extends AbstractEntity {
     private static final Logger logger =  LoggerFactory.getLogger(StockDto.class);
 
     @JsonProperty("name")
@@ -42,49 +43,9 @@ public class StockDto {
         this.code = code;
     }
 
-    public StockDto realDataUpdate(String name, String price, String changeMoney, String changePercent, String detailUrl) {
-        this.name = name.toUpperCase();
-        this.cost = price;
-        this.updn = changeMoney;
-        this.rate = changePercent;
-        this.code = detailUrl;
-        return this;
-    }
-
-//    public StockDto update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
-//        this.name = getName().toUpperCase();
-//        this.cost = price;
-//        this.updn = changeMoney;
-//        this.rate = changePercent;
-//        this.profit = profit;
-//        this.salesMoney = salesMoney;
-//        this.totalCost = totalCost;
-//        this.code = detailUrl;
-//        logger.info("{} updated", toString());
-//        return this;
-//    }
-
-    public Integer changeInt(String number) {
-        return Integer.parseInt(number.replace(",", ""));
-    }
-
-    public Double changeDouble(String percent) {
-        return Double.parseDouble(percent.replace("%",""));
-    }
-
-    public Integer changePrice(String changeMoney) {
-        if (changeMoney.contains("▼"))
-            return (Integer.parseInt(changeMoney.replace("▼", "").replace(",", "").trim()) * -1);
-        return Integer.parseInt(changeMoney.replace("▲", "").replace(",","").trim());
-    }
-
     public Stock toStock() {
-        return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), getUrl(this.code));
+        return new Stock(this.name, costToInteger(this.cost), updnToInteger(this.updn), rateToDouble(this.rate), getUrl(this.code));
     }
-
-//    public Stock toUpdate() {
-//        return new Stock(this.name, changeInt(this.cost), changePrice(this.updn), changeDouble(this.rate), this.profit, this.salesMoney, this.totalCost, this.code);
-//    }
 
     public String getUrl(String code) {
         return "http://finance.daum.net/item/main.daum?code="+code;

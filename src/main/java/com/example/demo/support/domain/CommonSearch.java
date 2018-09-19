@@ -28,10 +28,17 @@ public abstract class CommonSearch {
 
     public StockDto makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
         JsonObject object = (JsonObject)parser.parse(info);
-        if (chekcDB(object, stockMap))
-            return stockRepository.findByName(getTitle(object)).toStockDto().realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
+        if (chekcDB(object, stockMap)) {
+            logger.info("db에 {} 존재", getTitle(object));
+            ifStockExist(object);
+            return null;
+        }
         Gson gson = new Gson();
         return gson.fromJson(object, StockDto.class);
+    }
+
+    public Stock ifStockExist(JsonObject object) {
+        return stockRepository.findByName(getTitle(object)).realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString());
     }
 
     public String getUrl(String code) {
@@ -42,15 +49,16 @@ public abstract class CommonSearch {
         return object.get("name").getAsString();
     }
 
-    public Stock update(StockDto original) throws IOException {
-        Research research = new Research(original.getCode());
+    public Stock updateByStockName(Stock original) throws IOException {
+        logger.info("{}의 세부 정보 : {}", original.getName(), original.getDetailUrl());
+        Research research = new Research(original.getDetailUrl());
         try {
             String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
-            original.toStock().update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
+            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
         } catch (Exception e) {
             logger.info("에러 발생 {}", e.getMessage());
         }
-        return original.toStock();
+        return original;
     }
 
     public Map<String, Stock> getMap(List<Stock> stocks) {

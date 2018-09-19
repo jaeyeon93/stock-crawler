@@ -1,6 +1,5 @@
 package com.example.demo.dto;
 
-import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -44,7 +43,7 @@ public class StockDtoTest {
         StockDto dto = gson.fromJson(hanmi, StockDto.class);
         logger.info("{}", dto.toString());
         logger.info("before : {}", dto.getUpdn());
-        int test = dto.changePrice(dto.getUpdn());
+        int test = dto.updnToInteger(dto.getUpdn());
         logger.info("after : {}", test);
         Stock stock = dto.toStock();
         logger.info("stock : {}", stock.toString());

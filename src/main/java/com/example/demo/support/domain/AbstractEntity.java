@@ -72,6 +72,20 @@ public class AbstractEntity {
         return dateTime.format(DateTimeFormatter.ofPattern(format));
     }
 
+    public Integer costToInteger(String updn) {
+        return Integer.parseInt(updn.replace(",", ""));
+    }
+
+    public Double rateToDouble(String rate) {
+        return Double.parseDouble(rate.replace("%",""));
+    }
+
+    public Integer updnToInteger(String cost) {
+        if (cost.contains("▼"))
+            return (Integer.parseInt(cost.replace("▼", "").replace(",", "").trim()) * -1);
+        return Integer.parseInt(cost.replace("▲", "").replace(",","").trim());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

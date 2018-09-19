@@ -33,7 +33,7 @@ public class HtmlFormDataBuilder {
     }
 
     public HtmlFormDataBuilder delete() {
-        params.add("_method", "delete");
+        params.add("_method", "deleteStockById");
         return this;
     }
 

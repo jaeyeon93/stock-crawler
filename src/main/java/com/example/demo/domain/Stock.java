@@ -56,16 +56,24 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         logger.info("stock 생성 : {}", toString());
     }
 
-    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
+    public Stock update(String cost, String updn, String rate, String profit, String salesMoney, String totalCost, String detailUrl) {
         this.name = getName().toUpperCase();
-        this.cost = cost;
-        this.updn = updn;
-        this.rate = rate;
+        this.cost = updnToInteger(cost);
+        this.updn = costToInteger(updn);
+        this.rate = rateToDouble(rate);
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
         this.detailUrl = detailUrl;
         logger.info("{} updated", toString());
+        return this;
+    }
+
+    public Stock realDataUpdate(String name, String cost, String updn, String rate) {
+        this.name = name.toUpperCase();
+        this.cost = costToInteger(cost);
+        this.updn = updnToInteger(updn);
+        this.rate = rateToDouble(rate);
         return this;
     }
 
@@ -119,7 +127,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
                 ", profit='" + profit + '\'' +
                 ", totalCost='" + totalCost + '\'' +
                 ", updn='" + updn + '\'' +
-                ", changePrice='" + rate + '\'' +
+                ", updnToInteger='" + rate + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }

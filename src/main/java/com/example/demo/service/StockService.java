@@ -4,8 +4,6 @@ import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import com.example.demo.dto.StockDto;
-import org.hibernate.Session;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,11 +36,11 @@ public class StockService {
         return stockRepository.findAll();
     }
 
-    public Stock findById(long id) {
+    public Stock getStockById(long id) {
         return stockRepository.findOne(id);
     }
 
-    public Stock findByName(String stockName) {
+    public Stock getStockByStockName(String stockName) {
         logger.info("stockName on Service : {}", stockName);
         return stockRepository.findByName(stockName);
     }
@@ -58,36 +54,36 @@ public class StockService {
     }
 
     @Transactional
-    public void delete(long id) throws Exception {
-        logger.info("delete method called {}", id);
+    public void deleteStockById(long id) throws Exception {
+        logger.info("deleteStockById method called {}", id);
         stockRepository.delete(id);
     }
 
     @Transactional
-    public void addAll() throws Exception {
+    public void getAllStock() throws Exception {
         long start = System.currentTimeMillis();
-        stockRepository.save(stockInfo.jsonMaking(kospiUrl));
-        stockRepository.save(stockInfo.jsonMaking(kosdaqUrl));
+        stockRepository.save(stockInfo.getAllStockByUrl(kospiUrl));
+//        stockRepository.save(stockInfo.getAllStockByUrl(kosdaqUrl));
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
-    public void update(String stockName) throws IOException {
+    public void updateByStockName(String stockName) throws IOException {
         long start =  System.currentTimeMillis();
-        StockDto stock = stockRepository.findByName(stockName).toStockDto();
-        stockInfo.update(stock);
+        Stock stock = stockRepository.findByName(stockName);
+        stockInfo.updateByStockName(stock);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
-    public void wholeUpdate() throws IOException {
+    public void detailWholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
         List<Stock> original = stockRepository.findAll();
         List<Stock> stocks = new ArrayList<>();
-        for (int i = 100; i  < 150; i++)
-            stocks.add(stockInfo.update(original.get(i).toStockDto()));
+        for (int i = 100; i  < 200; i++)
+            stocks.add(stockInfo.updateByStockName(original.get(i)));
         stockRepository.save(stocks);
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
@@ -108,6 +104,10 @@ public class StockService {
 
     public List<Stock> topPrice() {
         return stockRepository.findAllByOrderByCostDesc();
+    }
+
+    public List<Stock> searchByStockName(String stockName) {
+        return stockRepository.findByNameStartingWith(stockName);
     }
 }
 

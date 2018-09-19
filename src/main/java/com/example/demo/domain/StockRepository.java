@@ -10,4 +10,5 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findAllByOrderByRateDesc();
     List<Stock> findAllByOrderByRateAsc();
     List<Stock> findAllByOrderByCostAsc();
+    List<Stock> findByNameStartingWith(String name);
 }

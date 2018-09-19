@@ -11,19 +11,30 @@ import static org.junit.Assert.*;
 
 public class StockTest {
     private static final Logger logger =  LoggerFactory.getLogger(StockTest.class);
-    private StockDto stock;
+    private StockDto stockDto;
     private Double result;
+    private Stock stock;
 
     @Before
     public void setUp() {
-        stock = new StockDto("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+        stockDto = new StockDto("test1", "3,170", "35", "-1.09%", "http://finance.daum.net/item/main.daum?code=060310");
+    }
+
+    @Test
+    public void update() {
+        stock = stockDto.toStock();
+        assertThat(stock.getCost(), is(3170));
+        stock.update("50,000", "350", "+10%", "536450", "1000","2,956,099억(1위)", "http://www.naver.com");
+        assertThat(stock.getRate(), is(10.0));
+        assertThat(stock.getUpdn(), is(350));
+        assertThat(stock.getCost(), is(50000));
     }
 
 
     @Test
     public void stringToInteger() {
         assertThat(stock.getCost(), is(3170));
-        logger.info("changePrice : {}", stock.getRate());
+        logger.info("updnToInteger : {}", stock.getRate());
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.example.demo.web;
 
 import com.example.demo.domain.Stock;
 import com.example.demo.service.StockService;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,28 +26,34 @@ public class StockController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable long id) throws Exception {
-        logger.info("delete method called");
-        stockService.delete(id);
+    public String deleteStockById(@PathVariable long id) throws Exception {
+        logger.info("deleteStockById method called");
+        stockService.deleteStockById(id);
         return "/redirect:/stock";
     }
 
     @GetMapping("/all")
-    public String allStock() throws Exception {
-        stockService.addAll();
+    public String getAllStock() throws Exception {
+        stockService.getAllStock();
         return "redirect:/stock";
     }
 
     @GetMapping("/{stockName}")
-    public String update(@PathVariable String stockName) throws Exception {
-        logger.info("update method called on controller");
-        stockService.update(stockName);
+    public String updateByStockName(@PathVariable String stockName) throws Exception {
+        logger.info("updateByStockName method called on controller");
+        stockService.updateByStockName(stockName);
         return "redirect:/stock";
     }
 
-    @GetMapping("/update")
-    public String wholeUpdate() throws Exception {
-        stockService.wholeUpdate();
+    @GetMapping("/search/{stockName}")
+    public @ResponseBody List<Stock> searchByStockName(@PathVariable String stockName) {
+        logger.info("전달받은 주식이름 : {}", stockName);
+        return stockService.searchByStockName(stockName);
+    }
+
+    @GetMapping("/allstockupdate")
+    public String detailWholeUpdate() throws Exception {
+        stockService.detailWholeUpdate();
         return "redirect:/stock";
     }
 

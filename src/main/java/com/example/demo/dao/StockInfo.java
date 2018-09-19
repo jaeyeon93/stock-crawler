@@ -31,7 +31,7 @@ public class StockInfo extends CommonSearch {
     @Autowired
     private StockRepository stockRepository;
 
-    public List<Stock> jsonMaking(String url) throws IOException {
+    public List<Stock> getAllStockByUrl(String url) throws IOException {
         List<Stock> stocks = new ArrayList<>();
         Map<String, Stock> stockMap = getMap(stockRepository.findAll());
         String body = new Research(url).getBody();

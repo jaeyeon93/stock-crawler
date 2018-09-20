@@ -41,10 +41,6 @@ public class Research  {
         return doc.body().text().substring(start+1, end).trim();
     }
 
-    public String getPage() {
-        return doc.location();
-    }
-
     public String html() {
         return doc.html();
     }

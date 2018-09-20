@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "nameRateIndex", columnList = "name, rate")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);
 
@@ -56,16 +57,25 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         logger.info("stock 생성 : {}", toString());
     }
 
-    public Stock update(String price, String changeMoney, String changePercent, String profit, String salesMoney, String totalCost, String detailUrl) {
+    public Stock update(String cost, String updn, String rate, String profit, String salesMoney, String totalCost, String detailUrl) {
         this.name = getName().toUpperCase();
-        this.cost = cost;
-        this.updn = updn;
-        this.rate = rate;
+        this.cost = updnToInteger(cost);
+        this.updn = costToInteger(updn);
+        this.rate = rateToDouble(rate);
         this.profit = profit;
         this.salesMoney = salesMoney;
         this.totalCost = totalCost;
         this.detailUrl = detailUrl;
-        logger.info("{} updated", toString());
+        logger.info("{} updated", getName());
+        return this;
+    }
+
+    public Stock realDataUpdate(String name, String cost, String updn, String rate) {
+        this.name = name.toUpperCase();
+        this.cost = costToInteger(cost);
+        this.updn = updnToInteger(updn);
+        this.rate = rateToDouble(rate);
+        logger.info("{} 실시간 정보 업데이트", name);
         return this;
     }
 
@@ -119,7 +129,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
                 ", profit='" + profit + '\'' +
                 ", totalCost='" + totalCost + '\'' +
                 ", updn='" + updn + '\'' +
-                ", changePrice='" + rate + '\'' +
+                ", updnToInteger='" + rate + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }

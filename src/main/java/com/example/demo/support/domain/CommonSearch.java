@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +28,12 @@ public abstract class CommonSearch {
         return body.split("\\s,\\s");
     }
 
-    public StockDto makingStockUsingJson(String info, JsonParser parser, Map<String, Stock> stockMap) {
+    public StockDto makeStockByJson(String info, JsonParser parser, Map<String, Stock> stockMap) throws Exception {
         JsonObject object = (JsonObject)parser.parse(info);
-        if (chekcDB(object, stockMap))
-            return stockRepository.findByName(getTitle(object)).toStockDto().realDataUpdate(object.get("name").getAsString(), object.get("cost").getAsString(), object.get("updn").getAsString(), object.get("rate").getAsString(), getUrl(object.get("code").getAsString()));
         Gson gson = new Gson();
-        return gson.fromJson(object, StockDto.class);
+        if (!chekcDB(object, stockMap))
+            return gson.fromJson(object, StockDto.class);
+        throw new Exception(getTitle(object) + "객체가 이미 데이터베이스에 존재합니다.");
     }
 
     public String getUrl(String code) {
@@ -42,15 +44,15 @@ public abstract class CommonSearch {
         return object.get("name").getAsString();
     }
 
-    public Stock update(StockDto original) throws IOException {
-        Research research = new Research(original.getCode());
+    public Stock updateByStockName(Stock original) throws IOException {
+        Research research = new Research(original.getDetailUrl());
         try {
             String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
-            original.toStock().update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getCode());
+            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
         } catch (Exception e) {
             logger.info("에러 발생 {}", e.getMessage());
         }
-        return original.toStock();
+        return original;
     }
 
     public Map<String, Stock> getMap(List<Stock> stocks) {

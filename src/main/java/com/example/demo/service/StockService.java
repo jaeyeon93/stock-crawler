@@ -4,8 +4,6 @@ import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import com.example.demo.dto.StockDto;
-import org.hibernate.Session;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +34,21 @@ public class StockService {
     @Value("${kospiUrl}")
     private String kospiUrl;
 
+    @PersistenceContext
+    private EntityManager em;
+
+    @Value("${batch.size}")
+    private Integer batchSize;
+
     public List<Stock> findAll() {
         return stockRepository.findAll();
     }
 
-    public Stock findById(long id) {
+    public Stock getStockById(long id) {
         return stockRepository.findOne(id);
     }
 
-    public Stock findByName(String stockName) {
+    public Stock getStockByStockName(String stockName) {
         logger.info("stockName on Service : {}", stockName);
         return stockRepository.findByName(stockName);
     }
@@ -58,56 +62,63 @@ public class StockService {
     }
 
     @Transactional
-    public void delete(long id) throws Exception {
-        logger.info("delete method called {}", id);
+    public void deleteStockById(long id) throws Exception {
+        logger.info("deleteStockById method called {}", id);
         stockRepository.delete(id);
     }
 
     @Transactional
-    public void addAll() throws Exception {
+    public void getAllStock() throws Exception {
         long start = System.currentTimeMillis();
-        stockRepository.save(stockInfo.jsonMaking(kospiUrl));
-        stockRepository.save(stockInfo.jsonMaking(kosdaqUrl));
+        stockInfo.getAllStockByUrl(kospiUrl);
+        stockInfo.getAllStockByUrl(kosdaqUrl);
         long end = System.currentTimeMillis();
         logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
     }
 
     @Transactional
-    public void update(String stockName) throws IOException {
-        long start =  System.currentTimeMillis();
-        StockDto stock = stockRepository.findByName(stockName).toStockDto();
-        stockInfo.update(stock);
-        long end = System.currentTimeMillis();
-        logger.info("총 걸린 시간 : {}초", (end - start)/1000.0);
+    public Stock updateByStockName(String stockName) throws IOException {
+        Stock stock = stockRepository.findByName(stockName);
+        return stockInfo.updateByStockName(stock);
     }
 
     @Transactional
-    public void wholeUpdate() throws IOException {
+    public void detailWholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
         List<Stock> original = stockRepository.findAll();
-        List<Stock> stocks = new ArrayList<>();
-        for (int i = 100; i  < 150; i++)
-            stocks.add(stockInfo.update(original.get(i).toStockDto()));
-        stockRepository.save(stocks);
+        for (int i = 0; i  < 100; i++) {
+            Stock stock = em.merge(stockInfo.updateByStockName(original.get(i)));
+            em.persist(stock);
+            if (i % batchSize == 0) {
+                logger.info("{}번째 배치 업데이트 실행", i);
+                em.flush();
+                em.clear();
+            }
+        }
+        em.flush();
+        em.clear();
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }
 
-
-    public List<Stock> lowPercent() {
-        return stockRepository.findAllByOrderByRateAsc();
+    public List<Stock> lowRate() {
+        return stockRepository.findTop20ByOrderByRateAsc();
     }
 
-    public List<Stock> lowPrice() {
-        return stockRepository.findAllByOrderByCostAsc();
+    public List<Stock> lowCost() {
+        return stockRepository.findTop20ByOrderByCostAsc();
     }
 
-    public List<Stock> topPercent() {
-        return stockRepository.findAllByOrderByRateDesc();
+    public List<Stock> topRate() {
+        return stockRepository.findTop20ByOrderByRateDesc();
     }
 
-    public List<Stock> topPrice() {
-        return stockRepository.findAllByOrderByCostDesc();
+    public List<Stock> topCost() {
+        return stockRepository.findTop20ByOrderByCostDesc();
+    }
+
+    public List<Stock> searchByStockName(String stockName) {
+        return stockRepository.findByNameStartingWith(stockName);
     }
 }
 

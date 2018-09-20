@@ -7,17 +7,12 @@ import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +39,7 @@ public class kospiInfoTest {
 
     @Test
     public void crawlingTest() throws Exception {
-        stockService.addAll();
+        stockService.getAllStock();
     }
 
     @Test
@@ -68,10 +63,5 @@ public class kospiInfoTest {
         Map<String, Stock> map = stockInfo.getMap(original);
         boolean checkDB = stockInfo.chekcDB(object, map);
         assertThat(checkDB, is(true));
-    }
-
-    @Test
-    public void updateTest() throws IOException {
-        stockService.update("삼성전자");
     }
 }

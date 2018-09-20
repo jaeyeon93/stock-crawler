@@ -47,6 +47,10 @@ public class StockDto extends AbstractEntity {
         return new Stock(this.name, costToInteger(this.cost), updnToInteger(this.updn), rateToDouble(this.rate), getUrl(this.code));
     }
 
+    public Stock toRealDataUpdate(Stock original) {
+        return original.realDataUpdate(this);
+    }
+
     public String getUrl(String code) {
         return "http://finance.daum.net/item/main.daum?code="+code;
     }

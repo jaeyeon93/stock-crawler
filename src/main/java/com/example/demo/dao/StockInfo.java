@@ -31,7 +31,7 @@ public class StockInfo extends CommonSearch {
     private EntityManager em;
 
     @Transactional
-    public void getAllStockByUrl(String url) throws IOException {
+    public void getAllStockByUrl(String url) throws Exception {
         Map<String, Stock> stockMap = getMap(stockRepository.findAll());
         String body = new Research(url).getBody();
         parser = new JsonParser();

@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
+import com.example.demo.domain.StockRepository;
 import com.example.demo.service.StockService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,6 +32,9 @@ public class kospiInfoTest {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private StockRepository stockRepository;
 
     @Before
     public void setUp() {
@@ -71,4 +75,5 @@ public class kospiInfoTest {
         Stock stock = stockService.updateByStockName("삼성전자");
         assertThat(stock.getName(), is("삼성전자"));
     }
+
 }

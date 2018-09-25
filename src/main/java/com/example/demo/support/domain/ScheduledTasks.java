@@ -23,9 +23,21 @@ public class ScheduledTasks {
         logger.info("The time is now {}", dateformat.format(new Date()));
     }
 
-    @Scheduled(fixedRate = 10000)
-    public void call() throws Exception {
-        logger.info("10초마다 자동 업데이트");
+    @Scheduled(cron = "0 * 9-23 * * MON-FRI")
+    public void getAllStock() throws Exception {
+        logger.info("평일 9시-16시까지 1분마다 자동업데이트");
         stockService.getAllStock();
+    }
+
+    @Scheduled(cron = "1 * 16 * * MON-FRI")
+    public void detailWholeUpdate() throws Exception {
+        logger.info("평일 16:01, 장 종료 후 전체 업데이트 진행");
+        stockService.detailWholeUpdate();
+    }
+
+    @Scheduled(cron = "0 0 0 * * SAT,SUN")
+    public void getWeekUpdate() throws Exception {
+        logger.info("토, 일 0시0분0초에 전체 주식정보 업데이트");
+        stockService.detailWholeUpdate();
     }
 }

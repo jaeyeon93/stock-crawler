@@ -22,7 +22,6 @@ import java.util.Map;
 public class StockInfo extends CommonSearch {
     private static final Logger logger = LoggerFactory.getLogger(StockInfo.class);
     private JsonParser parser;
-    private Stock stock;
 
     @Autowired
     private StockRepository stockRepository;
@@ -49,7 +48,7 @@ public class StockInfo extends CommonSearch {
         for (int i = 0; i < infos.length; i++) {
             JsonObject object = (JsonObject)parser.parse(infos[i]);
             if (chekcDB(object, stockMap)) {
-                stock = stockRepository.findByName(getTitle(object)).realDataUpdate(makeStockDtoByJson(object, parser));
+                Stock stock = stockRepository.findByName(getTitle(object)).realDataUpdate(makeStockDtoByJson(object, parser));
                 em.merge(stock);
                 insertUsingBatch(stock, i);
                 continue;
@@ -58,7 +57,7 @@ public class StockInfo extends CommonSearch {
         }
     }
 
-    public void insertUsingBatch(Stock stock, int i) {
+    private void insertUsingBatch(Stock stock, int i) {
         em.persist(stock);
         if (i % batchSize == 0) {
             logger.info("{}번째 배치삽입", i);

@@ -38,6 +38,10 @@ public class StockService {
     @Value("${batch.size}")
     private Integer batchSize;
 
+    private static final double maxHighPercent = 30.0;
+    private static final double maxLowPercent = -30.0;
+    private static final int minCost = 0;
+
     public List<Stock> findAll() {
         return stockRepository.findAll();
     }
@@ -100,15 +104,15 @@ public class StockService {
     }
 
     public List<Stock> lowRate() {
-        return stockRepository.findTop20ByRateGreaterThanEqualOrderByRateAsc(-30.0);
+        return stockRepository.findTop20ByRateGreaterThanEqualOrderByRateAsc(maxLowPercent);
     }
 
     public List<Stock> lowCost() {
-        return stockRepository.findTop20ByCostGreaterThanOrderByCostAsc(0);
+        return stockRepository.findTop20ByCostGreaterThanOrderByCostAsc(minCost);
     }
 
     public List<Stock> topRate() {
-        return stockRepository.findTop20ByRateLessThanEqualOrderByRateDesc(30.0);
+        return stockRepository.findTop20ByRateLessThanEqualOrderByRateDesc(maxHighPercent);
     }
 
     public List<Stock> topCost() {

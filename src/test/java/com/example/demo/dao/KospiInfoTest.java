@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +22,8 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class kospiInfoTest {
-    private static final Logger logger = LoggerFactory.getLogger(kospiInfoTest.class);
+public class KospiInfoTest {
+    private static final Logger logger = LoggerFactory.getLogger(KospiInfoTest.class);
     private JsonParser parser;
 
     @Autowired

@@ -21,19 +21,13 @@ import java.util.Map;
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
 
-    @Autowired
-    private StockRepository stockRepository;
-
     public String [] splitBody(String body) {
         return body.split("\\s,\\s");
     }
 
-    public StockDto makeStockByJson(String info, JsonParser parser, Map<String, Stock> stockMap) throws Exception {
-        JsonObject object = (JsonObject)parser.parse(info);
+    public StockDto makeStockDtoByJson(JsonObject object, JsonParser parser) throws Exception {
         Gson gson = new Gson();
-        if (!chekcDB(object, stockMap))
-            return gson.fromJson(object, StockDto.class);
-        throw new Exception(getTitle(object) + "객체가 이미 데이터베이스에 존재합니다.");
+        return gson.fromJson(object, StockDto.class);
     }
 
     public String getUrl(String code) {

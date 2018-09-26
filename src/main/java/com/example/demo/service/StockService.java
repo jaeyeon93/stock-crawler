@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
-import com.example.demo.dto.StockDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,6 +37,10 @@ public class StockService {
 
     @Value("${batch.size}")
     private Integer batchSize;
+
+    private static final double maxHighPercent = 30.0;
+    private static final double maxLowPercent = -30.0;
+    private static final int minCost = 0;
 
     public List<Stock> findAll() {
         return stockRepository.findAll();
@@ -102,15 +104,15 @@ public class StockService {
     }
 
     public List<Stock> lowRate() {
-        return stockRepository.findTop20ByOrderByRateAsc();
+        return stockRepository.findTop20ByRateGreaterThanEqualOrderByRateAsc(maxLowPercent);
     }
 
     public List<Stock> lowCost() {
-        return stockRepository.findTop20ByOrderByCostAsc();
+        return stockRepository.findTop20ByCostGreaterThanOrderByCostAsc(minCost);
     }
 
     public List<Stock> topRate() {
-        return stockRepository.findTop20ByOrderByRateDesc();
+        return stockRepository.findTop20ByRateLessThanEqualOrderByRateDesc(maxHighPercent);
     }
 
     public List<Stock> topCost() {

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "nameRateIndex", columnList = "name, rate")})
+@Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "rateIndex", columnList = "rate"), @Index(name = "costIndex", columnList = "cost")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);
 
@@ -70,11 +70,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-    public Stock realDataUpdate(String name, String cost, String updn, String rate) {
-        this.name = name.toUpperCase();
-        this.cost = costToInteger(cost);
-        this.updn = updnToInteger(updn);
-        this.rate = rateToDouble(rate);
+    public Stock realDataUpdate(StockDto stockDto) {
+        this.name = stockDto.getName();
+        this.cost = stockDto.getCost();
+        this.updn = stockDto.getUpdn();
+        this.rate = stockDto.getRate();
         logger.info("{} 실시간 정보 업데이트", name);
         return this;
     }
@@ -84,7 +84,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     }
 
     public String getName() {
-        return name;
+        return name.toUpperCase();
     }
 
     public String getSalesMoney() {

@@ -2,7 +2,9 @@ package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.CommonSearch;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -36,17 +38,32 @@ public class StockInfo extends CommonSearch {
         String body = new Research(url).getBody();
         parser = new JsonParser();
         String [] infos = splitBody(body);
-        for (int i = 0; i < infos.length; i++) {
-            em.persist(makeStockByJson(infos[i], parser, stockMap).toStock());
-            if (i % batchSize == 0) {
-                logger.info("{}번째i batch실행", i);
-                em.flush();
-                em.clear();
-            }
-        }
+        determineMakeUpdate(infos, stockMap);
         logger.info("batch끝");
         em.flush();
         em.clear();
+    }
+
+    public void determineMakeUpdate(String [] infos, Map<String, Stock> stockMap) throws Exception {
+        for (int i = 0; i < infos.length; i++) {
+            JsonObject object = (JsonObject)parser.parse(infos[i]);
+            if (chekcDB(object, stockMap)) {
+                Stock stock = stockRepository.findByName(getTitle(object)).realDataUpdate(makeStockDtoByJson(object, parser));
+                em.merge(stock);
+                insertUsingBatch(stock, i);
+                continue;
+            }
+            insertUsingBatch(makeStockDtoByJson(object, parser).toStock(), i);
+        }
+    }
+
+    private void insertUsingBatch(Stock stock, int i) {
+        em.persist(stock);
+        if (i % batchSize == 0) {
+            logger.info("{}번째 배치삽입", i);
+            em.flush();
+            em.clear();
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.domain.Stock;
+import com.example.demo.domain.StockRepository;
 import com.example.demo.service.StockService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +22,8 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class kospiInfoTest {
-    private static final Logger logger = LoggerFactory.getLogger(kospiInfoTest.class);
+public class KospiInfoTest {
+    private static final Logger logger = LoggerFactory.getLogger(KospiInfoTest.class);
     private JsonParser parser;
 
     @Autowired
@@ -31,6 +31,9 @@ public class kospiInfoTest {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private StockRepository stockRepository;
 
     @Before
     public void setUp() {
@@ -64,4 +67,12 @@ public class kospiInfoTest {
         boolean checkDB = stockInfo.chekcDB(object, map);
         assertThat(checkDB, is(true));
     }
+
+    @Test
+    public void batchInsertTest() throws Exception {
+        stockService.getAllStock();
+        Stock stock = stockService.updateByStockName("삼성전자");
+        assertThat(stock.getName(), is("삼성전자"));
+    }
+
 }

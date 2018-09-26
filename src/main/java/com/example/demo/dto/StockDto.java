@@ -44,7 +44,7 @@ public class StockDto extends AbstractEntity {
     }
 
     public Stock toStock() {
-        return new Stock(this.name, costToInteger(this.cost), updnToInteger(this.updn), rateToDouble(this.rate), getUrl(this.code));
+        return new Stock(this.name, getCost(), getUpdn(), getRate(), getUrl(this.code));
     }
 
     public Stock toRealDataUpdate(Stock original) {
@@ -74,8 +74,8 @@ public class StockDto extends AbstractEntity {
         return this;
     }
 
-    public String getCost() {
-        return cost;
+    public Integer getCost() {
+        return Integer.parseInt(cost.replace(",", ""));
     }
 
     public StockDto setCost(String cost) {
@@ -101,8 +101,10 @@ public class StockDto extends AbstractEntity {
         return this;
     }
 
-    public String getUpdn() {
-        return updn;
+    public Integer getUpdn() {
+        if (updn.contains("▼"))
+            return (Integer.parseInt(updn.replace("▼", "").replace(",", "").trim()) * -1);
+        return Integer.parseInt(updn.replace("▲", "").replace(",","").trim());
     }
 
     public StockDto setUpdn(String updn) {
@@ -110,8 +112,8 @@ public class StockDto extends AbstractEntity {
         return this;
     }
 
-    public String getRate() {
-        return rate;
+    public Double getRate() {
+        return Double.parseDouble(rate.replace("%",""));
     }
 
     public StockDto setRate(String rate) {

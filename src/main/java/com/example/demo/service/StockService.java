@@ -122,5 +122,19 @@ public class StockService {
     public List<Stock> searchByStockName(String stockName) {
         return stockRepository.findByNameStartingWith(stockName);
     }
+
+    public List<Stock> searchByStockNameAndOverCost(String stockName, Integer cost) {
+        return stockRepository.findByNameIsStartingWithAndCostGreaterThanEqualOrderByCostDesc(stockName, cost);
+    }
+
+    public List<Stock> searchByOverRate(Double overRate) {
+        logger.info("overRate : {}", overRate);
+        return stockRepository.findByRateGreaterThanEqualOrderByRateDesc(overRate);
+    }
+
+    public List<Stock> searchByUnderRate(Double underRate) {
+        logger.info("under : {}", underRate);
+        return stockRepository.findByRateLessThanEqualOrderByRateDesc(underRate);
+    }
 }
 

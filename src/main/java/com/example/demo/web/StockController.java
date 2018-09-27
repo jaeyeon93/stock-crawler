@@ -48,6 +48,24 @@ public class StockController {
         return stockService.searchByStockName(stockName);
     }
 
+    @GetMapping("/search/{stockName}/{cost}")
+    public @ResponseBody List<Stock> searchByStockName(@PathVariable String stockName, @PathVariable Integer cost) {
+        logger.info("stockName : {} cost : {}", stockName, cost);
+        return stockService.searchByStockNameAndOverCost(stockName, cost);
+    }
+
+    @GetMapping("/overRate/{overRate}")
+    public @ResponseBody List<Stock> searchByOverRate(@PathVariable Double overRate) {
+        logger.info("전달받은 overRate : {}", overRate);
+        return stockService.searchByOverRate(overRate);
+    }
+
+    @GetMapping("/underRate/{underRate}")
+    public @ResponseBody List<Stock> searchByUnderRate(@PathVariable Double underRate) {
+        logger.info("전달받은 underRate : {}", underRate);
+        return stockService.searchByUnderRate(underRate);
+    }
+
     @GetMapping("/allstockupdate")
     public String detailWholeUpdate() throws Exception {
         stockService.detailWholeUpdate();

@@ -40,4 +40,8 @@ dependencies {
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
     compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.2.15')
+    compile group: 'org.telegram', name: 'telegrambots', version: '4.1'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
+    // https://mvnrepository.com/artifact/me.ramswaroop.jbot/jbot
+    compile group: 'me.ramswaroop.jbot', name: 'jbot', version: '4.0.0'
 }

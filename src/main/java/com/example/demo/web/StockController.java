@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -24,6 +25,18 @@ public class StockController {
         return stockService.findAll();
     }
 
+    @PostMapping("/hello")
+    public String hello() {
+        logger.info("hello method called");
+        return "hello world";
+    }
+
+    @PostMapping("/삼성전자")
+    public @ResponseBody Stock test(@PathVariable String stockName) throws Exception {
+        logger.info("test method called");
+        return stockService.updateByStockName(stockName);
+    }
+
     @DeleteMapping("/{id}")
     public String deleteStockById(@PathVariable long id) throws Exception {
         logger.info("deleteStockById method called");
@@ -33,6 +46,7 @@ public class StockController {
 
     @GetMapping("/all")
     public String getAllStock() throws Exception {
+        logger.info("all 메소드 호출");
         stockService.getAllStock();
         return "redirect:/stock";
     }
@@ -46,6 +60,24 @@ public class StockController {
     @GetMapping("/search/{stockName}")
     public @ResponseBody List<Stock> searchByStockName(@PathVariable String stockName) {
         return stockService.searchByStockName(stockName);
+    }
+
+    @GetMapping("/search/{stockName}/{cost}")
+    public @ResponseBody List<Stock> searchByStockName(@PathVariable String stockName, @PathVariable Integer cost) {
+        logger.info("stockName : {} cost : {}", stockName, cost);
+        return stockService.searchByStockNameAndOverCost(stockName, cost);
+    }
+
+    @GetMapping("/overRate/{overRate}")
+    public @ResponseBody List<Stock> searchByOverRate(@PathVariable Double overRate) {
+        logger.info("전달받은 overRate : {}", overRate);
+        return stockService.searchByOverRate(overRate);
+    }
+
+    @GetMapping("/underRate/{underRate}")
+    public @ResponseBody List<Stock> searchByUnderRate(@PathVariable Double underRate) {
+        logger.info("전달받은 underRate : {}", underRate);
+        return stockService.searchByUnderRate(underRate);
     }
 
     @GetMapping("/allstockupdate")

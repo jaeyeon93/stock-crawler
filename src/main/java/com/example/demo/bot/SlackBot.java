@@ -27,9 +27,6 @@ public class SlackBot extends Bot {
     @Autowired
     private StockService stockService;
 
-    @Autowired
-    private StockRepository stockRepository;
-
     @Override
     public String getSlackToken() {
         return token;
@@ -42,7 +39,6 @@ public class SlackBot extends Bot {
 
     @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE})
     public void onReceiveDM(WebSocketSession session, Event event) {
-        logger.info("token : {}", token);
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
@@ -56,6 +52,5 @@ public class SlackBot extends Bot {
         if (message.contains("하위변동률"))
             reply(session, event, new Message("많이 떨어진 종목 : " + stockService.lowRate().toString()));
 
-//        reply(session, event, new Message("검색한 종목은 " + stockRepository.findByName(message).toString()));
     }
 }

@@ -35,13 +35,11 @@ dependencies {
     runtime('mysql:mysql-connector-java')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     compile 'org.jsoup:jsoup:1.11.3'
-// https://mvnrepository.com/artifact/com.codeborne/phantomjsdriver
-    compile group: 'com.codeborne', name: 'phantomjsdriver', version: '1.4.3'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.4.0'
     compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.2.15')
     compile group: 'org.telegram', name: 'telegrambots', version: '4.1'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
-    // https://mvnrepository.com/artifact/me.ramswaroop.jbot/jbot
+    compile group: 'com.github.seratch', name: 'jslack', version: '1.1.6'
     compile group: 'me.ramswaroop.jbot', name: 'jbot', version: '4.0.0'
+    compileOnly 'javax.websocket:javax.websocket-api:1.1'
+    compile group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.13.1'
 }

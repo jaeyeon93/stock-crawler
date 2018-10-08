@@ -3,6 +3,7 @@ package com.example.demo.domain;
 import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.AbstractEntity;
 import com.example.demo.support.domain.UrlGeneratable;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "rateIndex", columnList = "rate"), @Index(name = "costIndex", columnList = "cost")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);

@@ -60,6 +60,7 @@ public class AbstractEntity {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
 
+    @JsonIgnore
     public Integer getDiffday() {
         int createDate = changeDate(getLocalDateTime()).getDayOfYear();
         int current = changeDate(getRequestTime()).getDayOfYear();

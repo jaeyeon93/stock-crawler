@@ -34,9 +34,6 @@ public class SlackBot extends Bot {
     @Value("${slack.webhook.url}")
     private String webhookUrl;
 
-    @Value("${slack.bot.url}")
-    private String botUrl;
-
     @Autowired
     private StockService stockService;
 
@@ -58,17 +55,32 @@ public class SlackBot extends Bot {
     @Controller(events = EventType.MESSAGE)
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
+        logger.info("입력한 메세지 : {}", message);
+        Stock stock = stockService.getStockByStockName(message);
+        logger.info("검색한 주식 : {}", stock.getName());
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
-        String json = "{\n" +
-                "\t\"channel\":\"test\",\n" +
-                "\t\"text\":\"I hope the tour went well, Mr. Wonka.\",\n" +
-                "\t\"attachments\": [\n" +
+        HttpEntity<String> entity = new HttpEntity<>(jsonFormater(stock) ,headers);
+//        if (message.contains("테스트"))
+//            restTemplate.postForEntity(webhookUrl, entity, Stock.class);
+        restTemplate.postForEntity(webhookUrl, entity, String.class);
+        if (message.contains("상위변동률"))
+            reply(session, event, new Message("많이 오른 종목 : " + stockService.topRate().toString()));
+
+        if (message.contains("하위변동률"))
+            reply(session, event, new Message("많이 떨어진 종목 : " + stockService.lowRate().toString()));
+    }
+
+    public String jsonFormater(Stock stock) {
+        String convert = "{\n" +
+                "    \"attachments\": [\n" +
                 "        {\n" +
+                "            \"fallback\": \"Required plain-text summary of the attachment.\",\n" +
                 "            \"color\": \"#CC0000\",\n" +
-                "            \"title\": \"<http://www.naver.com| Naver>\",\n" +
+                "            \"title\": \"<" + stock.getDetailUrl() + "| " + stock.getName() + ">: Backup in delayed jobs\",\n" +
                 "            \"mrkdwn_in\": [\n" +
                 "                \"title\",\n" +
                 "                \"text\",\n" +
@@ -78,35 +90,32 @@ public class SlackBot extends Bot {
                 "            \"fields\": [\n" +
                 "                {\n" +
                 "                    \"title\": \"주가\",\n" +
-                "                    \"value\": \"700,000\",\n" +
+                "                    \"value\": " + stock.getCost() + ",\n" +
                 "                    \"short\": true\n" +
                 "                },\n" +
                 "                {\n" +
                 "                    \"title\": \"변동률\",\n" +
-                "                    \"value\": \"15%\",\n" +
+                "                    \"value\": " + stock.getRate() + ",\n" +
                 "                    \"short\": true\n" +
                 "                },\n" +
                 "                {\n" +
                 "                    \"title\": \"변동가격\",\n" +
-                "                    \"value\": \"10,000\",\n" +
+                "                    \"value\": " + stock.getUpdn() + ",\n" +
                 "                    \"short\": true\n" +
+                "                }\n" +
+                "            ],\n" +
+                "            \"actions\": [\n" +
+                "                {\n" +
+                "                    \"name\": \"Acknowledge\",\n" +
+                "                    \"text\": \"자세히보기\",\n" +
+                "                    \"type\": \"button\",\n" +
+                "                    \"value\": \"Acknowledge\"\n" +
                 "                }\n" +
                 "            ],\n" +
                 "            \"footer\": \"MADE BY JIMMY\"\n" +
                 "        }\n" +
                 "    ]\n" +
-                "\n" +
                 "}";
-
-        HttpEntity<String> entity = new HttpEntity<>(json ,headers);
-        logger.info("입력한 메세지 : {}", message);
-        if (message.contains("테스트"))
-            restTemplate.postForEntity(webhookUrl, entity, String.class);
-
-        if (message.contains("상위변동률"))
-            reply(session, event, new Message("많이 오른 종목 : " + stockService.topRate().toString()));
-
-        if (message.contains("하위변동률"))
-            reply(session, event, new Message("많이 떨어진 종목 : " + stockService.lowRate().toString()));
+        return convert;
     }
 }

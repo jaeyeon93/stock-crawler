@@ -1,6 +1,7 @@
 package com.example.demo.bot;
 
 import com.example.demo.domain.Stock;
+import com.example.demo.dto.StockJsonDto;
 import com.example.demo.service.StockService;
 import me.ramswaroop.jbot.core.common.Controller;
 import me.ramswaroop.jbot.core.common.EventType;
@@ -58,14 +59,14 @@ public class SlackBot extends Bot {
     @Controller(events = EventType.MESSAGE)
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
-        Stock stock = stockService.getStockByStockName(message);
-        logger.info("입력한 주식 : {}", stock.getName());
-
+//        Stock stock = stockService.getStockByStockName(message);
+//        logger.info("입력한 주식 : {}", stock.getName());
+        StockJsonDto jsonDto = new StockJsonDto(stockService.getStockByStockName(message));
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
-        HttpEntity<String> entity = new HttpEntity<>(converter(stock) , headers);
+        HttpEntity<String> entity = new HttpEntity<>(jsonDto.makeJson().toString() , headers);
         restTemplate.postForEntity(botUrl, entity, String.class);
     }
 

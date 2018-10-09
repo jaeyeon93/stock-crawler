@@ -14,6 +14,7 @@ public class StockJsonDtoTest {
     private static final Logger logger =  LoggerFactory.getLogger(StockJsonDtoTest.class);
     private Stock stock;
     private StockJsonDto stockJsonDto;
+    private Runnable runnable;
 
     @Before
     public void setUp() {
@@ -22,12 +23,20 @@ public class StockJsonDtoTest {
     }
 
     @Test
+    public void makeFiledsTest() {
+        logger.info("{}", stockJsonDto.makeFileds().toString());
+    }
+
+    @Test
+    public void attachmentsTest() {
+        logger.info("{}", stockJsonDto.attachements().toString());
+    }
+
+    @Test
     public void addProperty() {
-        Gson gson = new Gson();
         JsonObject object = new JsonObject();
         object.addProperty("username", "jimmy");
         object.addProperty("channel","test");
-        logger.info("{}", object.toString());
         JsonArray fields = new JsonArray();
         JsonObject field1 = new JsonObject();
         field1.addProperty("title", "주가");

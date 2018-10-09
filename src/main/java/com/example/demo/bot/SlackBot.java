@@ -34,6 +34,9 @@ public class SlackBot extends Bot {
     @Value("${slack.webhook.url}")
     private String webhookUrl;
 
+    @Value("${slack.bot.url}")
+    private String botUrl;
+
     @Autowired
     private StockService stockService;
 
@@ -55,30 +58,24 @@ public class SlackBot extends Bot {
     @Controller(events = EventType.MESSAGE)
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
-        logger.info("입력한 메세지 : {}", message);
         Stock stock = stockService.getStockByStockName(message);
-        logger.info("검색한 주식 : {}", stock.getName());
+        logger.info("입력한 주식 : {}", stock.getName());
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
-        HttpEntity<String> entity = new HttpEntity<>(jsonFormater(stock) ,headers);
-//        if (message.contains("테스트"))
-//            restTemplate.postForEntity(webhookUrl, entity, Stock.class);
-        restTemplate.postForEntity(webhookUrl, entity, String.class);
-        if (message.contains("상위변동률"))
-            reply(session, event, new Message("많이 오른 종목 : " + stockService.topRate().toString()));
-
-        if (message.contains("하위변동률"))
-            reply(session, event, new Message("많이 떨어진 종목 : " + stockService.lowRate().toString()));
+        HttpEntity<String> entity = new HttpEntity<>(converter(stock) , headers);
+        restTemplate.postForEntity(botUrl, entity, String.class);
     }
 
-    public String jsonFormater(Stock stock) {
-        String convert = "{\n" +
-                "    \"attachments\": [\n" +
+    public String converter(Stock stock) {
+        String converter = "{\n" +
+                "\t\"username\" : \"jimmy\",\n" +
+                "\t\"channel\":\"test\",\n" +
+                "\t\"text\":\"I hope the tour went well, Mr. Wonka.\",\n" +
+                "\t\"attachments\": [\n" +
                 "        {\n" +
-                "            \"fallback\": \"Required plain-text summary of the attachment.\",\n" +
                 "            \"color\": \"#CC0000\",\n" +
                 "            \"title\": \"<" + stock.getDetailUrl() + "| " + stock.getName() + ">: Backup in delayed jobs\",\n" +
                 "            \"mrkdwn_in\": [\n" +
@@ -104,18 +101,11 @@ public class SlackBot extends Bot {
                 "                    \"short\": true\n" +
                 "                }\n" +
                 "            ],\n" +
-                "            \"actions\": [\n" +
-                "                {\n" +
-                "                    \"name\": \"Acknowledge\",\n" +
-                "                    \"text\": \"자세히보기\",\n" +
-                "                    \"type\": \"button\",\n" +
-                "                    \"value\": \"Acknowledge\"\n" +
-                "                }\n" +
-                "            ],\n" +
                 "            \"footer\": \"MADE BY JIMMY\"\n" +
                 "        }\n" +
                 "    ]\n" +
+                "\n" +
                 "}";
-        return convert;
+        return converter;
     }
 }

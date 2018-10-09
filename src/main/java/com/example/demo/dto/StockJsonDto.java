@@ -27,7 +27,7 @@ public class StockJsonDto {
         JsonArray attachments = new JsonArray();
         JsonObject attach = new JsonObject();
         attach.addProperty("color", "#CC0000");
-        attach.addProperty("title", "<" + getStock().getDetailUrl() + "|" + getStock().getName() + ">");
+        attach.addProperty("title", "<" + getStock().getDetailUrl() + " |" + getStock().getName() + ">");
         attach.add("fields", makeFileds());
         attach.addProperty("footer", "MADE BY JIMMY");
         attachments.add(attach);

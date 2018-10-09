@@ -29,12 +29,6 @@ public class SlackBot extends Bot {
     @Value("${slack.token}")
     private String token;
 
-    @Value("${default.url}")
-    private String defaultUrl;
-
-    @Value("${slack.webhook.url}")
-    private String webhookUrl;
-
     @Value("${slack.bot.url}")
     private String botUrl;
 
@@ -59,8 +53,6 @@ public class SlackBot extends Bot {
     @Controller(events = EventType.MESSAGE)
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
-//        Stock stock = stockService.getStockByStockName(message);
-//        logger.info("입력한 주식 : {}", stock.getName());
         StockJsonDto jsonDto = new StockJsonDto(stockService.getStockByStockName(message));
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -70,43 +62,4 @@ public class SlackBot extends Bot {
         restTemplate.postForEntity(botUrl, entity, String.class);
     }
 
-    public String converter(Stock stock) {
-        String converter = "{\n" +
-                "\t\"username\" : \"jimmy\",\n" +
-                "\t\"channel\":\"test\",\n" +
-                "\t\"text\":\"I hope the tour went well, Mr. Wonka.\",\n" +
-                "\t\"attachments\": [\n" +
-                "        {\n" +
-                "            \"color\": \"#CC0000\",\n" +
-                "            \"title\": \"<" + stock.getDetailUrl() + "| " + stock.getName() + ">: Backup in delayed jobs\",\n" +
-                "            \"mrkdwn_in\": [\n" +
-                "                \"title\",\n" +
-                "                \"text\",\n" +
-                "                \"pretext\",\n" +
-                "                \"fields\"\n" +
-                "            ],\n" +
-                "            \"fields\": [\n" +
-                "                {\n" +
-                "                    \"title\": \"주가\",\n" +
-                "                    \"value\": " + stock.getCost() + ",\n" +
-                "                    \"short\": true\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"title\": \"변동률\",\n" +
-                "                    \"value\": " + stock.getRate() + ",\n" +
-                "                    \"short\": true\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"title\": \"변동가격\",\n" +
-                "                    \"value\": " + stock.getUpdn() + ",\n" +
-                "                    \"short\": true\n" +
-                "                }\n" +
-                "            ],\n" +
-                "            \"footer\": \"MADE BY JIMMY\"\n" +
-                "        }\n" +
-                "    ]\n" +
-                "\n" +
-                "}";
-        return converter;
-    }
 }

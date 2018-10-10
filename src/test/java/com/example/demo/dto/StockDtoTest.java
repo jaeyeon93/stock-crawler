@@ -34,19 +34,4 @@ public class StockDtoTest {
         Stock stock = gson.fromJson(object, StockDto.class).toStock();
         logger.info("stock정보 : {}", stock.toString());
     }
-
-    @Test
-    public void 한미약품() {
-        String hanmi = "{code:\"128940\",name :\"한미약품\",cost :\"505,000\",updn :\"▲9,000\",rate :\"+1.81%\"}";
-        boolean result = hanmi.contains("▲");
-        assertThat(result, is(true));
-        StockDto dto = gson.fromJson(hanmi, StockDto.class);
-        logger.info("{}", dto.toString());
-        logger.info("before : {}", dto.getUpdn());
-        int test = dto.updnToInteger(dto.getUpdn());
-        logger.info("after : {}", test);
-        Stock stock = dto.toStock();
-        logger.info("stock : {}", stock.toString());
-    }
-
 }

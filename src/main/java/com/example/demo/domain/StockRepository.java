@@ -15,4 +15,11 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     // 이름으로 검색하기
     List<Stock> findByNameStartingWith(String name);
 
+    // rate이상으로 검색하기
+    List<Stock> findByRateGreaterThanEqualOrderByRateDesc(Double overRate);
+
+    // rate이하로 검색하기
+    List<Stock> findByRateLessThanEqualOrderByRateDesc(Double underRate);
+
+    List<Stock> findByNameIsStartingWithAndCostGreaterThanEqualOrderByCostDesc(String name, Integer cost);
 }

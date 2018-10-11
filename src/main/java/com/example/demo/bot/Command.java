@@ -46,7 +46,7 @@ public class Command {
             }
         });
     }
-
+    
     public Map<String, CommadMessage> getCommands() {
         return commands;
     }

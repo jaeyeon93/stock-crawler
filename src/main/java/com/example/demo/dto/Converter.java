@@ -17,7 +17,7 @@ public class Converter extends LinkedHashMap<String, Object> {
         put("username", "jimmy");
         put("channel", "test");
         List<Attachment> attachments = new ArrayList<>();
-        attachments.add(new Attachment(stock));
+        attachments.add(new Attachment(stock, checkColor(stock)));
         put("attachments", attachments);
     }
 
@@ -26,9 +26,13 @@ public class Converter extends LinkedHashMap<String, Object> {
         put("channel", "test");
         List<Attachment> attachments = new ArrayList<>();
         for (Stock stock : stocks)
-            attachments.add(new Attachment(stock));
+            attachments.add(new Attachment(stock, checkColor(stock)));
         put("attachments", attachments);
     }
 
-
+    public static String checkColor(Stock stock) {
+        if (stock.getRate() > 0.0)
+            return red;
+        return blue;
+    }
 }

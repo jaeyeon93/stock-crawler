@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
@@ -59,24 +60,20 @@ public class SlackBot extends Bot {
     }
 
     @Controller(events = EventType.MESSAGE)
-    public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
+    public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
+        logger.info("메세지 : {}", message);
         Gson gson = new Gson();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
-        if (checkCommand(message)) {
-            logger.info("명령어 : {}", message);
-            restTemplate.postForEntity(botUrl, requestList(gson, headers, command.getCommands().get(message).runCommand()), String.class);
-            return;
-        }
-        logger.info("명령어집합에 없다. 주식검색");
+
+        if (checkCommand(message))
+            return restTemplate.postForEntity(botUrl, requestList(gson, headers, command.getCommands().get(message).runCommand()), String.class);
         Stock stock = stockService.getStockByStockName(message);
-        String json = gson.toJson(new Converter(stock));
-        HttpEntity<String> entity = new HttpEntity<>(json , headers);
-        //        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
-        restTemplate.postForEntity(botUrl, entity, String.class);
+        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
+        return restTemplate.postForEntity(botUrl, entity, String.class);
     }
 
     public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks) {

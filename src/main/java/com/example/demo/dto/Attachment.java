@@ -1,19 +1,17 @@
 package com.example.demo.dto;
 
 import com.example.demo.domain.Stock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 
 public class Attachment extends LinkedHashMap<String, Object> {
-    public Attachment(String color, Stock stock) {
-        put("color", color);
-        put("title", "<" + stock.getDetailUrl() + " |" + stock.getName() + ">");
-        List<Field> fields = new ArrayList<>();
-        fields.add(new Field("주가", stock.getCost()));
-        fields.add(new Field("변동률", stock.getRate()));
-        fields.add(new Field("변동가격", stock.getUpdn()));
-        put("fields", fields);
-        put("footer", "Made by Jimmy");
+    private static final Logger logger =  LoggerFactory.getLogger(Attachment.class);
+    public Attachment(Stock stock) {
+        logger.info("{}", stock.toString());
+        put("color", "#CC0000");
+        put("title", "<" + stock.getDetailUrl() + "|" + stock.getName() + "> 주가 : " + stock.getCost() + ", 변동률 : " + stock.getRate() + ", 변동가격 : " + stock.getUpdn());
     }
 }

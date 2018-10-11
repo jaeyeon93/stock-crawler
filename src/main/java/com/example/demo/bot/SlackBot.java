@@ -22,6 +22,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 
 @Component
@@ -36,6 +39,9 @@ public class SlackBot extends Bot {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private Command command;
 
     @Override
     public String getSlackToken() {
@@ -56,13 +62,30 @@ public class SlackBot extends Bot {
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
         Gson gson = new Gson();
-        Stock stock = stockService.getStockByStockName(message);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
-        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
+        if (checkCommand(message)) {
+            logger.info("명령어 : {}", message);
+            restTemplate.postForEntity(botUrl, requestList(gson, headers, command.getCommands().get(message).runCommand()), String.class);
+            return;
+        }
+        logger.info("명령어집합에 없다. 주식검색");
+        Stock stock = stockService.getStockByStockName(message);
+        String json = gson.toJson(new Converter(stock));
+        HttpEntity<String> entity = new HttpEntity<>(json , headers);
+        //        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
         restTemplate.postForEntity(botUrl, entity, String.class);
     }
 
+    public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks) {
+        return new HttpEntity<>(gson.toJson(new Converter(stocks)), headers);
+    }
+
+    public boolean checkCommand(String message) {
+        if (command.getCommands().containsKey(message))
+            return true;
+        return false;
+    }
 }

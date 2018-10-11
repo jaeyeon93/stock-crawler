@@ -1,7 +1,10 @@
 package com.example.demo.bot;
 
-import com.example.demo.domain.StockRepository;
+import com.example.demo.domain.Stock;
+import com.example.demo.dto.Converter;
+import com.example.demo.dto.StockJsonDto;
 import com.example.demo.service.StockService;
+import com.google.gson.Gson;
 import me.ramswaroop.jbot.core.common.Controller;
 import me.ramswaroop.jbot.core.common.EventType;
 import me.ramswaroop.jbot.core.slack.Bot;
@@ -11,7 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -23,6 +30,9 @@ public class SlackBot extends Bot {
 
     @Value("${slack.token}")
     private String token;
+
+    @Value("${slack.bot.url}")
+    private String botUrl;
 
     @Autowired
     private StockService stockService;
@@ -45,12 +55,14 @@ public class SlackBot extends Bot {
     @Controller(events = EventType.MESSAGE)
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
-        reply(session, event, new Message("응답하라"));
-        if (message.contains("상위변동률"))
-            reply(session, event, new Message("많이 오른 종목 : " + stockService.topRate().toString()));
-
-        if (message.contains("하위변동률"))
-            reply(session, event, new Message("많이 떨어진 종목 : " + stockService.lowRate().toString()));
-
+        Gson gson = new Gson();
+        Stock stock = stockService.getStockByStockName(message);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.set("Authorization", "Bearer "+ token);
+        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
+        restTemplate.postForEntity(botUrl, entity, String.class);
     }
+
 }

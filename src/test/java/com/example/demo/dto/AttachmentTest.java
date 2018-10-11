@@ -1,7 +1,6 @@
-package com.example.demo.dao;
+package com.example.demo.dto;
 
 import com.example.demo.domain.Stock;
-import com.example.demo.dto.Attachment;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -22,4 +21,5 @@ public class AttachmentTest {
         attachment = new Attachment("red", stock);
         logger.info("{}", attachment.toString());
     }
+
 }

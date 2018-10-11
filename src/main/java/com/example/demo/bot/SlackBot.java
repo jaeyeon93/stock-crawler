@@ -70,7 +70,7 @@ public class SlackBot extends Bot {
         headers.set("Authorization", "Bearer "+ token);
 
         if (checkCommand(message))
-            return restTemplate.postForEntity(botUrl, requestList(gson, headers, command.getCommands().get(message).runCommand()), String.class);
+            return restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand()), String.class);
         Stock stock = stockService.getStockByStockName(message);
         HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
         return restTemplate.postForEntity(botUrl, entity, String.class);
@@ -81,7 +81,7 @@ public class SlackBot extends Bot {
     }
 
     public boolean checkCommand(String message) {
-        if (command.getCommands().containsKey(message))
+        if (command.containsKey(message))
             return true;
         return false;
     }

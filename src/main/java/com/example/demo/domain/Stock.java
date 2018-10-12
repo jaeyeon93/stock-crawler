@@ -5,13 +5,14 @@ import com.example.demo.support.domain.AbstractEntity;
 import com.example.demo.support.domain.UrlGeneratable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 
 @Entity
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "rateIndex", columnList = "rate"), @Index(name = "costIndex", columnList = "cost")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);
@@ -51,7 +52,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock() {}
 
     public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl) {
-        this.name = name.toUpperCase();
+        this.name = name.toUpperCase().replace(" ","");
         this.cost = cost;
         this.updn = updn;
         this.rate = rate;
@@ -60,7 +61,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     }
 
     public Stock update(String cost, String updn, String rate, String profit, String salesMoney, String totalCost, String detailUrl) {
-        this.name = getName().toUpperCase();
+        this.name = getName().toUpperCase().replace(" ","");
         this.cost = updnToInteger(cost);
         this.updn = costToInteger(updn);
         this.rate = rateToDouble(rate);
@@ -127,11 +128,11 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return "Stock{" +
                 "name='" + name + '\'' +
                 ", salesMoney='" + salesMoney + '\'' +
-                ", cost='" + cost + '\'' +
+                ", cost=" + cost +
                 ", profit='" + profit + '\'' +
                 ", totalCost='" + totalCost + '\'' +
-                ", updn='" + updn + '\'' +
-                ", updnToInteger='" + rate + '\'' +
+                ", updn=" + updn +
+                ", rate=" + rate +
                 ", detailUrl='" + detailUrl + '\'' +
                 '}';
     }

@@ -34,7 +34,6 @@ public class StockTest {
     @Test
     public void stringToInteger() {
         assertThat(stock.getCost(), is(3170));
-        logger.info("updnToInteger : {}", stock.getRate());
     }
 
     @Test

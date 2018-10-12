@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,20 +61,24 @@ public class SlackBot extends Bot {
     }
 
     @Controller(events = EventType.MESSAGE)
-    public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
+    public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
         logger.info("메세지 : {}", message);
-        Gson gson = new Gson();
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        headers.set("Authorization", "Bearer "+ token);
-
-        if (checkCommand(message))
-            return restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand()), String.class);
-        Stock stock = stockService.getStockByStockName(message);
-        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stock)) , headers);
-        return restTemplate.postForEntity(botUrl, entity, String.class);
+        try {
+            Gson gson = new Gson();
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+            headers.set("Authorization", "Bearer "+ token);
+            if (checkCommand(event.getText())) {
+                restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand()), String.class);
+                return;
+            }
+            HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message))) , headers);
+            restTemplate.postForEntity(botUrl, entity, String.class);
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks) {

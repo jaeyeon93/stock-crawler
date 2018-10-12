@@ -52,7 +52,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock() {}
 
     public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl) {
-        this.name = name.toUpperCase();
+        this.name = name.toUpperCase().replace(" ","");
         this.cost = cost;
         this.updn = updn;
         this.rate = rate;
@@ -61,7 +61,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     }
 
     public Stock update(String cost, String updn, String rate, String profit, String salesMoney, String totalCost, String detailUrl) {
-        this.name = getName().toUpperCase();
+        this.name = getName().toUpperCase().replace(" ","");
         this.cost = updnToInteger(cost);
         this.updn = costToInteger(updn);
         this.rate = rateToDouble(rate);

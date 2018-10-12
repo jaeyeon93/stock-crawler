@@ -16,10 +16,4 @@ public class AttachmentTest {
         stock = new Stock("testStock", 50000, 1000, 10.0, "http://www.naver.com");
     }
 
-    @Test
-    public void 값테스트() {
-        attachment = new Attachment("red", stock);
-        logger.info("{}", attachment.toString());
-    }
-
 }

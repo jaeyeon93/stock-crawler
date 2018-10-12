@@ -2,7 +2,6 @@ package com.example.demo.bot;
 
 import com.example.demo.domain.Stock;
 import com.example.demo.dto.Converter;
-import com.example.demo.dto.StockJsonDto;
 import com.example.demo.service.StockService;
 import com.google.gson.Gson;
 import me.ramswaroop.jbot.core.common.Controller;
@@ -17,16 +16,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 @Component
@@ -77,7 +72,7 @@ public class SlackBot extends Bot {
             HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message))) , headers);
             restTemplate.postForEntity(botUrl, entity, String.class);
         } catch (Exception e) {
-            e.getMessage();
+            logger.info("{}", e.getMessage());
         }
     }
 

@@ -13,17 +13,17 @@ public class Converter extends LinkedHashMap<String, Object> {
     private static final String red = "#CC0000";
     private static final String blue = "#0000FF";
 
-    public Converter(Stock stock) {
+    public Converter(Stock stock, String channel) {
         put("username", "jimmy");
-        put("channel", "test");
+        put("channel", channel);
         List<Attachment> attachments = new ArrayList<>();
         attachments.add(new Attachment(stock, checkColor(stock)));
         put("attachments", attachments);
     }
 
-    public Converter(List<Stock> stocks) {
+    public Converter(List<Stock> stocks, String channel) {
         put("username", "jimmy");
-        put("channel", "test");
+        put("channel", channel);
         List<Attachment> attachments = new ArrayList<>();
         for (Stock stock : stocks)
             attachments.add(new Attachment(stock, checkColor(stock)));

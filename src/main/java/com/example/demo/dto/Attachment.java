@@ -12,5 +12,6 @@ public class Attachment extends LinkedHashMap<String, Object> {
     public Attachment(Stock stock, String color) {
         put("color", color);
         put("title", "<" + stock.getDetailUrl() + " |" + stock.getName() + "> 주가 : " + stock.getCost() + " 변동률 : " + stock.getRate() + " 변동가격 : " + stock.getUpdn());
+        put("text", "주가 : " + stock.getCost() + " 변동가 : " + stock.getUpdn());
     }
 }

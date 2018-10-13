@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
@@ -66,18 +67,18 @@ public class SlackBot extends Bot {
             headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
             headers.set("Authorization", "Bearer "+ token);
             if (checkCommand(event.getText())) {
-                restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand()), String.class);
+                restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand(), event.getChannelId()), String.class);
                 return;
             }
-            HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message))) , headers);
+            HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message), event.getChannelId())) , headers);
             restTemplate.postForEntity(botUrl, entity, String.class);
         } catch (Exception e) {
-            logger.info("{}", e.getMessage());
+            e.getMessage();
         }
     }
 
-    public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks) {
-        return new HttpEntity<>(gson.toJson(new Converter(stocks)), headers);
+    public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks, String channel) {
+        return new HttpEntity<>(gson.toJson(new Converter(stocks, channel)), headers);
     }
 
     public boolean checkCommand(String message) {

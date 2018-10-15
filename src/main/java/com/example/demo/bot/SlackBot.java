@@ -56,25 +56,21 @@ public class SlackBot extends Bot {
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
-    @Controller(events = EventType.MESSAGE)
+    @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
     public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
         String message = event.getText();
         logger.info("메세지 : {}", message);
-        try {
-            Gson gson = new Gson();
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-            headers.set("Authorization", "Bearer "+ token);
-            if (checkCommand(event.getText())) {
-                restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand(), event.getChannelId()), String.class);
-                return;
-            }
-            HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message), event.getChannelId())) , headers);
-            restTemplate.postForEntity(botUrl, entity, String.class);
-        } catch (Exception e) {
-            e.getMessage();
+        Gson gson = new Gson();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.set("Authorization", "Bearer "+ token);
+        if (checkCommand(event.getText())) {
+            restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand(), event.getChannelId()), String.class);
+            return;
         }
+        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message), event.getChannelId())) , headers);
+        restTemplate.postForEntity(botUrl, entity, String.class);
     }
 
     public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks, String channel) {

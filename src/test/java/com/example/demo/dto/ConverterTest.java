@@ -15,7 +15,7 @@ public class ConverterTest {
     @Before
     public void setUp() {
         stock = new Stock("삼성전자", 43900, 1400, -3.09, "http://www.naver.com");
-        converter = new Converter(stock);
+        converter = new Converter(stock, "general");
         logger.info("{}", converter.toString());
     }
 

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.WebSocketSession;
@@ -31,14 +32,11 @@ public class SlackBot extends Bot {
     @Value("${slack.token}")
     private String token;
 
-    @Value("${slack.bot.url}")
-    private String botUrl;
-
-    @Autowired
-    private StockService stockService;
-
     @Autowired
     private Command command;
+
+    @Autowired
+    private SlackBotRepository slackBotRepository;
 
     @Override
     public String getSlackToken() {
@@ -55,34 +53,17 @@ public class SlackBot extends Bot {
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
-    @Controller(events = EventType.MESSAGE)
-    public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
-        String message = event.getText();
+    @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
+    public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
+        String message = event.getText().toUpperCase();
         logger.info("메세지 : {}", message);
-        try {
-            Gson gson = new Gson();
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-            headers.set("Authorization", "Bearer "+ token);
-            if (checkCommand(event.getText())) {
-                restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand()), String.class);
-                return;
-            }
-            HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message))) , headers);
-            restTemplate.postForEntity(botUrl, entity, String.class);
-        } catch (Exception e) {
-            logger.info("{}", e.getMessage());
-        }
-    }
 
-    public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks) {
-        return new HttpEntity<>(gson.toJson(new Converter(stocks)), headers);
-    }
+        if (message.contains("검색"))
+            return slackBotRepository.search(message.substring(message.indexOf(":")+1).trim(), event);
 
-    public boolean checkCommand(String message) {
         if (command.containsKey(message))
-            return true;
-        return false;
+            return slackBotRepository.requestCommand(message, event);
+
+        return slackBotRepository.reqeustCustomStock(message, event);
     }
 }

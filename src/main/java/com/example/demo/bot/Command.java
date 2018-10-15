@@ -1,6 +1,8 @@
 package com.example.demo.bot;
 
 import com.example.demo.service.StockService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +10,8 @@ import java.util.HashMap;
 
 @Component
 public class Command extends HashMap<String, CommadMessage> {
+    private static final Logger logger =  LoggerFactory.getLogger(Command.class);
+
     @Autowired
     private StockService stockService;
 

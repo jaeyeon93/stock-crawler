@@ -65,11 +65,19 @@ public class SlackBot extends Bot {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
+
+        if (checkSearch(message)) {
+            String keyword = message.substring(message.indexOf(":")+1).trim();
+            restTemplate.postForEntity(botUrl, requestList(gson, headers, stockService.searchByStockName(keyword), event.getChannelId()), String.class);
+            return;
+        }
+
         if (checkCommand(event.getText())) {
             restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand(), event.getChannelId()), String.class);
             return;
         }
-        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.getStockByStockName(message), event.getChannelId())) , headers);
+
+        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.updateByStockName(message), event.getChannelId())) , headers);
         restTemplate.postForEntity(botUrl, entity, String.class);
     }
 
@@ -79,6 +87,12 @@ public class SlackBot extends Bot {
 
     public boolean checkCommand(String message) {
         if (command.containsKey(message))
+            return true;
+        return false;
+    }
+
+    public boolean checkSearch(String message) {
+        if (message.contains("검색"))
             return true;
         return false;
     }

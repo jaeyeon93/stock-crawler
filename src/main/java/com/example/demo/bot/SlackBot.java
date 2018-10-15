@@ -32,14 +32,11 @@ public class SlackBot extends Bot {
     @Value("${slack.token}")
     private String token;
 
-    @Value("${slack.bot.url}")
-    private String botUrl;
-
-    @Autowired
-    private StockService stockService;
-
     @Autowired
     private Command command;
+
+    @Autowired
+    private SlackBotRepository slackBotRepository;
 
     @Override
     public String getSlackToken() {
@@ -57,43 +54,16 @@ public class SlackBot extends Bot {
     }
 
     @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
-    public void onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
-        String message = event.getText();
+    public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
+        String message = event.getText().toUpperCase();
         logger.info("메세지 : {}", message);
-        Gson gson = new Gson();
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        headers.set("Authorization", "Bearer "+ token);
 
-        if (checkSearch(message)) {
-            String keyword = message.substring(message.indexOf(":")+1).trim();
-            restTemplate.postForEntity(botUrl, requestList(gson, headers, stockService.searchByStockName(keyword), event.getChannelId()), String.class);
-            return;
-        }
-
-        if (checkCommand(event.getText())) {
-            restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand(), event.getChannelId()), String.class);
-            return;
-        }
-
-        HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.updateByStockName(message), event.getChannelId())) , headers);
-        restTemplate.postForEntity(botUrl, entity, String.class);
-    }
-
-    public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks, String channel) {
-        return new HttpEntity<>(gson.toJson(new Converter(stocks, channel)), headers);
-    }
-
-    public boolean checkCommand(String message) {
-        if (command.containsKey(message))
-            return true;
-        return false;
-    }
-
-    public boolean checkSearch(String message) {
         if (message.contains("검색"))
-            return true;
-        return false;
+            return slackBotRepository.search(message.substring(message.indexOf(":")+1).trim(), event);
+
+        if (command.containsKey(message))
+            return slackBotRepository.requestCommand(message, event);
+
+        return slackBotRepository.reqeustCustomStock(message, event);
     }
 }

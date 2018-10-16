@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import com.example.demo.dto.ChartImageUrl;
 import com.example.demo.dto.RealData;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -20,6 +21,7 @@ public class ResearchTest {
     private static final Logger logger =  LoggerFactory.getLogger(ResearchTest.class);
     private Research research;
     private Document doc;
+    private Gson gson = new Gson();
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +31,6 @@ public class ResearchTest {
 
     @Test
     public void 시가총액() throws Exception {
-        Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         String json = doc.body().text();
         logger.info("{}", json);
@@ -39,8 +40,22 @@ public class ResearchTest {
 
     @Test
     public void 리얼데이터매핑테스트() {
-        Gson gson = new Gson();
-        RealData realData = gson.fromJson(doc.body().text(), RealData.class);
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(doc.body().text());
+        logger.info("{}", element);
+        JsonObject object = (JsonObject)element;
+        logger.info("{}", object);
+        RealData realData = gson.fromJson(element, RealData.class);
         logger.info("{}", realData.toString());
+    }
+
+    @Test
+    public void 차트이미지url() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = (JsonObject)parser.parse(doc.body().text());
+        logger.info("{}",object.get("chartImageUrl"));
+        JsonElement urls = object.get("chartImageUrl");
+        ChartImageUrl images = gson.fromJson(urls, ChartImageUrl.class);
+        logger.info("{}", images.toString());
     }
 }

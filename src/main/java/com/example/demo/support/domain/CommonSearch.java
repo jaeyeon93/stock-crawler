@@ -1,8 +1,6 @@
 package com.example.demo.support.domain;
 
-import com.example.demo.dao.Research;
 import com.example.demo.domain.Stock;
-import com.example.demo.domain.StockRepository;
 import com.example.demo.dto.RealData;
 import com.example.demo.dto.StockDto;
 import com.google.gson.Gson;
@@ -12,10 +10,6 @@ import com.google.gson.JsonParser;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -40,18 +34,6 @@ public abstract class CommonSearch {
     public String getTitle(JsonObject object) {
         return object.get("name").getAsString();
     }
-
-//    public Stock updateByStockName(Stock original) throws IOException {
-//        logger.info("update stock : {}", original.toString());
-//        Research research = new Research(original.getDetailUrl());
-//        try {
-//            String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
-//            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
-//        } catch (Exception e) {
-//            logger.info("업데이트 에러 발생 {}", e.getMessage());
-//        }
-//        return original;
-//    }
 
     public RealData updateByStockName(String updateUrl) throws IOException {
         logger.info("Api를 이용해서 업데이트");

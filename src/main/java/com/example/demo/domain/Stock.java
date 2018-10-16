@@ -62,6 +62,9 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonIgnore
     private String updateUrl;
 
+    @JsonIgnore
+    private String yearGraph;
+
     public Stock() {}
 
     public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl, String updateUrl) {
@@ -83,6 +86,8 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.profitPercent = formatDoube((realData.getOperatingProfit()/realData.getSales())*100);
         this.salesMoney = formatDoube((realData.getSales()/100000000));
         this.totalCost = formatDoube((realData.getMarketCap()/100000000));
+        this.yearGraph = realData.getChartImageUrl().getYear();
+        logger.info("{}", realData.toString());
         logger.info("{} updated", getName());
         return this;
     }

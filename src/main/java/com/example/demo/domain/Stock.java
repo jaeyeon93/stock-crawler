@@ -3,6 +3,7 @@ package com.example.demo.domain;
 import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.AbstractEntity;
 import com.example.demo.support.domain.UrlGeneratable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -12,7 +13,8 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.*;
 
 @Entity
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+//@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "rateIndex", columnList = "rate"), @Index(name = "costIndex", columnList = "cost")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
     public static final Logger logger = LoggerFactory.getLogger(Stock.class);
@@ -49,14 +51,18 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     @JsonProperty
     private String detailUrl;
 
+    @JsonIgnore
+    private String updateUrl;
+
     public Stock() {}
 
-    public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl) {
+    public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl, String updateUrl) {
         this.name = name.toUpperCase().replace(" ","");
         this.cost = cost;
         this.updn = updn;
         this.rate = rate;
         this.detailUrl = detailUrl;
+        this.updateUrl = updateUrl;
         logger.info("stock 생성 : {}", toString());
     }
 
@@ -118,6 +124,10 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return detailUrl;
     }
 
+    public String getUpdateUrl() {
+        return updateUrl;
+    }
+
     @Override
     public String generateUrl() {
         return String.format("/stock/%d", getId());
@@ -134,6 +144,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
                 ", updn=" + updn +
                 ", rate=" + rate +
                 ", detailUrl='" + detailUrl + '\'' +
+                ", updateUrl='" + updateUrl + '\'' +
                 '}';
     }
 }

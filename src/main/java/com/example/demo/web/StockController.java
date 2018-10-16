@@ -31,12 +31,6 @@ public class StockController {
         return "hello world";
     }
 
-    @PostMapping("/삼성전자")
-    public @ResponseBody Stock test(@PathVariable String stockName) throws Exception {
-        logger.info("test method called");
-        return stockService.updateByStockName(stockName);
-    }
-
     @DeleteMapping("/{id}")
     public String deleteStockById(@PathVariable long id) throws Exception {
         logger.info("deleteStockById method called");

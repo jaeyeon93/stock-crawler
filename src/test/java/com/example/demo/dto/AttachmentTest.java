@@ -13,7 +13,7 @@ public class AttachmentTest {
 
     @Before
     public void setUp() {
-        stock = new Stock("testStock", 50000, 1000, 10.0, "http://www.naver.com");
+        stock = new Stock("testStock", 50000, 1000, 10.0, "http://www.naver.com", "http://www.daum.net");
     }
 
 }

@@ -23,16 +23,28 @@ public class Research  {
         return elements;
     }
 
+//    public String getTotalCost() {
+//        return doc.select("#stockContent > ul.list_descstock > li:nth-child(2) > dl.second > dd").text();
+//    }
+//
+//    public String getSalesMoney() {
+//        return doc.select("#performanceCorp > table > tbody > tr:nth-child(4) > td:nth-child(9)").text();
+//    }
+//
+//    public String getProfit() {
+//        return doc.select("#performanceCorp > table > tbody > tr:nth-child(5) > td:nth-child(9)").text();
+//    }
+
     public String getTotalCost() {
-        return doc.select("#stockContent > ul.list_descstock > li:nth-child(2) > dl.second > dd").text();
+        return doc.select("#boxDashboard > div > div > span.txtB > dl > dd:nth-child(8) > p").text();
     }
 
     public String getSalesMoney() {
-        return doc.select("#performanceCorp > table > tbody > tr:nth-child(4) > td:nth-child(9)").text();
+        return doc.select("##boxAnalysis > div > div.box_contents > div > table > tbody > tr.first > td:nth-child(9) > span").text();
     }
 
     public String getProfit() {
-        return doc.select("#performanceCorp > table > tbody > tr:nth-child(5) > td:nth-child(9)").text();
+        return doc.select("#boxAnalysis > div > div.box_contents > div > table > tbody > tr:nth-child(2) > td:nth-child(9) > span").text();
     }
 
     public String getBody() {

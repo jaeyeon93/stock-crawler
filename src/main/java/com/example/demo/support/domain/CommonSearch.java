@@ -39,12 +39,13 @@ public abstract class CommonSearch {
     }
 
     public Stock updateByStockName(Stock original) throws IOException {
+        logger.info("update stock : {}", original.toString());
         Research research = new Research(original.getDetailUrl());
         try {
             String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
             original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
         } catch (Exception e) {
-            logger.info("에러 발생 {}", e.getMessage());
+            logger.info("업데이트 에러 발생 {}", e.getMessage());
         }
         return original;
     }

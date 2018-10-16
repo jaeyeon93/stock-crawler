@@ -19,13 +19,11 @@ import java.util.List;
 
 public class ResearchTest {
     private static final Logger logger =  LoggerFactory.getLogger(ResearchTest.class);
-    private Research research;
     private Document doc;
     private Gson gson = new Gson();
 
     @Before
     public void setUp() throws Exception {
-        research = new Research("http://finance.daum.net/quotes/A005930#home");
         doc = Jsoup.connect("http://finance.daum.net/api/quotes/A000660?summary=false&changeStatistics=true").ignoreContentType(true).get();
     }
 

@@ -6,6 +6,8 @@ import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.CommonSearch;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,9 +38,8 @@ public class StockInfo extends CommonSearch {
     @Transactional
     public void getAllStockByUrl(String url) throws Exception {
         Map<String, Stock> stockMap = getMap(stockRepository.findAll());
-        String body = new Research(url).getBody();
         parser = new JsonParser();
-        String [] infos = splitBody(body);
+        String [] infos = splitBody(getBody(url));
         determineMakeUpdate(infos, stockMap);
         logger.info("batch끝");
         em.flush();
@@ -64,6 +66,13 @@ public class StockInfo extends CommonSearch {
             em.flush();
             em.clear();
         }
+    }
+
+    public String getBody(String url) throws IOException {
+        Document doc = Jsoup.connect(url).get();
+        int start = doc.body().text().indexOf("[");
+        int end = doc.body().text().indexOf("]");
+        return doc.body().text().substring(start+1, end).trim();
     }
 }
 

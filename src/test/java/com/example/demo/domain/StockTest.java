@@ -21,15 +21,12 @@ public class StockTest {
     }
 
     @Test
-    public void update() {
-        stock = stockDto.toStock();
-        assertThat(stock.getCost(), is(3170));
-        stock.update("50,000", "350", "+10%", "536450", "1000","2,956,099억(1위)", "http://www.naver.com");
-        assertThat(stock.getRate(), is(10.0));
-        assertThat(stock.getUpdn(), is(350));
-        assertThat(stock.getCost(), is(50000));
+    public void 영업이익률() {
+        double sales = 4018.3;
+        double profit = 116.81;
+        double result  = (profit/sales)*100;
+        logger.info("result : {}", result);
     }
-
 
     @Test
     public void stringToInteger() {

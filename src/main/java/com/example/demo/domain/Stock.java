@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.dto.RealData;
 import com.example.demo.dto.StockDto;
 import com.example.demo.support.domain.AbstractEntity;
 import com.example.demo.support.domain.UrlGeneratable;
@@ -7,13 +8,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Getter;
+import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 
 @Entity
-//@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@Getter
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "stock", indexes = {@Index(name = "nameIndex", columnList = "name"), @Index(name = "rateIndex", columnList = "rate"), @Index(name = "costIndex", columnList = "cost")})
 public class Stock extends AbstractEntity implements UrlGeneratable {
@@ -25,7 +29,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private String salesMoney;
+    private double salesMoney;
 
     @Column
     @JsonProperty
@@ -33,11 +37,15 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
 
     @Column
     @JsonProperty
-    private String profit;
+    private Double profit;
 
     @Column
     @JsonProperty
-    private String totalCost;
+    private Double profitPercent;
+
+    @Column
+    @JsonProperty
+    private Double totalCost;
 
     @Column
     @JsonProperty
@@ -66,15 +74,15 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         logger.info("stock 생성 : {}", toString());
     }
 
-    public Stock update(String cost, String updn, String rate, String profit, String salesMoney, String totalCost, String detailUrl) {
+    public Stock update(RealData realData) {
         this.name = getName().toUpperCase().replace(" ","");
-        this.cost = updnToInteger(cost);
-        this.updn = costToInteger(updn);
-        this.rate = rateToDouble(rate);
-        this.profit = profit;
-        this.salesMoney = salesMoney;
-        this.totalCost = totalCost;
-        this.detailUrl = detailUrl;
+        this.cost = realData.getTradePrice();
+        this.updn = realData.getChangePrice();
+        this.rate = formatDoube(realData.getChangeRate()*100);
+        this.profit = formatDoube((realData.getOperatingProfit()/100000000));
+        this.profitPercent = formatDoube((realData.getOperatingProfit()/realData.getSales())*100);
+        this.salesMoney = formatDoube((realData.getSales()/100000000));
+        this.totalCost = formatDoube((realData.getMarketCap()/100000000));
         logger.info("{} updated", getName());
         return this;
     }
@@ -88,44 +96,12 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
+    public Double formatDoube(double number) {
+        return Double.parseDouble(String.format("%.2f", number));
+    }
+
     public StockDto toStockDto() {
         return new StockDto(this.name, String.valueOf(cost), String.valueOf(this.updn), String.valueOf(this.rate), this.detailUrl);
-    }
-
-    public String getName() {
-        return name.toUpperCase();
-    }
-
-    public String getSalesMoney() {
-        return salesMoney;
-    }
-
-    public Integer getCost() {
-        return cost;
-    }
-
-    public String getProfit() {
-        return profit;
-    }
-
-    public String getTotalCost() {
-        return totalCost;
-    }
-
-    public Integer getUpdn() {
-        return updn;
-    }
-
-    public Double getRate() {
-        return rate;
-    }
-
-    public String getDetailUrl() {
-        return detailUrl;
-    }
-
-    public String getUpdateUrl() {
-        return updateUrl;
     }
 
     @Override
@@ -133,18 +109,4 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return String.format("/stock/%d", getId());
     }
 
-    @Override
-    public String toString() {
-        return "Stock{" +
-                "name='" + name + '\'' +
-                ", salesMoney='" + salesMoney + '\'' +
-                ", cost=" + cost +
-                ", profit='" + profit + '\'' +
-                ", totalCost='" + totalCost + '\'' +
-                ", updn=" + updn +
-                ", rate=" + rate +
-                ", detailUrl='" + detailUrl + '\'' +
-                ", updateUrl='" + updateUrl + '\'' +
-                '}';
-    }
 }

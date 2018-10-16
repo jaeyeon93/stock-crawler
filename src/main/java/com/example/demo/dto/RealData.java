@@ -5,45 +5,47 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.LinkedHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class RealData extends LinkedHashMap<String, ChartImageUrl> {
-
-//    @JsonProperty("tradePrice")
-//    private Integer tradePrice;
+public class RealData {
+    private static final Logger logger =  LoggerFactory.getLogger(RealData.class);
 
     @JsonProperty("name")
     private String name;
 
-//    @JsonProperty("changePrice")
-//    private Integer changePrice;
-//
-//    @JsonProperty("sales")
-//    private Integer sales;
-//
-//    @JsonProperty("operatingProfit")
-//    private Double operatingProfit;
+    @JsonProperty("tradePrice")
+    private int tradePrice;
 
-    public RealData(String name) {
+    @JsonProperty("changePrice")
+    private int changePrice;
+
+    @JsonProperty("changeRate")
+    private double changeRate;
+
+    @JsonProperty("sales")
+    private double sales;
+
+    @JsonProperty("operatingProfit")
+    private double operatingProfit;
+
+    @JsonProperty("chartImageUrl")
+    private ChartImageUrl chartImageUrl;
+
+    @JsonProperty("marketCap")
+    private double marketCap;
+
+    public RealData(String name, int tradePrice, int changePrice, double changeRate, double sales, double operatingProfit, int marketCap) {
         this.name = name;
+        this.tradePrice = tradePrice;
+        this.changePrice = changePrice;
+        this.changeRate = changeRate;
+        this.sales =sales;
+        this.operatingProfit = operatingProfit;
+        this.marketCap = marketCap;
     }
-
-//    public RealData(String name, String tradePrice) {
-//        this.name = name;
-//        this.tradePrice = tradePrice;
-//    }
-//
-//    public RealData(String tradePrice, String name, String changePrice, String sales, String operatingProfit) {
-//        this.tradePrice = tradePrice;
-//        this.name = name;
-//        this.changePrice = changePrice;
-//        this.sales = sales;
-//        this.operatingProfit = operatingProfit;
-//    }
-
 }

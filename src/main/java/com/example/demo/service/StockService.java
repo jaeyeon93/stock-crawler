@@ -80,8 +80,10 @@ public class StockService {
 
     @Transactional
     public Stock updateByStockName(String stockName) throws IOException {
+        logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName);
-        return stockInfo.updateByStockName(stock);
+        logger.info("{}", stock.getUpdateUrl());
+        return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
 
     @Transactional
@@ -89,7 +91,7 @@ public class StockService {
         long start =  System.currentTimeMillis();
         List<Stock> original = stockRepository.findAll();
         for (int i = 0; i  < 100; i++) {
-            Stock stock = em.merge(stockInfo.updateByStockName(original.get(i)));
+            Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
             em.persist(stock);
             if (i % batchSize == 0) {
                 logger.info("{}번째 배치 업데이트 실행", i);

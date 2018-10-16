@@ -30,23 +30,12 @@ public class ResearchTest {
     }
 
     @Test
-    public void 시가총액() throws Exception {
-        JsonParser parser = new JsonParser();
-        String json = doc.body().text();
-        logger.info("{}", json);
-        JsonElement element = parser.parse(json);
-        logger.info("현재가격 {}", element.getAsJsonObject().get("tradePrice").getAsString());
-    }
-
-    @Test
     public void 리얼데이터매핑테스트() {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(doc.body().text());
-        logger.info("{}", element);
-        JsonObject object = (JsonObject)element;
-        logger.info("{}", object);
         RealData realData = gson.fromJson(element, RealData.class);
-        logger.info("{}", realData.toString());
+        String json = gson.toJson(realData);
+        logger.info("{}", json);
     }
 
     @Test

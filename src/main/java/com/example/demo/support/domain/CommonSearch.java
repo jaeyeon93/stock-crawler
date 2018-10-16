@@ -3,10 +3,13 @@ package com.example.demo.support.domain;
 import com.example.demo.dao.Research;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.example.demo.dto.RealData;
 import com.example.demo.dto.StockDto;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +41,24 @@ public abstract class CommonSearch {
         return object.get("name").getAsString();
     }
 
-    public Stock updateByStockName(Stock original) throws IOException {
-        logger.info("update stock : {}", original.toString());
-        Research research = new Research(original.getDetailUrl());
-        try {
-            String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
-            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
-        } catch (Exception e) {
-            logger.info("업데이트 에러 발생 {}", e.getMessage());
-        }
-        return original;
+//    public Stock updateByStockName(Stock original) throws IOException {
+//        logger.info("update stock : {}", original.toString());
+//        Research research = new Research(original.getDetailUrl());
+//        try {
+//            String changePercent = research.getElements().get(2).substring(0, research.getElements().get(2).length()-1);
+//            original.update(research.getElements().get(0),research.getElements().get(1), changePercent, research.getProfit(), research.getSalesMoney(), research.getTotalCost(), original.getDetailUrl());
+//        } catch (Exception e) {
+//            logger.info("업데이트 에러 발생 {}", e.getMessage());
+//        }
+//        return original;
+//    }
+
+    public RealData updateByStockName(String updateUrl) throws IOException {
+        logger.info("Api를 이용해서 업데이트");
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(Jsoup.connect(updateUrl).ignoreContentType(true).get().body().text());
+        return gson.fromJson(element, RealData.class);
     }
 
     public Map<String, Stock> getMap(List<Stock> stocks) {

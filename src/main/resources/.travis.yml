@@ -1,0 +1,15 @@
+language: java
+jdk:
+  - openjdk8
+
+branches:
+  only:
+  - master
+
+# Travis CI 서버의 Cache활성화
+cache:
+  directories:
+  - '$HOME/.gradle'
+
+# clean 후 Build(Build 시 자동으로 test)
+script: 'gradle build -x test'

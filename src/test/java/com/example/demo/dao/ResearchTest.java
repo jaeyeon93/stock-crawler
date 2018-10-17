@@ -1,5 +1,14 @@
 package com.example.demo.dao;
 
+import com.example.demo.dto.ChartImageUrl;
+import com.example.demo.dto.RealData;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -10,46 +19,30 @@ import java.util.List;
 
 public class ResearchTest {
     private static final Logger logger =  LoggerFactory.getLogger(ResearchTest.class);
-    private Research research;
+    private Document doc;
+    private Gson gson = new Gson();
 
     @Before
     public void setUp() throws Exception {
-        research = new Research("http://finance.daum.net/item/main.daum?code=005930");
+        doc = Jsoup.connect("http://finance.daum.net/api/quotes/A000660?summary=false&changeStatistics=true").ignoreContentType(true).get();
     }
 
     @Test
-    public void antherSite() throws Exception {
-        research = new Research("http://finance.daum.net/quote/all.daum?type=S&stype=P");
-        logger.info("{}", research.html());
+    public void 리얼데이터매핑테스트() {
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(doc.body().text());
+        RealData realData = gson.fromJson(element, RealData.class);
+        String json = gson.toJson(realData);
+        logger.info("{}", json);
     }
 
     @Test
-    public void apiTest() throws Exception {
-        research = new Research("http://finance.daum.net/xml/xmlallpanel.daum?stype=P&type=S");
-        String result = research.getBody();
-        System.out.println(result);
-    }
-
-    @Test
-    public void getElements() throws Exception {
-        List<String> elements = research.getElements();
-        for (String s : elements)
-            logger.info("value : {}", s);
-    }
-
-    @Test
-    public void 시가총액() throws Exception {
-        logger.info("{}", research.getTotalCost());
-    }
-
-    @Test
-    public void 업데이트() throws Exception {
-        List<String> elements = research.getElements();
-        logger.info("주가 : {}", elements.get(0));
-        logger.info("변동가격 : {}", elements.get(1));
-        logger.info("변동률 : {}", elements.get(2));
-        logger.info("시가총액 : {}", research.getTotalCost());
-        logger.info("매출액 : {}", research.getSalesMoney());
-        logger.info("영업이익 : {}", research.getProfit());
+    public void 차트이미지url() {
+        JsonParser parser = new JsonParser();
+        JsonObject object = (JsonObject)parser.parse(doc.body().text());
+        logger.info("{}",object.get("chartImageUrl"));
+        JsonElement urls = object.get("chartImageUrl");
+        ChartImageUrl images = gson.fromJson(urls, ChartImageUrl.class);
+        logger.info("{}", images.toString());
     }
 }

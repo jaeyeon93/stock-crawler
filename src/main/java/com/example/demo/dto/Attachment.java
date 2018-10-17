@@ -18,7 +18,9 @@ public class Attachment extends LinkedHashMap<String, Object> {
             fields.add(new Field("매출", stock.getSalesMoney()));
             fields.add(new Field("영업이익", stock.getProfit()));
             fields.add(new Field("시가총액", stock.getTotalCost()));
+            fields.add(new Field("영업이익률", stock.getProfitPercent()));
             put("fields", fields);
+            put("image_url", stock.getYearGraph());
         }
     }
 }

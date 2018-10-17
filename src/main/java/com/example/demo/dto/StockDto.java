@@ -44,7 +44,7 @@ public class StockDto extends AbstractEntity {
     }
 
     public Stock toStock() {
-        return new Stock(this.name, getCost(), getUpdn(), getRate(), getUrl(this.code));
+        return new Stock(this.name, getCost(), getUpdn(), getRate(), getUrl(this.code), getUpdateUrl(this.code));
     }
 
     public Stock toRealDataUpdate(Stock original) {
@@ -52,7 +52,11 @@ public class StockDto extends AbstractEntity {
     }
 
     public String getUrl(String code) {
-        return "http://finance.daum.net/item/main.daum?code="+code;
+        return "http://finance.daum.net/quotes/A"+code+"#home";
+    }
+
+    public String getUpdateUrl(String code) {
+        return "http://finance.daum.net/api/quotes/A" + code + "?summary=false&changeStatistics=true";
     }
 
 

@@ -5,6 +5,7 @@ jdk:
 branches:
   only:
   - master
+  - autoBuild
 
 # Travis CI 서버의 Cache활성화
 cache:

@@ -13,4 +13,4 @@ cache:
   - '$HOME/.gradle'
 
 # clean 후 Build(Build 시 자동으로 test)
-script: 'gradle build -x test'
+script: "./gradlew clean build"

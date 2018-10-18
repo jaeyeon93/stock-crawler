@@ -18,26 +18,26 @@ public class ScheduledTasks {
     @Autowired
     private StockService stockService;
 
-//    @Scheduled(fixedRate = 5000)
-//    public void reportCurrentTime() throws Exception {
-//        logger.info("The time is now {}", dateformat.format(new Date()));
-//    }
+    @Scheduled(fixedRate = 5000)
+    public void reportCurrentTime() throws Exception {
+        logger.info("The time is now {}", dateformat.format(new Date()));
+    }
 
-//    @Scheduled(cron = "0 * 9-23 * * MON-FRI")
-//    public void getAllStock() throws Exception {
-//        logger.info("평일 9시-16시까지 1분마다 자동업데이트");
-//        stockService.getAllStock();
-//    }
-//
-//    @Scheduled(cron = "1 * 16 * * MON-FRI")
-//    public void detailWholeUpdate() throws Exception {
-//        logger.info("평일 16:01, 장 종료 후 전체 업데이트 진행");
-//        stockService.detailWholeUpdate();
-//    }
-//
-//    @Scheduled(cron = "0 0 0 * * SAT,SUN")
-//    public void getWeekUpdate() throws Exception {
-//        logger.info("토, 일 0시0분0초에 전체 주식정보 업데이트");
-//        stockService.detailWholeUpdate();
-//    }
+    @Scheduled(cron = "0 * 9-23 * * MON-FRI")
+    public void getAllStock() throws Exception {
+        logger.info("평일 9시-16시까지 1분마다 자동업데이트");
+        stockService.getAllStock();
+    }
+
+    @Scheduled(cron = "1 * 16 * * MON-FRI")
+    public void detailWholeUpdate() throws Exception {
+        logger.info("평일 16:01, 장 종료 후 전체 업데이트 진행");
+        stockService.detailWholeUpdate();
+    }
+
+    @Scheduled(cron = "0 0 0 * * SAT,SUN")
+    public void getWeekUpdate() throws Exception {
+        logger.info("토, 일 0시0분0초에 전체 주식정보 업데이트");
+        stockService.detailWholeUpdate();
+    }
 }

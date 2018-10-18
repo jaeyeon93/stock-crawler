@@ -18,11 +18,6 @@ public class ScheduledTasks {
     @Autowired
     private StockService stockService;
 
-    @Scheduled(fixedRate = 5000)
-    public void reportCurrentTime() throws Exception {
-        logger.info("The time is now {}", dateformat.format(new Date()));
-    }
-
     @Scheduled(cron = "0 * 9-23 * * MON-FRI")
     public void getAllStock() throws Exception {
         logger.info("평일 9시-16시까지 1분마다 자동업데이트");

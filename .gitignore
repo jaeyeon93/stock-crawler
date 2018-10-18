@@ -35,3 +35,5 @@ bin/
 *.zip
 *.tar.gz
 *.rar
+local.properties
+.properties

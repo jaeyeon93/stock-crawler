@@ -45,7 +45,4 @@ dependencies {
     compile group: 'me.ramswaroop.jbot', name: 'jbot', version: '4.0.0'
     compileOnly 'javax.websocket:javax.websocket-api:1.1'
     compile group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.13.1'
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.0.0.RELEASE'
-
 }

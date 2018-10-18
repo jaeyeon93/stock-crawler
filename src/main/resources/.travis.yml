@@ -7,10 +7,17 @@ branches:
   - master
   - autoBuild
 
-# Travis CI 서버의 Cache활성화
+# Travis CI 서버의 Home
 cache:
   directories:
-  - '$HOME/.gradle'
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
 
 # clean 후 Build(Build 시 자동으로 test)
 script: "./gradlew clean build"
+
+# CI 실행 완료시 메일로 알람
+notifications:
+  email:
+    recipients:
+      - foodsksms@gmail.com

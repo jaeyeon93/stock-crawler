@@ -1,24 +1,5 @@
 .DS_Store
-/build/
-!gradle/wrapper/gradle-wrapper.jar
-/out/
-/target/
 .apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-bin/
-/.gradle/
-*.iml
-/.idea
-
-# Compiled class file
-*.class
-
-# Log file
-*.log
 
 # BlueJ files
 *.ctxt
@@ -28,6 +9,7 @@ bin/
 
 # Package Files #
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear
@@ -35,9 +17,25 @@ bin/
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-.idea/*
-~/.gradle/*
-application.properties
-~/.gradle/gradle.properties
+local.properties
+.properties
+/.gradle/
+/build/
+/out/
+/target/
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+bin/
+/.gradle/
+*.iml
+/.idea

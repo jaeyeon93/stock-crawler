@@ -46,13 +46,6 @@ public class KospiInfoTest {
     }
 
     @Test
-    public void db에정보확인() {
-        List<Stock> stocks = stockService.findAll();
-        logger.info("Stocks의 사이즈 : {}", stocks.size());
-        assertThat(stocks.get(0).getName(), is("삼성전자"));
-    }
-
-    @Test
     public void db에주식이있으면true() {
         boolean result = stockService.checkMakingStock("삼성전자");
         assertThat(result, is(true));
@@ -66,13 +59,6 @@ public class KospiInfoTest {
         Map<String, Stock> map = stockInfo.getMap(original);
         boolean checkDB = stockInfo.chekcDB(object, map);
         assertThat(checkDB, is(true));
-    }
-
-    @Test
-    public void batchInsertTest() throws Exception {
-        stockService.getAllStock();
-        Stock stock = stockService.updateByStockName("삼성전자");
-        assertThat(stock.getName(), is("삼성전자"));
     }
 
 }

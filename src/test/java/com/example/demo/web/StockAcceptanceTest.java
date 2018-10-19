@@ -22,28 +22,14 @@ public class StockAcceptanceTest extends AcceptanceTest {
     public void addlowerCaseName() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodeForm()
                 .addParameter("stockName", "naver").build();
-        ResponseEntity<String> response = template().postForEntity("/stock/naver",request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/stock/naver", request, String.class);
     }
 
     @Test
     public void 소문자한글포함() throws Exception {
         HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodeForm()
                 .addParameter("stockName", "sk하이닉스").build();
-        ResponseEntity<String> response = template().postForEntity("/stock/sk하이닉스",request, String.class);
+        ResponseEntity<String> response = template().postForEntity("/stock/sk하이닉스", request, String.class);
     }
 
-    @Test
-    public void showStock() throws Exception {
-        ResponseEntity<String> response = template().getForEntity("/stock/1", String.class);
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
-
-    @Test
-    public void showStockByName() throws Exception {
-        HttpEntity<MultiValueMap<String, Object>> request = HtmlFormDataBuilder.urlEncodeForm()
-                .addParameter("stockName", "삼성전자").build();
-        ResponseEntity<String> response = template.postForEntity("/stock", request, String.class);
-//        ResponseEntity<String> response = template().getForEntity("/stock/삼성전자", String.class);
-//        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    }
 }

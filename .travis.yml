@@ -14,7 +14,7 @@ cache:
   - '$HOME/.gradle'
 
 # clean 후 Build(Build 시 자동으로 test)
-script: "./gradlew clean build -x test"
+script: "./gradlew clean build"
 
 # CI 실행 완료시 메일로 알람
 notifications:

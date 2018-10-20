@@ -5,7 +5,6 @@ jdk:
 branches:
   only:
   - master
-  - autoBuild
 
 # Travis CI 서버의 Home
 cache:
@@ -38,5 +37,5 @@ deploy:
     acl: public_read
     wait-until-deployed: true
     on:
-      repo: jaeyeon93/stock-crawler.git #Github 주소
+      repo: jaeyeon93/stock-crawler # gitId/Repo
       branch: master

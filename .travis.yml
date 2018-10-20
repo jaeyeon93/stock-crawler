@@ -21,10 +21,10 @@ notifications:
     recipients:
       - foodsksms@gmail.com
 
-#before_deploy:
-#  - zip -r stock-crawler *
-#  - mkdir -p deploy
-#  - mv stock-crawler.zip deploy/stock-crawler.zip
+before_deploy:
+  - zip -r stock-crawler * # 현재 위치와 모든 파일을 stock-crawler이름으로 압축(zip)
+  - mkdir -p deploy # deploy라는 디렉토리를 TravisCI가 실행중인 위치에서 생성
+  - mv stock-crawler.zip deploy/stock-crawler.zip # stock-crawler.zip 파일을 deploy/stock-crawler.zip으로 이
 
 
 deploy:
@@ -35,6 +35,7 @@ deploy:
     region: ap-northeast-2
     skip_cleanup: true
     acl: public_read
+    local_dir: deploy # before_deploy에서 생성한 디렉토리, 해당디렉토리(deploy)내용들만 S3에 전송
     wait-until-deployed: true
     on:
       repo: jaeyeon93/stock-crawler # gitId/Repo

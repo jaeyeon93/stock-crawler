@@ -38,5 +38,5 @@ deploy:
     acl: public_read
     wait-until-deployed: true
     on:
-      repo: jojoldu/springboot-webservice #Github 주소
+      repo: https://github.com/jaeyeon93/stock-crawler.git #Github 주소
       branch: master

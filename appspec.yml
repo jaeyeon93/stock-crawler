@@ -1,5 +1,9 @@
+echo " > version : $version"
 version: 0.0 # CodeDeploy의 버전을 나타낸다. 프로젝트 버전이 아니라서 0.0외의 다른버전을 사용하면 에러난다.
+
 os: linux
+
+echo "> desnation : /home/ec2-user-app/travis/build/"
 files:
   - source: / # 복사할 파일의 위치
     destination: /home/ec2-user/app/travis/build/ # zip파일을 복사해 압축을 풀 위치를 정한다.

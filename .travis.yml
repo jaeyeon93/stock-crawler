@@ -38,7 +38,7 @@ deploy:
   access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
   secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
   bucket: stock-crawler-deploy # S3 버킷
-  key: stock-crawler.zop # S3 버킷에 저장된 springboot-webservice.zip 파일을 EC2로 배포
+  key: stock-crawler.zip # S3 버킷에 저장된 springboot-webservice.zip 파일을 EC2로 배포
   bundle_type: zip
   application: stock-crawler # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
   deployment_group: stock-crawler-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
@@ -51,4 +51,4 @@ deploy:
 notifications:
   email:
     recipients:
-    - jojoldu@gmail.com
+    - foodsksms@gmail.com

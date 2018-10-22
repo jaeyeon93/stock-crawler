@@ -1,60 +1,3 @@
-#language: java
-#jdk:
-#- openjdk8
-#
-#branches:
-#  only:
-#  - master
-#  - autoBuild
-#
-## Travis CI 서버의 Home
-#cache:
-#  directories:
-#  - '$HOME/.m2/repository'
-#  - '$HOME/.gradle'
-#
-## clean 후 Build(Build 시 자동으로 test)
-#script: "gradle build -x test"
-#
-#before_deploy:
-#- zip -r stock-crawler * # 현재 위치와 모든 파일을 stock-crawler이름으로 압축(zip)
-#- mkdir -p deploy # deploy라는 디렉토리를 TravisCI가 실행중인 위치에서 생성
-#- mv stock-crawler.zip deploy/stock-crawler.zip # stock-crawler.zip 파일을 deploy/stock-crawler.zip
-#
-#deploy:
-#  - provider: s3
-#    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
-#    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
-#    bucket: stock-crawler-deploy # 6-3-3에서 생성한 S3 버킷
-#    region: ap-northeast-2
-#    skip_cleanup: true
-#    acl: public_read
-#    local_dir: deploy # before_deploy에서 생성한 디렉토리, 해당디렉토리(deploy)내용들만 S3에 전
-#    wait-until-deployed: true
-#    on:
-#      repo: jaeyeon93/stock-crawler # gitId/Repo
-#      branch: autoBuild
-#
-#  - provider: codedeploy
-#      access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
-#      secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
-#      bucket: stock-crawler-deploy # S3 버킷
-#      key: stock-crawler.zip # 빌드 파일을 압축해서 전달
-#      bundle_type: zip
-#      application: stock-crawler # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
-#      deployment_group: stock-crawler-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
-#      region: ap-northeast-2
-#      wait-until-deployed: true
-#      on:
-#        repo: jaeyeon93/stock-crawler
-#        branch: autoBuild
-#
-## CI 실행 완료시 메일로 알람
-#notifications:
-#  email:
-#    recipients:
-#    - foodsksms@gmail.com
-
 language: java
 jdk:
   - openjdk8
@@ -89,7 +32,7 @@ deploy:
     wait-until-deployed: true
     on:
       repo: jaeyeon93/stock-crawler # gitId/Repo
-      branch: autoBuild
+      branch: master
 
   - provider: codedeploy
     access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값

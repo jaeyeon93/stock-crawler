@@ -29,11 +29,6 @@ public class StockTest {
     }
 
     @Test
-    public void stringToInteger() {
-        assertThat(stock.getCost(), is(3170));
-    }
-
-    @Test
     public void numberTest() {
         String test = "-0.33%";
         if (test.contains("+")) {
@@ -45,15 +40,5 @@ public class StockTest {
             result = Double.parseDouble(test.replace("%","").replace("-", "")) * (-1.0);
             assertThat(result, is(-0.33));
         }
-    }
-
-    @Test
-    public void changePercentMinus() {
-        assertThat(stock.getRate(), is(-1.09));
-    }
-
-    @Test
-    public void changePercentPlus() {
-        assertThat(stock.getRate(), is(11.09));
     }
 }

@@ -36,10 +36,10 @@ public abstract class CommonSearch {
     }
 
     public RealData updateByStockName(String updateUrl) throws IOException {
-        logger.info("Api를 이용해서 업데이트");
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(Jsoup.connect(updateUrl).ignoreContentType(true).get().body().text());
+        logger.info("element : {}", element.toString());
         return gson.fromJson(element, RealData.class);
     }
 

@@ -5,8 +5,8 @@ os: linux
 
 echo "> desnation : /home/ec2-user-app/travis/build/"
 files:
-- source: / # 복사할 파일의 위치
-  destination: /home/ec2-user/app/travis/build/ # zip파일을 복사해 압축을 풀 위치를 정한다.
+  - source: / # 복사할 파일의 위치
+    destination: /home/ec2-user/app/travis/build/ # zip파일을 복사해 압축을 풀 위치를 정한다.
 
 hooks:
   AfterInstall: # 배포가 끝나면 아래 명령어를 실행

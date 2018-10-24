@@ -7,7 +7,6 @@ import com.example.demo.support.domain.UrlGeneratable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.ToString;
 import org.slf4j.Logger;
@@ -77,17 +76,32 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         logger.info("stock 생성 : {}", toString());
     }
 
+//    public Stock update(RealData realData) {
+//        this.name = getName();
+//        this.cost = realData.getTradePrice();
+//        this.updn = realData.getChangePrice();
+//        this.rate = formatDouble(realData.getChangeRate()*100);
+//        this.profit = formatDouble((realData.getOperatingProfit()/100000000));
+//        this.profitPercent = formatDouble((realData.getOperatingProfit()/realData.getSales())*100);
+//        this.salesMoney = formatDouble((realData.getSales()/100000000));
+//        this.totalCost = formatDouble((realData.getMarketCap()/100000000));
+//        this.yearGraph = realData.getChartImageUrl().getYear();
+//        logger.info("stock to {}", toString());
+//        logger.info("{} updated", getName());
+//        return this;
+//    }
+
     public Stock update(RealData realData) {
         this.name = getName();
         this.cost = realData.getTradePrice();
         this.updn = realData.getChangePrice();
-        this.rate = formatDoube(realData.getChangeRate()*100);
-        this.profit = formatDoube((realData.getOperatingProfit()/100000000));
-        this.profitPercent = formatDoube((realData.getOperatingProfit()/realData.getSales())*100);
-        this.salesMoney = formatDoube((realData.getSales()/100000000));
-        this.totalCost = formatDoube((realData.getMarketCap()/100000000));
+        this.rate = checkNaN(formatDouble(realData.getChangeRate()*100));
+        this.profit = checkNaN(formatDouble((realData.getOperatingProfit()/100000000)));
+        this.profitPercent = checkNaN(formatDouble((realData.getOperatingProfit()/realData.getSales())*100));
+        this.salesMoney = checkNaN(formatDouble((realData.getSales()/100000000)));
+        this.totalCost = checkNaN(formatDouble((realData.getMarketCap()/100000000)));
         this.yearGraph = realData.getChartImageUrl().getYear();
-        logger.info("{}", realData.toString());
+        logger.info("stock to {}", toString());
         logger.info("{} updated", getName());
         return this;
     }
@@ -101,8 +115,18 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         return this;
     }
 
-    public Double formatDoube(double number) {
-        return Double.parseDouble(String.format("%.2f", number));
+//    public Double formatDouble(double number) {
+//        return Double.parseDouble(String.format("%.2f", number));
+//    }
+
+    public Double formatDouble(double number) {
+        return Double.valueOf(String.format("%.2f", number));
+    }
+
+    public Double checkNaN(double number) {
+        if (Double.isNaN(number))
+            return 0.0;
+        return number;
     }
 
     public StockDto toStockDto() {

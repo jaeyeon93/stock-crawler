@@ -91,19 +91,27 @@ public class StockService {
     public void detailWholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
         List<Stock> original = stockRepository.findAll();
-        for (int i = 0; i  < 100; i++) {
-            Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
-            em.persist(stock);
-            if (i % batchSize == 0) {
-                logger.info("{}번째 배치 업데이트 실행", i);
-                em.flush();
-                em.clear();
-            }
-        }
+        stockUpdate(original);
         em.flush();
         em.clear();
         long end = System.currentTimeMillis();
         logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
+    }
+
+    public void stockUpdate(List<Stock> original) {
+        try {
+            for (int i = 0; i  < original.size(); i++) {
+                Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
+                em.persist(stock);
+                if (i % batchSize == 0) {
+                    logger.info("{}번째 배치 업데이트 실행", i);
+                    em.flush();
+                    em.clear();
+                }
+            }
+        } catch (Exception e) {
+            logger.info("개별업데이트에서 에러발생 : {}", e.getCause());
+        }
     }
 
     public List<Stock> lowRate() {

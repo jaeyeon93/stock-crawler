@@ -42,5 +42,6 @@ public class StockServiceTest {
         assertThat(tiger.getName(), is("TIGER 단기통안채"));
         Stock edit = stockService.updateByStockName(tiger.getName());
         logger.info("after : {}", edit.toString());
+        stockService.detailWholeUpdate();
     }
 }

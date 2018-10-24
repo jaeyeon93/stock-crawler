@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.example.demo.dto.StockDto;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +84,6 @@ public class StockService {
     public Stock updateByStockName(String stockName) throws IOException {
         logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName);
-        logger.info("{}", stock.getUpdateUrl());
         return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
 

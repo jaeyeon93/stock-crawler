@@ -41,6 +41,13 @@ public class StockServiceTest {
     }
 
     @Test
+    public void 삼성전자업데이트() throws Exception {
+        Stock stock = stockService.updateByStockName("삼성전자");
+        logger.info("영업이익률 : {}", stock.getProfitPercent());
+        logger.info("{}", stock.toString());
+    }
+
+    @Test
     public void 단기통안채테스트() throws Exception {
         Stock tiger = stockRepository.findByName("TIGER 단기통안채");
         logger.info("{}", tiger.toString());
@@ -68,9 +75,9 @@ public class StockServiceTest {
         logger.info("after : {}", edit.toString());
     }
 
-    @Test
-    public void 전체테스트() throws IOException {
-        logger.info("size : {}", stockRepository.findAll().size());
-        stockService.detailWholeUpdate();
-    }
+//    @Test
+//    public void 전체테스트() throws IOException {
+//        logger.info("size : {}", stockRepository.findAll().size());
+//        stockService.detailWholeUpdate();
+//    }
 }

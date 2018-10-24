@@ -65,7 +65,6 @@ public class StockService {
         Stock stock = stockRepository.findByName(stockName.toUpperCase());
         if (stock != null)
             return true;
-        logger.info("주식이 DB에 없음");
         return false;
     }
 
@@ -88,11 +87,12 @@ public class StockService {
     public Stock updateByStockName(String stockName) throws Exception {
         logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName);
-        if (Jsoup.connect(stock.getUpdateUrl()).get().location().equals(errorPage))
+        logger.info("업데이트 요청된 Stock정보 : {}", stock.toString());
+        if (Jsoup.connect(stock.getUpdateUrl()).ignoreContentType(true).get().location().equals(errorPage))
             return stock;
         return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
-    
+
     @Transactional
     public void detailWholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();

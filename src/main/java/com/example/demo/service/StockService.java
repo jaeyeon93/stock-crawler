@@ -92,18 +92,7 @@ public class StockService {
             return stock;
         return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
-
-//    @Transactional
-//    public void detailWholeUpdate() throws IOException {
-//        long start =  System.currentTimeMillis();
-//        List<Stock> original = stockRepository.findAll();
-//        stockUpdate(original);
-//        em.flush();
-//        em.clear();
-//        long end = System.currentTimeMillis();
-//        logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
-//    }
-
+    
     @Transactional
     public void detailWholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
@@ -118,20 +107,24 @@ public class StockService {
     public void stockUpdate(List<Stock> original) {
         try {
             for (int i = 0; i  < original.size(); i++) {
-                try {
-                    Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
-                    em.persist(stock);
-                    if (i % batchSize == 0) {
-                        logger.info("{}번째 배치 업데이트 실행", i);
-                        em.flush();
-                        em.clear();
-                    }
-                } catch (Exception e) {
-                    logger.info("개별업데이트에서 에러 발생 : {}", e.getMessage());
-                }
+                stockUpdateException(original, i);
             }
         } catch (Exception e) {
             logger.info("전체 에러발생 : {}", e.getMessage());
+        }
+    }
+
+    public void  stockUpdateException(List<Stock> original, int i) {
+        try {
+            Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
+            em.persist(stock);
+            if (i % batchSize == 0) {
+                logger.info("{}번째 배치 업데이트 실행", i);
+                em.flush();
+                em.clear();
+            }
+        } catch (Exception e) {
+            logger.info("개별업데이트에서 에러 발생 : {}", e.getMessage());
         }
     }
 

@@ -47,7 +47,15 @@ public class StockServiceTest {
         assertThat(tiger.getName(), is("TIGER 단기통안채"));
         Stock edit = stockService.updateByStockName(tiger.getName());
         logger.info("after : {}", edit.toString());
-        stockService.detailWholeUpdate();
+    }
+
+    @Test
+    public void 힘스테스트() throws Exception {
+        Stock stock = stockRepository.findByName("힘스");
+        logger.info("주식의 사이즈 : {}", stockRepository.findAll().size());
+        assertThat(stock.getName(), is("힘스"));
+        Stock edit = stockService.updateByStockName(stock.getName());
+        logger.info("after : {}", edit.toString());
     }
 
     @Test
@@ -58,26 +66,6 @@ public class StockServiceTest {
         logger.info("UpdateUrl : {}", stock.getUpdateUrl());
         Stock edit = stockService.updateByStockName(stock.getName());
         logger.info("after : {}", edit.toString());
-    }
-
-    @Test
-    public void 에러페이지() throws Exception {
-        Stock stock = stockRepository.findByName("KB KQ 우량주30 ETN");
-        String errorPage = "http://status.daum.net/error/error500.html";
-        Gson gson = new GsonBuilder().setLenient().create();
-        JsonParser parser = new JsonParser();
-        if (!Jsoup.connect(stock.getUpdateUrl()).get().location().equals(errorPage)) {
-            logger.info("정상적으로 존재");
-            Stock edit = stockService.updateByStockName(stock.getName());
-            logger.info("정상적으로 업데이트 : {}", edit.toString());
-        }
-
-        if (Jsoup.connect(stock.getUpdateUrl()).get().location().equals(errorPage)) {
-            logger.info("페이지 존재안한다");
-            return;
-        }
-
-
     }
 
     @Test

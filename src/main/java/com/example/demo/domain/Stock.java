@@ -124,7 +124,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     }
 
     public Double checkNaN(double number) {
-        if (Double.isNaN(number))
+        if (Double.isNaN(number) || Double.isInfinite(number))
             return 0.0;
         return number;
     }

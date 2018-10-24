@@ -5,6 +5,7 @@ import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
 import com.example.demo.dto.StockDto;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class StockService {
 
     @Autowired
     private StockInfo stockInfo;
+
+    @Value("${errorPage}")
+    private String errorPage;
 
     @Value("${kosdaqUrl}")
     private String kosdaqUrl;
@@ -84,6 +88,8 @@ public class StockService {
     public Stock updateByStockName(String stockName) throws Exception {
         logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName);
+        if (Jsoup.connect(stock.getUpdateUrl()).get().location().equals(errorPage))
+            return stock;
         return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
 
@@ -112,17 +118,20 @@ public class StockService {
     public void stockUpdate(List<Stock> original) {
         try {
             for (int i = 0; i  < original.size(); i++) {
-//                Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
-                Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
-                em.persist(stock);
-                if (i % batchSize == 0) {
-                    logger.info("{}번째 배치 업데이트 실행", i);
-                    em.flush();
-                    em.clear();
+                try {
+                    Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
+                    em.persist(stock);
+                    if (i % batchSize == 0) {
+                        logger.info("{}번째 배치 업데이트 실행", i);
+                        em.flush();
+                        em.clear();
+                    }
+                } catch (Exception e) {
+                    logger.info("개별업데이트에서 에러 발생 : {}", e.getMessage());
                 }
             }
         } catch (Exception e) {
-            logger.info("개별업데이트에서 에러발생 : {}", e.getMessage());
+            logger.info("전체 에러발생 : {}", e.getMessage());
         }
     }
 

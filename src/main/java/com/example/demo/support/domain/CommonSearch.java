@@ -14,6 +14,7 @@ import java.util.Map;
 
 public abstract class CommonSearch {
     private static final Logger logger =  LoggerFactory.getLogger(CommonSearch.class);
+    private static final String errorPage = "http://status.daum.net/error/error500.html";
 
     public String [] splitBody(String body) {
         return body.split("\\s,\\s");
@@ -31,13 +32,26 @@ public abstract class CommonSearch {
     public String getTitle(JsonObject object) {
         return object.get("name").getAsString();
     }
-    
-    public RealData updateByStockName(String updateUrl) throws IOException {
+
+//    public RealData updateByStockName(String updateUrl) throws IOException {
+//        Gson gson = new GsonBuilder().setLenient().create();
+//        JsonParser parser = new JsonParser();
+//        if (Jsoup.connect(updateUrl).get().location().equals(errorPage))
+//            return;
+//        JsonElement element = parser.parse(Jsoup.connect(updateUrl).ignoreContentType(true).get().body().text());
+//        logger.info("element : {}", element.toString());
+//        return gson.fromJson(element, RealData.class);
+//    }
+
+    public RealData updateByStockName(Stock stock) throws Exception {
         Gson gson = new GsonBuilder().setLenient().create();
         JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(Jsoup.connect(updateUrl).ignoreContentType(true).get().body().text());
-        logger.info("element : {}", element.toString());
-        return gson.fromJson(element, RealData.class);
+        if (!Jsoup.connect(stock.getUpdateUrl()).get().location().equals(errorPage)) {
+            JsonElement element = parser.parse(Jsoup.connect(stock.getUpdateUrl()).ignoreContentType(true).get().body().text());
+            logger.info("element : {}", element.toString());
+            return gson.fromJson(element, RealData.class);
+        }
+        return new RealData();
     }
 
     public Map<String, Stock> getMap(List<Stock> stocks) {

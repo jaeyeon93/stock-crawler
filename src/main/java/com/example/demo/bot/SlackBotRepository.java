@@ -56,7 +56,7 @@ public class SlackBotRepository {
          return restTemplate.postForEntity(botUrl, requestList(gson, headers, command.get(message).runCommand(), event.getChannelId()), String.class);
     }
 
-    public ResponseEntity<String> reqeustCustomStock(String message, Event event) throws IOException {
+    public ResponseEntity<String> reqeustCustomStock(String message, Event event) throws Exception {
         HttpEntity<String> entity = new HttpEntity<>(gson.toJson(new Converter(stockService.updateByStockName(message), event.getChannelId())) , headers);
         return restTemplate.postForEntity(botUrl, entity, String.class);
     }

@@ -81,11 +81,22 @@ public class StockService {
     }
 
     @Transactional
-    public Stock updateByStockName(String stockName) throws IOException {
+    public Stock updateByStockName(String stockName) throws Exception {
         logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName);
         return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
+
+//    @Transactional
+//    public void detailWholeUpdate() throws IOException {
+//        long start =  System.currentTimeMillis();
+//        List<Stock> original = stockRepository.findAll();
+//        stockUpdate(original);
+//        em.flush();
+//        em.clear();
+//        long end = System.currentTimeMillis();
+//        logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
+//    }
 
     @Transactional
     public void detailWholeUpdate() throws IOException {
@@ -101,6 +112,7 @@ public class StockService {
     public void stockUpdate(List<Stock> original) {
         try {
             for (int i = 0; i  < original.size(); i++) {
+//                Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
                 Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
                 em.persist(stock);
                 if (i % batchSize == 0) {
@@ -110,7 +122,7 @@ public class StockService {
                 }
             }
         } catch (Exception e) {
-            logger.info("개별업데이트에서 에러발생 : {}", e.getCause());
+            logger.info("개별업데이트에서 에러발생 : {}", e.getMessage());
         }
     }
 

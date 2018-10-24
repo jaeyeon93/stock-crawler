@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.domain.Stock;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,16 @@ public class RealData {
 
     @JsonProperty("marketCap")
     private double marketCap;
+
+    public RealData(Stock stock) {
+        this.name = stock.getName();
+        this.tradePrice = stock.getCost();
+        this.changePrice = stock.getUpdn();
+        this.changeRate = stock.getRate();
+        this.sales = stock.getSalesMoney();
+        this.operatingProfit = stock.getProfit();
+        this.marketCap = stock.getTotalCost();
+    }
 
     public RealData(String name, int tradePrice, int changePrice, double changeRate, double sales, double operatingProfit, int marketCap) {
         this.name = name;

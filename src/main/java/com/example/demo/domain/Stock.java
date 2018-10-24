@@ -7,7 +7,6 @@ import com.example.demo.support.domain.UrlGeneratable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.ToString;
 import org.slf4j.Logger;
@@ -68,26 +67,24 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
     public Stock() {}
 
     public Stock(String name, Integer cost, Integer updn, Double rate, String detailUrl, String updateUrl) {
-        this.name = name.toUpperCase().replace(" ","");
+        this.name = name;
         this.cost = cost;
         this.updn = updn;
         this.rate = rate;
         this.detailUrl = detailUrl;
         this.updateUrl = updateUrl;
-        logger.info("stock 생성 : {}", toString());
     }
 
     public Stock update(RealData realData) {
-        this.name = getName().toUpperCase().replace(" ","");
+        this.name = getName();
         this.cost = realData.getTradePrice();
         this.updn = realData.getChangePrice();
-        this.rate = formatDoube(realData.getChangeRate()*100);
-        this.profit = formatDoube((realData.getOperatingProfit()/100000000));
-        this.profitPercent = formatDoube((realData.getOperatingProfit()/realData.getSales())*100);
-        this.salesMoney = formatDoube((realData.getSales()/100000000));
-        this.totalCost = formatDoube((realData.getMarketCap()/100000000));
+        this.rate = realData.getChangeRate();
+        this.profit = realData.getOperatingProfit();
+        this.profitPercent = realData.getProfitPercent();
+        this.salesMoney = realData.getSales();
+        this.totalCost = realData.getMarketCap();
         this.yearGraph = realData.getChartImageUrl().getYear();
-        logger.info("{}", realData.toString());
         logger.info("{} updated", getName());
         return this;
     }
@@ -97,16 +94,7 @@ public class Stock extends AbstractEntity implements UrlGeneratable {
         this.cost = stockDto.getCost();
         this.updn = stockDto.getUpdn();
         this.rate = stockDto.getRate();
-        logger.info("{} 실시간 정보 업데이트", name);
         return this;
-    }
-
-    public Double formatDoube(double number) {
-        return Double.parseDouble(String.format("%.2f", number));
-    }
-
-    public StockDto toStockDto() {
-        return new StockDto(this.name, String.valueOf(cost), String.valueOf(this.updn), String.valueOf(this.rate), this.detailUrl);
     }
 
     @Override

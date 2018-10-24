@@ -3,6 +3,9 @@ package com.example.demo.service;
 import com.example.demo.dao.StockInfo;
 import com.example.demo.domain.Stock;
 import com.example.demo.domain.StockRepository;
+import com.example.demo.dto.StockDto;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class StockService {
 
     @Autowired
     private StockInfo stockInfo;
+
+    @Value("${errorPage}")
+    private String errorPage;
 
     @Value("${kosdaqUrl}")
     private String kosdaqUrl;
@@ -59,7 +65,6 @@ public class StockService {
         Stock stock = stockRepository.findByName(stockName.toUpperCase());
         if (stock != null)
             return true;
-        logger.info("주식이 DB에 없음");
         return false;
     }
 
@@ -79,10 +84,12 @@ public class StockService {
     }
 
     @Transactional
-    public Stock updateByStockName(String stockName) throws IOException {
+    public Stock updateByStockName(String stockName) throws Exception {
         logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName);
-        logger.info("{}", stock.getUpdateUrl());
+        logger.info("업데이트 요청된 Stock정보 : {}", stock.toString());
+        if (Jsoup.connect(stock.getUpdateUrl()).ignoreContentType(true).get().location().equals(errorPage))
+            return stock;
         return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
     }
 
@@ -90,7 +97,25 @@ public class StockService {
     public void detailWholeUpdate() throws IOException {
         long start =  System.currentTimeMillis();
         List<Stock> original = stockRepository.findAll();
-        for (int i = 0; i  < 100; i++) {
+        stockUpdate(original);
+        em.flush();
+        em.clear();
+        long end = System.currentTimeMillis();
+        logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
+    }
+
+    public void stockUpdate(List<Stock> original) {
+        try {
+            for (int i = 0; i  < original.size(); i++) {
+                stockUpdateException(original, i);
+            }
+        } catch (Exception e) {
+            logger.info("전체 에러발생 : {}", e.getMessage());
+        }
+    }
+
+    public void  stockUpdateException(List<Stock> original, int i) {
+        try {
             Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
             em.persist(stock);
             if (i % batchSize == 0) {
@@ -98,11 +123,9 @@ public class StockService {
                 em.flush();
                 em.clear();
             }
+        } catch (Exception e) {
+            logger.info("개별업데이트에서 에러 발생 : {}", e.getMessage());
         }
-        em.flush();
-        em.clear();
-        long end = System.currentTimeMillis();
-        logger.info("총 업데이트 시간 : {}초", (end - start)/1000.0);
     }
 
     public List<Stock> lowRate() {

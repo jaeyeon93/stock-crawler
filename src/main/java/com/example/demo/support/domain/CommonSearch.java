@@ -3,10 +3,7 @@ package com.example.demo.support.domain;
 import com.example.demo.domain.Stock;
 import com.example.demo.dto.RealData;
 import com.example.demo.dto.StockDto;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +33,10 @@ public abstract class CommonSearch {
     }
 
     public RealData updateByStockName(String updateUrl) throws IOException {
-        logger.info("Api를 이용해서 업데이트");
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setLenient().create();
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(Jsoup.connect(updateUrl).ignoreContentType(true).get().body().text());
+        logger.info("element : {}", element.toString());
         return gson.fromJson(element, RealData.class);
     }
 

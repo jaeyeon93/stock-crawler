@@ -44,7 +44,7 @@ public class SlackBot extends Bot {
     }
 
     @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
-    public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws IOException {
+    public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws Exception {
         String message = event.getText().toUpperCase();
         logger.info("메세지 : {}", message);
 

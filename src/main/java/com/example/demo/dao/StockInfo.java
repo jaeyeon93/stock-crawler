@@ -50,11 +50,13 @@ public class StockInfo extends CommonSearch {
         for (int i = 0; i < infos.length; i++) {
             JsonObject object = (JsonObject)parser.parse(infos[i]);
             if (chekcDB(object, stockMap)) {
+                logger.info("DB에 존재 : {}", getTitle(object));
                 Stock stock = stockRepository.findByName(getTitle(object)).realDataUpdate(makeStockDtoByJson(object, parser));
                 em.merge(stock);
                 insertUsingBatch(stock, i);
                 continue;
             }
+            logger.info("DB에 없다 : {}", getTitle(object));
             insertUsingBatch(makeStockDtoByJson(object, parser).toStock(), i);
         }
     }

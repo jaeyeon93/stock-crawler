@@ -36,7 +36,7 @@ public class StockDto extends AbstractEntity {
     public StockDto() {}
 
     public StockDto(String name, String cost, String updn, String rate, String code) {
-        this.name = name.toUpperCase().replace(" ","");
+        this.name = name;
         this.cost = cost;
         this.updn = updn;
         this.rate = rate;

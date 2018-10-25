@@ -64,6 +64,10 @@ public class RealData {
         this.marketCap = marketCap;
     }
 
+    public double getChangeRate() {
+        return changeRate * 100;
+    }
+
     public double getSales() {
         return checkNaN(formatDouble((sales/100000000)));
     }

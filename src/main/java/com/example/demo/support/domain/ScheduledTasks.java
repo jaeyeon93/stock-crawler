@@ -18,15 +18,15 @@ public class ScheduledTasks {
     @Autowired
     private StockService stockService;
 
-    @Scheduled(cron = "0 * 9-23 * * MON-FRI")
+    @Scheduled(cron = "0 * 9-16 * * MON-FRI")
     public void getAllStock() throws Exception {
         logger.info("평일 9시-16시까지 1분마다 자동업데이트");
         stockService.getAllStock();
     }
 
-    @Scheduled(cron = "1 * 16 * * MON-FRI")
+    @Scheduled(cron = "5 * 16 * * MON-FRI")
     public void detailWholeUpdate() throws Exception {
-        logger.info("평일 16:01, 장 종료 후 전체 업데이트 진행");
+        logger.info("평일 16:05, 장 종료 후 전체 업데이트 진행");
         stockService.detailWholeUpdate();
     }
 

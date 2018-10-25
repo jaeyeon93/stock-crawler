@@ -17,8 +17,6 @@
 *.tar.gz
 *.rar
 
-local.properties
-.properties
 /.gradle/
 /build/
 /out/

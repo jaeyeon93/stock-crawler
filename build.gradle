@@ -36,7 +36,6 @@ dependencies {
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('com.h2database:h2')
     runtime('mysql:mysql-connector-java')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
     compile 'org.jsoup:jsoup:1.11.3'
     compile('pl.allegro.tech.boot:handlebars-spring-boot-starter:0.2.15')
     compile group: 'org.telegram', name: 'telegrambots', version: '4.1'
@@ -45,4 +44,12 @@ dependencies {
     compile group: 'me.ramswaroop.jbot', name: 'jbot', version: '4.0.0'
     compileOnly 'javax.websocket:javax.websocket-api:1.1'
     compile group: 'org.glassfish.tyrus.bundles', name: 'tyrus-standalone-client', version: '1.13.1'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2'
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-rest
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest', version: '2.0.4.RELEASE'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
+    testCompile('io.rest-assured:rest-assured:3.0.3') // Rest API Test
 }

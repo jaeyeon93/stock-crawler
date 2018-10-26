@@ -37,3 +37,7 @@ bin/
 /.gradle/
 *.iml
 /.idea
+
+### 인증정보 제외
+/src/main/resources/google.yml
+

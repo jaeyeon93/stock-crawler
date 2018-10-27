@@ -44,21 +44,23 @@ public class SlackBot extends Bot {
         return this;
     }
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
-        logger.info("connection 새로 연결, 세션정보 : {}");
-        super.afterConnectionEstablished(session);
-    }
+//    @Override
+//    public void afterConnectionEstablished(WebSocketSession session) {
+//        logger.info("connection 새로 연결, 세션정보 : {}");
+//        super.afterConnectionEstablished(session);
+//    }
 
     @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE})
     public void onReceiveDM(WebSocketSession session, Event event) {
+        logger.info("전달받은 메세지 : {}", event.getText());
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
     @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
     public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws Exception {
         String message = event.getText().toUpperCase();
-        logger.info("메세지 : {}", message);
+        logger.info("전달받은 메세지 : {}", event.getMessage());
+
         if (message.contains("검색"))
             return slackBotRepository.search(message.substring(message.indexOf(":")+1).trim(), event);
 

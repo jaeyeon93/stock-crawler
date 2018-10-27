@@ -1,11 +1,13 @@
 package com.example.demo.support.domain;
 
+import com.example.demo.bot.SlackBotRepository;
 import com.example.demo.service.StockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +19,9 @@ public class ScheduledTasks {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private SlackBotRepository repository;
 
     @Scheduled(cron = "0 * 9-16 * * MON-FRI")
     public void getAllStock() throws Exception {
@@ -34,5 +39,11 @@ public class ScheduledTasks {
     public void getWeekUpdate() throws Exception {
         logger.info("토, 일 0시0분0초에 전체 주식정보 업데이트");
         stockService.detailWholeUpdate();
+    }
+
+    @Scheduled(cron = )
+    public void pingpoing() {
+        logger.info("1시간 마다 웹소켓 연결 및 핑퐁");
+        repository.connect();
     }
 }

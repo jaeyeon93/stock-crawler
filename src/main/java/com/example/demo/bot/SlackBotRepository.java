@@ -4,6 +4,8 @@ import com.example.demo.domain.Stock;
 import com.example.demo.dto.Converter;
 import com.example.demo.service.StockService;
 import com.google.gson.Gson;
+import me.ramswaroop.jbot.core.common.BotWebSocketHandler;
+import me.ramswaroop.jbot.core.slack.SlackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import me.ramswaroop.jbot.core.slack.models.Event;
+import org.springframework.web.socket.client.WebSocketConnectionManager;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -34,7 +38,13 @@ public class SlackBotRepository {
     private String botUrl;
 
     @Autowired
+    private SlackBot bot;
+
+    @Autowired
     private StockService stockService;
+
+    @Autowired
+    private SlackService slackService;
 
     @Autowired
     private Command command;
@@ -46,6 +56,15 @@ public class SlackBotRepository {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         headers.set("Authorization", "Bearer "+ token);
+    }
+
+    public void connect() {
+        logger.info("connect 메서드 요청");
+        slackService.startRTM(token);
+        if (slackService.getWebSocketUrl() != null) {
+            WebSocketConnectionManager manager = new WebSocketConnectionManager(client(), handler(), slackService.getWebSocketUrl());
+            manager.start();
+        }
     }
 
     public ResponseEntity<String> search(String keyword, Event event) {
@@ -63,5 +82,13 @@ public class SlackBotRepository {
 
     public HttpEntity<String> requestList(Gson gson, HttpHeaders headers, List<Stock> stocks, String channel) {
         return new HttpEntity<>(gson.toJson(new Converter(stocks, channel)), headers);
+    }
+
+    public StandardWebSocketClient client() {
+        return new StandardWebSocketClient();
+    }
+
+    public BotWebSocketHandler handler() {
+        return new BotWebSocketHandler(bot.getSlackBot());
     }
 }

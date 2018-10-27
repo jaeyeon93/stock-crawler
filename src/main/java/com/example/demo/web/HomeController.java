@@ -17,31 +17,9 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 public class HomeController {
     public static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-    @Autowired
-    private SlackService slackService;
-
-    @Autowired
-    private SlackBotRepository slackBotRepository;
-
-    @Autowired
-    private SlackBot slackBot;
-
-    @Value("${slack.token}")
-    private String token;
-
     @GetMapping("/")
     public String index() {
         return "/index";
     }
 
-    @GetMapping("/connect")
-    public String connect() {
-        logger.info("컨트롤러에서 connect 요청");
-        slackService.startRTM(token);
-        if (slackService.getWebSocketUrl() != null) {
-            WebSocketConnectionManager manager = new WebSocketConnectionManager(slackBotRepository.client(), slackBotRepository.handler(), slackService.getWebSocketUrl());
-            manager.start();
-        } 
-        return "redirect:/stock";
-    }
 }

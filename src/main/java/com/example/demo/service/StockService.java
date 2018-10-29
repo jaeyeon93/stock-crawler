@@ -53,7 +53,7 @@ public class StockService {
     }
 
     public Stock getStockById(long id) {
-        return stockRepository.findOne(id);
+        return stockRepository.findById(id).get();
     }
 
     public Stock getStockByStockName(String stockName) {
@@ -71,7 +71,7 @@ public class StockService {
     @Transactional
     public void deleteStockById(long id) throws Exception {
         logger.info("deleteStockById method called {}", id);
-        stockRepository.delete(id);
+        stockRepository.deleteById(id);
     }
 
     @Transactional

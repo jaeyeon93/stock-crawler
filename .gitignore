@@ -17,9 +17,6 @@
 *.tar.gz
 *.rar
 
-/.gradle/
-/build/
-/out/
 /target/
 .classpath
 .factorypath
@@ -39,3 +36,7 @@ bin/
 /.idea
 
 *.yml
+
+build/*
+out/*
+.gradle/*

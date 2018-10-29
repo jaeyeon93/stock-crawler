@@ -1,5 +1,6 @@
 package com.example.demo.bot;
 
+import me.ramswaroop.jbot.core.common.BotWebSocketHandler;
 import me.ramswaroop.jbot.core.common.Controller;
 import me.ramswaroop.jbot.core.common.EventType;
 import me.ramswaroop.jbot.core.slack.Bot;
@@ -11,7 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.client.WebSocketConnectionManager;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.regex.Matcher;
 
@@ -38,15 +44,22 @@ public class SlackBot extends Bot {
         return this;
     }
 
+//    @Override
+//    public void afterConnectionEstablished(WebSocketSession session) {
+//        logger.info("connection 새로 연결, 세션정보 : {}");
+//        super.afterConnectionEstablished(session);
+//    }
+
     @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE})
     public void onReceiveDM(WebSocketSession session, Event event) {
+        logger.info("전달받은 메세지 : {}", event.getText());
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
     @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
     public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws Exception {
         String message = event.getText().toUpperCase();
-        logger.info("메세지 : {}", message);
+        logger.info("전달받은 메세지 : {}", event.getMessage());
 
         if (message.contains("검색"))
             return slackBotRepository.search(message.substring(message.indexOf(":")+1).trim(), event);
@@ -56,4 +69,5 @@ public class SlackBot extends Bot {
 
         return slackBotRepository.reqeustCustomStock(message, event);
     }
+
 }

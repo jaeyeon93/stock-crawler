@@ -37,7 +37,7 @@ public class LoginOAuth2Controller {
     private static String authorizationRequestBaseUri = "/oauth2/authorization";
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
 
-    @RequestMapping(path={"/", "/main"})
+    @RequestMapping(path={"/main"})
     public String main(){
         return "main";
     }

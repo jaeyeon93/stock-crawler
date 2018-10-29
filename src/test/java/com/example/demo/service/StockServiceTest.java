@@ -49,7 +49,7 @@ public class StockServiceTest {
 
     @Test
     public void 단기통안채테스트() throws Exception {
-        Stock tiger = stockRepository.findByName("TIGER 단기통안채");
+        Stock tiger = stockRepository.findByName("TIGER 단기통안채").get();
         logger.info("{}", tiger.toString());
         assertThat(tiger.getName(), is("TIGER 단기통안채"));
         Stock edit = stockService.updateByStockName(tiger.getName());
@@ -58,7 +58,7 @@ public class StockServiceTest {
 
     @Test
     public void 힘스테스트() throws Exception {
-        Stock stock = stockRepository.findByName("힘스");
+        Stock stock = stockRepository.findByName("힘스").get();
         logger.info("주식의 사이즈 : {}", stockRepository.findAll().size());
         assertThat(stock.getName(), is("힘스"));
         Stock edit = stockService.updateByStockName(stock.getName());
@@ -67,17 +67,11 @@ public class StockServiceTest {
 
     @Test
     public void KB우량주에러() throws Exception {
-        Stock stock = stockRepository.findByName("KB KQ 우량주30 ETN");
+        Stock stock = stockRepository.findByName("KB KQ 우량주30 ETN").get();
         logger.info("kb : {}", stock.toString());
         assertThat(stock.getName(), is("KB KQ 우량주30 ETN"));
         logger.info("UpdateUrl : {}", stock.getUpdateUrl());
         Stock edit = stockService.updateByStockName(stock.getName());
         logger.info("after : {}", edit.toString());
     }
-
-//    @Test
-//    public void 전체테스트() throws IOException {
-//        logger.info("size : {}", stockRepository.findAll().size());
-//        stockService.detailWholeUpdate();
-//    }
 }

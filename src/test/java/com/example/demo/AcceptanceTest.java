@@ -31,7 +31,7 @@ public abstract class AcceptanceTest {
     }
 
     protected Stock findByStockName(String stockName) {
-        return stockRepository.findByName(stockName);
+        return stockRepository.findByName(stockName).get();
     }
 
     protected String createResource(String path, Object bodyPayload) {

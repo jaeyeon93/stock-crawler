@@ -3,9 +3,13 @@ package com.example.demo.dto;
 import com.example.demo.domain.Stock;
 import com.example.demo.support.domain.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Getter
+@Setter
 public class StockDto extends AbstractEntity {
     private static final Logger logger =  LoggerFactory.getLogger(StockDto.class);
 
@@ -59,49 +63,12 @@ public class StockDto extends AbstractEntity {
         return "http://finance.daum.net/api/quotes/A" + code + "?summary=false&changeStatistics=true";
     }
 
-
-    public String getName() {
-        return name;
-    }
-
-    public StockDto setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getSalesMoney() {
-        return salesMoney;
-    }
-
-    public StockDto setSalesMoney(String salesMoney) {
-        this.salesMoney = salesMoney;
-        return this;
-    }
-
     public Integer getCost() {
         return Integer.parseInt(cost.replace(",", ""));
     }
 
     public StockDto setCost(String cost) {
         this.cost = cost;
-        return this;
-    }
-
-    public String getProfit() {
-        return profit;
-    }
-
-    public StockDto setProfit(String profit) {
-        this.profit = profit;
-        return this;
-    }
-
-    public String getTotalCost() {
-        return totalCost;
-    }
-
-    public StockDto setTotalCost(String totalCost) {
-        this.totalCost = totalCost;
         return this;
     }
 
@@ -124,15 +91,6 @@ public class StockDto extends AbstractEntity {
 
     public StockDto setRate(String rate) {
         this.rate = rate;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public StockDto setCode(String code) {
-        this.code = code;
         return this;
     }
 

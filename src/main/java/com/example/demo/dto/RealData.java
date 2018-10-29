@@ -34,6 +34,9 @@ public class RealData {
     @JsonProperty("operatingProfit")
     private double operatingProfit;
 
+    @JsonProperty("change")
+    private String change;
+
     private Double profitPercent;
 
     @JsonProperty("chartImageUrl")
@@ -65,19 +68,26 @@ public class RealData {
     }
 
     public double getChangeRate() {
-        return changeRate * 100;
+        return formatDouble(changeRate * 100) * fallRise();
     }
 
     public double getSales() {
-        return checkNaN(formatDouble((sales/100000000)));
+        return checkNaN(formatDouble((sales/1000000000)));
     }
 
     public double getOperatingProfit() {
-        return checkNaN(formatDouble((operatingProfit/100000000)));
+        return checkNaN(formatDouble((operatingProfit/1000000000)));
     }
 
     public double getMarketCap() {
-        return checkNaN(formatDouble((marketCap/100000000)));
+        return checkNaN(formatDouble((marketCap/1000000000)));
+    }
+
+    public Integer fallRise() {
+        logger.info(getChange());
+        if (getChange().equals("RISE"))
+            return 1;
+        return -1;
     }
 
     public Double getProfitPercent() {

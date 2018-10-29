@@ -58,11 +58,11 @@ public class StockService {
 
     public Stock getStockByStockName(String stockName) {
         logger.info("stockName on Service : {}", stockName);
-        return stockRepository.findByName(stockName);
+        return stockRepository.findByName(stockName).get();
     }
 
     public boolean checkMakingStock(String stockName) {
-        Stock stock = stockRepository.findByName(stockName.toUpperCase());
+        Stock stock = stockRepository.findByName(stockName.toUpperCase()).get();
         if (stock != null)
             return true;
         return false;
@@ -86,7 +86,7 @@ public class StockService {
     @Transactional
     public Stock updateByStockName(String stockName) throws Exception {
         logger.info("updateByStockName method called on service : {}", stockName);
-        Stock stock = stockRepository.findByName(stockName);
+        Stock stock = stockRepository.findByName(stockName).get();
         logger.info("업데이트 요청된 Stock정보 : {}", stock.toString());
         if (Jsoup.connect(stock.getUpdateUrl()).ignoreContentType(true).get().location().equals(errorPage))
             return stock;

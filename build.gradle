@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.RELEASE'
+        springBootVersion = '2.0.4.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -30,9 +30,6 @@ task wrapper(type: Wrapper) {
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.3'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.6.3'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.6.3'
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('com.h2database:h2')
     runtime('mysql:mysql-connector-java')
@@ -51,6 +48,6 @@ dependencies {
     compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.35'
 
     // Security
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.13.RELEASE'
+//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.13.RELEASE'
 
 }

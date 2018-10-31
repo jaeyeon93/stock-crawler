@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,26 +36,24 @@ public class LoginOAuth2Controller {
     private static String authorizationRequestBaseUri = "/oauth2/authorization";
     Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
 
-    @RequestMapping(path={"/main"})
-    public String main(){
+    @GetMapping("/main")
+    public String main() {
         return "main";
     }
 
     @GetMapping("/oauth/login")
     public String login(Model model) {
         Iterable<ClientRegistration> clientRegistrations = null;
-        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
-                .as(Iterable.class);
-        if (type != ResolvableType.NONE &&
-                ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
+        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository).as(Iterable.class);
+
+        if (type != ResolvableType.NONE && ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
             clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
+
         }
 
-        clientRegistrations.forEach(registration ->
-                oauth2AuthenticationUrls.put(registration.getClientName(),
-                        authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
+        clientRegistrations.forEach(registration -> oauth2AuthenticationUrls.put(registration.getClientName(), authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
         model.addAttribute("urls", oauth2AuthenticationUrls);
-
+        logger.info("urls : {}", oauth2AuthenticationUrls.toString());
         return "oauth/login";
     }
 
@@ -64,35 +61,25 @@ public class LoginOAuth2Controller {
     @GetMapping("/oauth/login_success")
     public String login_success(Model model, OAuth2AuthenticationToken authentication){
         OAuth2AuthorizedClient client = authorizedClientService
-                .loadAuthorizedClient(
-                        authentication.getAuthorizedClientRegistrationId(),
-                        authentication.getName()
-                );
+                .loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(), authentication.getName());
 
-        String userInfoEndpointUri = client.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUri();
+        String userInfoEndpointUri = client.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUri();
+        logger.info("endPointUrl : {}", userInfoEndpointUri.toString());
 
         if (!StringUtils.isEmpty(userInfoEndpointUri)) {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + client.getAccessToken().getTokenValue());
-
-
             HttpEntity entity = new HttpEntity(headers);
             ResponseEntity<Map> response = restTemplate.exchange(siteUrlCustoom(authentication.getAuthorizedClientRegistrationId(), userInfoEndpointUri), HttpMethod.GET, entity, Map.class);
             Map userAttributes = response.getBody();
-
+            logger.info("userInfo : {}", userAttributes.toString());
             model.addAttribute("userInfo", userAttributes);
         }
 
         return "oauth/login_success";
     }
 
-    /**
-     * 소셜 종류에 따라 URL 구성 변경
-     * @param site
-     * @return
-     */
     protected String siteUrlCustoom(String site, String baseUrl){
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 

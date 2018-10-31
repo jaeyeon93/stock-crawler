@@ -20,20 +20,20 @@ public class ScheduledTasks {
     @Autowired
     private StockService stockService;
 
-//    @Autowired
-//    private SlackBotRepository repository;
+    @Autowired
+    private SlackBotRepository repository;
 
-    @Scheduled(cron = "0 * 9-16 * * MON-FRI")
-    public void getAllStock() throws Exception {
-        logger.info("평일 9시-16시까지 1분마다 자동업데이트");
-        stockService.getAllStock();
-    }
-
-    @Scheduled(cron = "5 * 16 * * MON-FRI")
-    public void detailWholeUpdate() throws Exception {
-        logger.info("평일 16:05, 장 종료 후 전체 업데이트 진행");
-        stockService.detailWholeUpdate();
-    }
+//    @Scheduled(cron = "0 * 9-16 * * MON-FRI")
+//    public void getAllStock() throws Exception {
+//        logger.info("평일 9시-16시까지 1분마다 자동업데이트");
+//        stockService.getAllStock();
+//    }
+//
+//    @Scheduled(cron = "5 * 16 * * MON-FRI")
+//    public void detailWholeUpdate() throws Exception {
+//        logger.info("평일 16:05, 장 종료 후 전체 업데이트 진행");
+//        stockService.detailWholeUpdate();
+//    }
 
     @Scheduled(cron = "0 0 0 * * SAT,SUN")
     public void getWeekUpdate() throws Exception {
@@ -41,9 +41,9 @@ public class ScheduledTasks {
         stockService.detailWholeUpdate();
     }
 
-//    @Scheduled(cron = "0 0 * * * *")
-//    public void pingpoing() {
-//        logger.info("1시간 마다 웹소켓 연결 및 핑퐁");
-//        repository.connect();
-//    }
+    @Scheduled(cron = "0 0 * * * *")
+    public void pingpoing() {
+        logger.info("1시간 마다 웹소켓 연결 및 핑퐁");
+        repository.connect();
+    }
 }

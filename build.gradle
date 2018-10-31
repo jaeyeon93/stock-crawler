@@ -48,6 +48,11 @@ dependencies {
     compile group: 'org.webjars', name: 'webjars-locator-core', version: '0.35'
 
     // Security
-//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.13.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.0.4.RELEASE'
+    compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.0.4.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.0.9.RELEASE'
+    compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    // https://mvnrepository.com/artifact/org.springframework.social/spring-social-facebook
+    compile group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
 
 }

@@ -17,9 +17,18 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 public class HomeController {
     public static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+    @Autowired
+    private SlackBotRepository repository;
+
     @GetMapping("/")
     public String index() {
         return "/index";
     }
 
+    @GetMapping("/connect")
+    public String connect() {
+        logger.info("웹소켓이 끊어졌을경우, 수동으로 웹소켓 연결하기");
+        repository.connect();
+        return "redirect:/stock";
+    }
 }

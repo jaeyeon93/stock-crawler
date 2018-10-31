@@ -40,3 +40,6 @@ bin/
 build/*
 out/*
 .gradle/*
+
+facebook.yml
+google.yml

@@ -56,7 +56,8 @@ public class SlackBot extends Bot {
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
-    @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
+//    @Controller(events = EventType.MESSAGE, pattern = "[^a-zA-Z\\d\\s:]")
+    @Controller(events = EventType.MESSAGE, pattern = ".*\\S+.*")
     public ResponseEntity<String> onReceiveMessage(WebSocketSession session, Event event, Matcher matcher) throws Exception {
         String message = event.getText().toUpperCase();
         logger.info("전달받은 메세지 : {}", event.getMessage());

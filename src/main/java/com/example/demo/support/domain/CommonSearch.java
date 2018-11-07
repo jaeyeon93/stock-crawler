@@ -32,10 +32,10 @@ public abstract class CommonSearch {
         return object.get("name").getAsString();
     }
 
-    public RealData updateByStockName(String updateUrl) throws IOException {
+    public RealData updateByStockName(String updateUrl, String detailUrl) throws IOException {
         Gson gson = new GsonBuilder().setLenient().create();
         JsonParser parser = new JsonParser();
-        JsonElement element = parser.parse(Jsoup.connect(updateUrl).ignoreContentType(true).get().body().text());
+        JsonElement element = parser.parse(Jsoup.connect(updateUrl).referrer(detailUrl).ignoreContentType(true).get().body().text());
         logger.info("element : {}", element.toString());
         return gson.fromJson(element, RealData.class);
     }

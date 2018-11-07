@@ -90,9 +90,9 @@ public class StockService {
         logger.info("updateByStockName method called on service : {}", stockName);
         Stock stock = stockRepository.findByName(stockName).get();
         logger.info("업데이트 요청된 Stock정보 : {}", stock.toString());
-        if (Jsoup.connect(stock.getUpdateUrl()).ignoreContentType(true).get().location().equals(errorPage))
+        if (Jsoup.connect(stock.getUpdateUrl()).referrer(stock.getDetailUrl()).ignoreContentType(true).get().location().equals(errorPage))
             return stock;
-        return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl()));
+        return stock.update(stockInfo.updateByStockName(stock.getUpdateUrl(), stock.getDetailUrl()));
     }
 
     @Transactional
@@ -118,7 +118,7 @@ public class StockService {
 
     public void  stockUpdateException(List<Stock> original, int i) {
         try {
-            Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl())));
+            Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl(), original.get(i).getDetailUrl())));
             em.persist(stock);
             if (i % batchSize == 0) {
                 logger.info("{}번째 배치 업데이트 실행", i);

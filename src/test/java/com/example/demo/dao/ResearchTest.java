@@ -24,7 +24,7 @@ public class ResearchTest {
 
     @Before
     public void setUp() throws Exception {
-        doc = Jsoup.connect("http://finance.daum.net/api/quotes/A000660?summary=false&changeStatistics=true").ignoreContentType(true).get();
+        doc = Jsoup.connect("http://finance.daum.net/api/quotes/A000660?summary=false&changeStatistics=true").referrer("http://finance.daum.net/quotes/A000660#home").ignoreContentType(true).get();
     }
 
     @Test

@@ -31,6 +31,7 @@ public class ResearchTest {
     public void 리얼데이터매핑테스트() {
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(doc.body().text());
+        logger.info("{}", element.toString());
         RealData realData = gson.fromJson(element, RealData.class);
         String json = gson.toJson(realData);
         logger.info("{}", json);
@@ -44,5 +45,11 @@ public class ResearchTest {
         JsonElement urls = object.get("chartImageUrl");
         ChartImageUrl images = gson.fromJson(urls, ChartImageUrl.class);
         logger.info("{}", images.toString());
+    }
+
+    @Test
+    public void quater() throws IOException {
+        doc = Jsoup.connect("http://finance.daum.net/api/quote/A000660/financials").referrer("http://finance.daum.net/quotes/A000660#home").ignoreContentType(true).get();
+        logger.info("{}", doc.body().text());
     }
 }

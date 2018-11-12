@@ -116,7 +116,7 @@ public class StockService {
         }
     }
 
-    public void  stockUpdateException(List<Stock> original, int i) {
+    public void stockUpdateException(List<Stock> original, int i) {
         try {
             Stock stock = em.merge(original.get(i).update(stockInfo.updateByStockName(original.get(i).getUpdateUrl(), original.get(i).getDetailUrl())));
             em.persist(stock);

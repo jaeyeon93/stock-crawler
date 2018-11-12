@@ -2,17 +2,11 @@ package com.example.demo.dto;
 
 import com.example.demo.domain.Stock;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ToString
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class RealData {
     private static final Logger logger =  LoggerFactory.getLogger(RealData.class);
 

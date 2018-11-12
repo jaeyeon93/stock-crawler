@@ -51,4 +51,5 @@ deploy:
 notifications:
   email:
     recipients:
-    - foodsksms@gmail.com
+      - foodsksms@gmail.com
+      

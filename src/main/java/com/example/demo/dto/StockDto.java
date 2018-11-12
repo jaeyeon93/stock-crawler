@@ -3,15 +3,20 @@ package com.example.demo.dto;
 import com.example.demo.domain.Stock;
 import com.example.demo.support.domain.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Getter
-@Setter
+@Data
 public class StockDto extends AbstractEntity {
     private static final Logger logger =  LoggerFactory.getLogger(StockDto.class);
+    private static final String UP = "▲";
+    private static final String DOWN1 = "▼";
+    private static final String DOWN2 = "↓";
+    private static final String COMMA = ",";
+    private static final String EMPTY = "";
 
     @JsonProperty("name")
     private String name;
@@ -73,11 +78,11 @@ public class StockDto extends AbstractEntity {
     }
 
     public Integer getUpdn() {
-        if (updn.contains("▼"))
-            return (Integer.parseInt(updn.replace("▼", "").replace(",", "").trim()) * -1);
-        if (updn.contains("↓"))
-            return (Integer.parseInt(updn.replace("↓", "").replace(",", "").trim()) * -1);
-        return Integer.parseInt(updn.replace("▲", "").replace(",","").trim());
+        if (updn.contains(DOWN1))
+            return (Integer.parseInt(updn.replace(DOWN1, EMPTY).replace(COMMA, EMPTY).trim()) * -1);
+        if (updn.contains(DOWN2))
+            return (Integer.parseInt(updn.replace(DOWN2, EMPTY).replace(COMMA, EMPTY).trim()) * -1);
+        return Integer.parseInt(updn.replace(UP, EMPTY).replace(COMMA,EMPTY).trim());
     }
 
     public StockDto setUpdn(String updn) {
@@ -92,19 +97,5 @@ public class StockDto extends AbstractEntity {
     public StockDto setRate(String rate) {
         this.rate = rate;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "StockDto{" +
-                "name='" + name + '\'' +
-                ", salesMoney='" + salesMoney + '\'' +
-                ", cost='" + cost + '\'' +
-                ", profit='" + profit + '\'' +
-                ", totalCost='" + totalCost + '\'' +
-                ", updn='" + updn + '\'' +
-                ", rate='" + rate + '\'' +
-                ", code='" + code + '\'' +
-                '}';
     }
 }

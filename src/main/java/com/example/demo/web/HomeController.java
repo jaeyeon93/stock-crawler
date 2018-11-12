@@ -25,6 +25,7 @@ public class HomeController {
         return "/index";
     }
 
+    
     @GetMapping("/connect")
     public String connect() {
         logger.info("웹소켓이 끊어졌을경우, 수동으로 웹소켓 연결하기");

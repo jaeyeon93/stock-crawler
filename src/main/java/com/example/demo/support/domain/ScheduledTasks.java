@@ -1,5 +1,6 @@
 package com.example.demo.support.domain;
 
+import com.example.demo.bot.SlackBot;
 import com.example.demo.bot.SlackBotRepository;
 import com.example.demo.service.StockService;
 import org.slf4j.Logger;

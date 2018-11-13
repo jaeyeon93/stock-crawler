@@ -4,29 +4,26 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "ACCOUNT")
-internal data class Account(
+data class Account(
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
-        private val id: Long? = null,
+        val id: Long? = null,
 
         @Column(name = "ACCOUNT_USERNAME")
-        private val username: String? = null,
+        val username: String? = null,
 
         @Column(name = "ACCOUNT_LOGINID")
-        val userId: String? = null,
+        val userId: String? = "emalyun@naver.com",
 
         @Column(name = "ACCOUNT_PASSWORD")
-        val password: String? = null,
+        var password: String? = "1234",
 
         @Column(name = "ACCOUNT_ROLE")
-        @Enumerated(value = EnumType.STRING) // ODINAL은 위험
-        val userRole: UserRole? = null,
-
+        @Enumerated(value = EnumType.STRING)
+        var userRole: UserRole? = UserRole.USER,
         @Column(name = "ACCOUNT_SOCIAL_ID")
-        private val socialId: Long? = null,
-
+        var socialId: Long? = null,
         @Column(name = "ACCOUNT_SOCIAL_PROFILEPIC")
-        private val profileHref: String? = null
-
-)
+        var profileHref: String? = null) {
+}

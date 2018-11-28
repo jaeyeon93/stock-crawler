@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 
 @Component
 public class AccountContextService implements UserDetailsService {
+    // 자격정보오 사용자 정보를 DB에서 가져오는 인터페이스
     @Autowired
     private AccountRepository accountRepository;
 

@@ -52,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        //UserService를 사용해 인증처리를 하는 과정
         auth
                 .authenticationProvider(this.provider);
     }

@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccountContext extends User {
-
+    // AccountUserDetails로서 implements UserDetails를 하거나 UserDetails의 구현체인 User를 상속을 받은 클래스
+    // 인증처리에 필요한 자격정보와 사용자 상태정보를 제공하는 UserDetails인터페이스 구현체
     private Account account;
 
     public AccountContext(Account account, String username, String password, Collection<? extends GrantedAuthority> authorities) {

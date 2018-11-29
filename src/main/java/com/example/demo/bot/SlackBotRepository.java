@@ -60,11 +60,14 @@ public class SlackBotRepository {
 
     public void connect() {
         logger.info("connect 메서드 요청");
-        slackService.startRTM(token);
         if (slackService.getWebSocketUrl() == null) {
+            slackService.startRTM(token);
             logger.info("웹소켓의 url이 null");
             WebSocketConnectionManager manager = new WebSocketConnectionManager(client(), handler(), slackService.getWebSocketUrl());
             manager.start();
+        } else {
+            logger.info("web소켓 연결되어 있다.");
+            logger.info("{}", slackService.getWebSocketUrl());
         }
     }
 

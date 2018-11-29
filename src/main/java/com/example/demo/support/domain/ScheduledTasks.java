@@ -47,4 +47,10 @@ public class ScheduledTasks {
         logger.info("1시간 마다 웹소켓 연결 및 핑퐁");
         repository.connect();
     }
+
+//    @Scheduled(cron = "0 * * * * *")
+//    public void testping() {
+//        logger.info("1분 마다 웹소켓 연결 및 핑퐁");
+//        repository.connect();
+//    }
 }

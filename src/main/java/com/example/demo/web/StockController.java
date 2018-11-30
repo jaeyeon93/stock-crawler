@@ -25,12 +25,6 @@ public class StockController {
         return stockService.findAll();
     }
 
-    @PostMapping("/hello")
-    public String hello() {
-        logger.info("hello method called");
-        return "hello world";
-    }
-
     @DeleteMapping("/{id}")
     public String deleteStockById(@PathVariable long id) throws Exception {
         logger.info("deleteStockById method called");
@@ -47,7 +41,6 @@ public class StockController {
 
     @GetMapping("/{stockName}")
     public @ResponseBody Stock getByStockName(@PathVariable String stockName) throws Exception {
-        logger.info("getByStockName method called on controller");
         return stockService.updateByStockName(stockName);
     }
 

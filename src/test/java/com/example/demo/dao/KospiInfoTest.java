@@ -46,6 +46,13 @@ public class KospiInfoTest {
     }
 
     @Test
+    public void updateTest() throws Exception {
+        stockService.getAllStock();
+        Stock stock = stockService.updateByStockName("아모레퍼시픽");
+        logger.info("{}", stock.toString());
+    }
+
+    @Test
     public void db에주식이있으면true() {
         boolean result = stockService.checkMakingStock("삼성전자");
         assertThat(result, is(true));

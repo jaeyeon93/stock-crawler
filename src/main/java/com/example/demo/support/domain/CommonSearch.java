@@ -36,7 +36,6 @@ public abstract class CommonSearch {
         Gson gson = new GsonBuilder().setLenient().create();
         JsonParser parser = new JsonParser();
         JsonElement element = parser.parse(Jsoup.connect(updateUrl).referrer(detailUrl).ignoreContentType(true).get().body().text());
-        logger.info("element : {}", element.toString());
         return gson.fromJson(element, RealData.class);
     }
 

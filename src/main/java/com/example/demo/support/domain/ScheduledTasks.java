@@ -42,15 +42,9 @@ public class ScheduledTasks {
         stockService.detailWholeUpdate();
     }
 
-    @Scheduled(cron = "0 0 */2 * * *")
+    @Scheduled(cron = "0 0 */4 * * *")
     public void pingpoing() {
         logger.info("2시간 마다 웹소켓 연결 및 핑퐁");
         repository.connect();
     }
-
-//    @Scheduled(cron = "0 * * * * *")
-//    public void testping() {
-//        logger.info("1분 마다 웹소켓 연결 및 핑퐁");
-//        repository.connect();
-//    }
 }
